@@ -1,0 +1,8 @@
+application:
+  host: 0.0.0.0
+  base_url: "https://api.postmarkapp.com"
+database:
+  require_ssl: true
+email_client:
+  base_url: "https://api.postmarkapp.com"
+  sender_email: "relam@richmond-county.k12.va.us"
