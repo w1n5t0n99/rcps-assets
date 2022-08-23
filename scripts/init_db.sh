@@ -21,7 +21,7 @@ DB_USER=${POSTGRES_USER:=postgres}
 # Check if a custom password has been set, otherwise default to 'password'
 DB_PASSWORD="${POSTGRES_PASSWORD:=password}"
 # Check if a custom database name has been set, otherwise default to 'newsletter'
-DB_NAME="${POSTGRES_DB:=newsletter}"
+DB_NAME="${POSTGRES_DB:=rcps-assets}"
 # Check if a custom port has been set, otherwise default to '5432'
 DB_PORT="${POSTGRES_PORT:=5432}"
 
@@ -30,6 +30,7 @@ DB_PORT="${POSTGRES_PORT:=5432}"
 if [[ -z "${SKIP_DOCKER}" ]]
 then
     docker run \
+        --name rcps-postgres \
         -e POSTGRES_USER=${DB_USER} \
         -e POSTGRES_PASSWORD=${DB_PASSWORD} \
         -e POSTGRES_DB=${DB_NAME} \
