@@ -1,8 +1,6 @@
 application:
   host: 0.0.0.0
-  base_url: "https://api.postmarkapp.com"
+  # server base url - should be replaced by env set by cloud provider
+  base_url: "http://127.0.0.1" 
 database:
   require_ssl: true
-email_client:
-  base_url: "https://api.postmarkapp.com"
-  sender_email: "relam@richmond-county.k12.va.us"
