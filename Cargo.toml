@@ -12,12 +12,12 @@ name = "rcps-assets"
 
 
 [dependencies]
+actix-web = "4"
 thiserror = "1.0.32"
 anyhow = "1.0.62"
 sqlx = { version = "0.6", default-features = false, features = ["runtime-actix-rustls", "macros", "postgres", "uuid", "chrono", "migrate", "offline"] }
 config = { version = "0.13", default-features = false, features = ["yaml"] }
 tokio = { version = "1", features = ["macros", "rt-multi-thread"] }
-actix-web = "4"
 uuid = { version = "1", features = ["v4", "serde"] }
 secrecy = { version = "0.8", features = ["serde"] }
 serde = "1.0.144"
@@ -28,6 +28,10 @@ tracing = "0.1.19"
 tracing-subscriber = { version = "0.3", features = ["registry", "env-filter"] }
 tracing-bunyan-formatter = "0.3"
 tracing-log = "0.1.1"
+tracing-actix-web = "0.6"
+actix-web-flash-messages = { version = "0.4", features = ["cookies"] }
+actix-session = { version = "0.6", features = ["redis-rs-tls-session"] }
+actix-web-lab = "0.16"
 
 [dev-dependencies]
 once_cell = "1.13.1"
