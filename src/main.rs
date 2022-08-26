@@ -12,7 +12,7 @@ async fn main() -> anyhow::Result<()> {
     //println!("{:?}", configuration);
 
     let application = Application::build(configuration.clone()).await?;
-    let application_task = tokio::spawn(application.run_until_stopped());
+    application.run_until_stopped().await?;
 
     Ok(())
 }
