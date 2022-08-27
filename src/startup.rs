@@ -60,7 +60,7 @@ async fn run (
     hmac_secret: Secret<String>,
 ) -> Result<Server, anyhow::Error> {
     let base_url = Data::new(ApplicationBaseUrl(base_url));
-    let secret_key = Key::from(hmac_secret.expose_secret().as_bytes());
+    //let secret_key = Key::from(hmac_secret.expose_secret().as_bytes());
 
     let server = HttpServer::new(move || {
         App::new()
