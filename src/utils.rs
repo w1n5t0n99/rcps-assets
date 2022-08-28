@@ -1,6 +1,11 @@
 use actix_web::http::header::LOCATION;
 use actix_web::HttpResponse;
 
+#[derive(Debug, PartialEq)]
+pub enum MsgType {
+    Success,
+    Error,
+}
 
 pub fn error_chain_fmt(
     e: &impl std::error::Error,

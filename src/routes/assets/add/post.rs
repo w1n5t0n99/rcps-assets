@@ -1,11 +1,13 @@
 use actix_web::http::StatusCode;
 use actix_web::{web, HttpResponse, ResponseError};
+use actix_web::error::InternalError;
 use anyhow::Context;
 use sqlx::{PgPool, Postgres, Transaction};
 use validator::Validate;
 use chrono::Utc;
+use actix_web_flash_messages::FlashMessage;
 
-use crate::utils::{error_chain_fmt, see_other};
+use crate::utils::{error_chain_fmt, see_other, e500};
 use crate::domain::Asset;
 
 #[derive(serde::Deserialize)]
@@ -33,6 +35,8 @@ impl From<FormData> for Asset {
 pub enum AddAssetError {
     #[error("Failed to validate asset data")]
     ValidationError(#[source] anyhow::Error),
+    #[error("Failed to insert asset data")]
+    InsertError(#[source] anyhow::Error),
     #[error("Unexpected Error")]
     UnexpectedError(#[source] anyhow::Error),
 }
@@ -44,10 +48,19 @@ impl std::fmt::Debug for AddAssetError {
 }
 
 impl ResponseError for AddAssetError {
-    fn status_code(&self) -> StatusCode {
+    fn error_response(&self) -> HttpResponse<actix_web::body::BoxBody> {
         match self {
-            AddAssetError::ValidationError(_) => StatusCode::BAD_REQUEST,
-            AddAssetError::UnexpectedError(_) => StatusCode::INTERNAL_SERVER_ERROR,
+            AddAssetError::ValidationError(e) => {
+                FlashMessage::error("Invalid user input.".to_string()).send();
+                see_other("/assets/add")
+            },
+            AddAssetError::InsertError(e) => {
+                FlashMessage::error("Could not add asset".to_string()).send();
+                see_other("/assets/add")
+            },
+            AddAssetError::UnexpectedError(e) => {
+                HttpResponse::build(StatusCode::INTERNAL_SERVER_ERROR).body("RCPS Assets - Internal Server Error :(")
+            },
         }
     }
 }
@@ -79,7 +92,7 @@ pub async fn add_asset(
     insert_asset(&mut transaction, &asset)
         .await
         .context("Failed to insert asset into database")
-        .map_err(AddAssetError::UnexpectedError)?;
+        .map_err(AddAssetError::InsertError)?;
 
     transaction
         .commit()
@@ -87,6 +100,7 @@ pub async fn add_asset(
         .context("Failed to commit SQL transaction to store a new subscriber.")
         .map_err(AddAssetError::UnexpectedError)?;
     
+    FlashMessage::success("Asset successfully added.".to_string()).send();
     Ok(see_other("/"))
 }
 

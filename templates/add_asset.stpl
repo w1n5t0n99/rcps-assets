@@ -5,6 +5,12 @@
     <title>Add Asset</title>
 </head>
 <body>
+    <% for msg in &messages { %>
+        <% if msg.0 == MsgType::Error { %>
+            <p style="color:red;"><i><%= msg.1 %></i></p>
+        <% } %>
+    <% } %>
+
     <form action="/assets/add" method="post">
         <label>Asset ID:<br>
             <input

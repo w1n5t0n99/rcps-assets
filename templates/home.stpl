@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta http-equiv="content-type" content="text/html; charset=utf-8">
+        <title>Home</title>
+    </head>
+    <body>
+        <% for msg in &messages { %>
+            <% if msg.0 == MsgType::Success { %>
+                <p style="color:green;"><i><%= msg.1 %></i></p>
+            <% } %>
+        <% } %>
+        <p>Welcome to RCPS-ASSETS!</p>
+        <p><a href="/assets/add">Add Asset</a></p>
+    </body>
+</html>
