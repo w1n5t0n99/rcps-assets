@@ -1,4 +1,5 @@
 use actix_web::http::StatusCode;
+use actix_web::http::header::ContentType;
 use actix_web::{web, HttpResponse, ResponseError};
 use actix_web::error::InternalError;
 use anyhow::Context;
@@ -59,7 +60,9 @@ impl ResponseError for AddAssetError {
                 see_other("/assets/add")
             },
             AddAssetError::UnexpectedError(e) => {
-                HttpResponse::build(StatusCode::INTERNAL_SERVER_ERROR).body("RCPS Assets - Internal Server Error :(")
+                HttpResponse::build(StatusCode::INTERNAL_SERVER_ERROR)
+                .insert_header(ContentType::html())
+                .body(self.to_string())
             },
         }
     }
