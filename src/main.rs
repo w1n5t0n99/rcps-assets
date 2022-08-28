@@ -1,7 +1,7 @@
 use rcps_assets::configuration::get_configuration;
 use rcps_assets::telemetry::{get_subscriber, init_subscriber};
 use rcps_assets::startup::Application;
-use tracing::subscriber;
+
 
 #[tokio::main]
 async fn main() -> anyhow::Result<()> {

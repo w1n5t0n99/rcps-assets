@@ -32,6 +32,10 @@ tracing-actix-web = "0.6"
 actix-web-flash-messages = { version = "0.4", features = ["cookies"] }
 actix-session = { version = "0.6", features = ["redis-rs-tls-session"] }
 actix-web-lab = "0.16"
+tera = "1"
+validator = { version = "0.16", features = ["derive"] }
+unicode-segmentation = "1.9.0"
+chrono = "0.4.22"
 
 [dev-dependencies]
 once_cell = "1.13.1"

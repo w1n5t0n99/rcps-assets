@@ -1,4 +1,5 @@
 use once_cell::sync::Lazy;
+use sqlx::{PgPool, PgConnection, Connection, Executor};
 use uuid::Uuid;
 use rcps_assets::telemetry::{get_subscriber, init_subscriber};
 use rcps_assets::configuration::*;
@@ -22,6 +23,7 @@ static TRACING: Lazy<()> = Lazy::new(|| {
 pub struct TestApplication {
     pub address: String,
     pub port: u16,
+    pub db_pool: PgPool,
     // Used to simulate interacting with server
     pub api_client: reqwest::Client,
 }
@@ -44,10 +46,14 @@ pub async fn spawn_test_application() -> TestApplication {
     // Randomise configuration to ensure test isolation
     let configuration = {
         let mut c = get_configuration().expect("Failed to read configuration.");
+        // Use a different database for each test case
+        c.database.database_name = Uuid::new_v4().to_string();
         // Use random port
         c.application.port = 0;
         c
     };
+
+    let db_pool = configure_database_for_testing(&configuration.database).await;
 
     // Launch application as background task to not interfere with tests
     let application = Application::build(configuration.clone())
@@ -65,7 +71,31 @@ pub async fn spawn_test_application() -> TestApplication {
 
     TestApplication {
         address: format!("http://localhost:{}", application_port),
+        db_pool,
         port: application_port,
         api_client: client,
     }
+}
+
+async fn configure_database_for_testing(config: &DatabaseSettings) -> PgPool {
+    // Create database
+    let mut connection = PgConnection::connect_with(&config.without_db())
+        .await
+        .expect("Failed to connect to Postgres");
+    connection
+        .execute(&*format!(r#"CREATE DATABASE "{}";"#, config.database_name))
+        .await
+        .expect("Failed to create database.");
+
+    // Migrate database
+    let connection_pool = PgPool::connect_with(config.with_db())
+        .await
+        .expect("Failed to connect to Postgres.");
+        
+    sqlx::migrate!("./migrations")
+        .run(&connection_pool)
+        .await
+        .expect("Failed to migrate the database");
+
+    connection_pool
 }

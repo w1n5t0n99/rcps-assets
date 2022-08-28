@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+    <title>Add Asset</title>
+</head>
+<body>
+    <form action="/assets/add" method="post">
+        <label>Asset ID:<br>
+            <input
+                type="text"
+                placeholder="Enter the asset ID"
+                name="asset_id"
+            >
+        </label>
+        <br>
+        <label>Name:<br>
+            <input
+                type="text"
+                placeholder="Enter the asset name"
+                name="name"
+            >
+        </label>
+        <br>
+        <label>SerialNum:<br>
+            <input
+                type="text"
+                placeholder="Enter the serial number"
+                name="serial_num"
+            >
+        </label>
+        <br>
+        <label>Brand:<br>
+            <input
+                type="text"
+                placeholder="Enter the device brand"
+                name="brand"
+            >
+        </label>
+        <br>
+        <label>Model:<br>
+            <input
+                type="text"
+                placeholder="Enter the device model"
+                name="model"
+            >
+        </label>
+        <br>
+        <button type="submit">Add</button>
+    </form>
+    <p><a href="/">&lt;- Back</a></p>
+</body>
+</html>
