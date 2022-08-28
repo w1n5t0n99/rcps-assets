@@ -5,7 +5,7 @@ use sqlx::{PgPool, Postgres, Transaction};
 use validator::Validate;
 use chrono::Utc;
 
-use crate::utils::error_chain_fmt;
+use crate::utils::{error_chain_fmt, see_other};
 use crate::domain::Asset;
 
 #[derive(serde::Deserialize)]
@@ -57,7 +57,8 @@ impl ResponseError for AddAssetError {
     skip(form, pool),
     fields(
         asset_id = %form.asset_id,
-        asset_name = %form.name
+        asset_name = %form.name,
+        serial_num = %form.serial_num
     )
 )]
 pub async fn add_asset(
@@ -79,12 +80,17 @@ pub async fn add_asset(
         .await
         .context("Failed to insert asset into database")
         .map_err(AddAssetError::UnexpectedError)?;
-    
 
-    Ok(HttpResponse::Ok().finish())
+    transaction
+        .commit()
+        .await
+        .context("Failed to commit SQL transaction to store a new subscriber.")
+        .map_err(AddAssetError::UnexpectedError)?;
+    
+    Ok(see_other("/"))
 }
 
-#[tracing::instrument(name = "Saving new asset details into database", skip(transaction))]
+#[tracing::instrument(name = "Saving new asset details into database", skip(transaction, asset))]
 async fn insert_asset(
     transaction: &mut Transaction<'_, Postgres>,
     asset: &Asset,

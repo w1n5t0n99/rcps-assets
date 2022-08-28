@@ -29,6 +29,15 @@ pub struct TestApplication {
 }
 
 impl TestApplication {
+    async fn post_form(&self, endpoint: &str, body: &impl serde::Serialize) -> reqwest::Response {
+        self.api_client
+            .post(&format!("{}/{}", &self.address, endpoint))
+            .form(body)
+            .send()
+            .await
+            .expect("Failed to execute request.")
+    }
+
     pub async fn get_health_check(&self) -> reqwest::Response {
         let response = self.api_client
             .get(&format!("{}/health_check", self.address))
@@ -37,6 +46,10 @@ impl TestApplication {
             .expect("Failed to execute request.");
 
         response
+    }
+
+    pub async fn post_add_asset(&self, body: &impl serde::Serialize) -> reqwest::Response {
+        self.post_form("assets/add", body).await
     }
 }
 
@@ -91,7 +104,7 @@ async fn configure_database_for_testing(config: &DatabaseSettings) -> PgPool {
     let connection_pool = PgPool::connect_with(config.with_db())
         .await
         .expect("Failed to connect to Postgres.");
-        
+
     sqlx::migrate!("./migrations")
         .run(&connection_pool)
         .await

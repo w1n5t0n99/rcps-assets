@@ -3,6 +3,7 @@ use actix_web::HttpResponse;
 use actix_web::web;
 use crate::utils::e500;
 
+#[tracing::instrument(name = "Add an asset form", skip(tmpl))]
 pub async fn add_asset_form(
     tmpl: web::Data<tera::Tera>
 ) -> Result<HttpResponse, actix_web::Error> {
