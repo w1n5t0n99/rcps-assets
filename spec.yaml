@@ -49,7 +49,7 @@ databases:
   # PG = Postgres
   - engine: PG
     # Database name
-    name: assets
+    name: rcpsdb
     # Again, let's keep the bill lean
     num_nodes: 1
     size: db-s-dev-database
