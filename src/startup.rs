@@ -33,6 +33,8 @@ impl Application {
         // In production (port 0) the OS will assign an open port.
         let port = listener.local_addr().unwrap().port();
 
+        println!("Server runing on {}:{}", configuration.application.host, port);
+
         let server = run(
             listener,
             connection_pool,
