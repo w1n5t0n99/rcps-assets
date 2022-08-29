@@ -1,5 +1,41 @@
 {
   "db": "PostgreSQL",
+  "0faf6f3a722fa55d5ed9ca77bf211ac754c5131548520b5559e54918d2bc4cd6": {
+    "describe": {
+      "columns": [
+        {
+          "name": "id",
+          "ordinal": 0,
+          "type_info": "Uuid"
+        },
+        {
+          "name": "asset_id",
+          "ordinal": 1,
+          "type_info": "Text"
+        },
+        {
+          "name": "name",
+          "ordinal": 2,
+          "type_info": "Text"
+        },
+        {
+          "name": "serial_num",
+          "ordinal": 3,
+          "type_info": "Text"
+        }
+      ],
+      "nullable": [
+        false,
+        false,
+        false,
+        false
+      ],
+      "parameters": {
+        "Left": []
+      }
+    },
+    "query": "SELECT id, asset_id, name, serial_num FROM assets"
+  },
   "43970bbf5af11e106a66d74070c6ba7552a58b4fac1430dbdd184f2717bb1a14": {
     "describe": {
       "columns": [],

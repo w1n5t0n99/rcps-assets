@@ -2,6 +2,13 @@ use validator::{ValidationError, Validate};
 use unicode_segmentation::UnicodeSegmentation;
 
 
+#[derive(Debug, PartialEq)]
+pub struct PartialAsset {
+    pub asset_id: String,
+    pub name: String,
+    pub serial_num: String,
+}
+
 #[derive(Debug, Validate)]
 pub struct Asset {
     #[validate(custom = "custom_validate")]

@@ -1,7 +1,9 @@
 mod asset;
 mod add_asset_template;
 mod home_template;
+mod assets_template;
 
-pub use asset::Asset;
+pub use asset::{Asset, PartialAsset};
 pub use add_asset_template::AddAssetTemplate;
 pub use home_template::HomeTemplate;
+pub use assets_template::AssetsTemplate;
