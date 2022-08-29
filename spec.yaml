@@ -32,19 +32,19 @@ services:
         value: ${APP_URL}
       - key: APP_DATABASE__USERNAME
         scope: RUN_TIME
-        value: ${assets.USERNAME}
+        value: ${rcpsdb.USERNAME}
       - key: APP_DATABASE__PASSWORD
         scope: RUN_TIME
-        value: ${assets.PASSWORD}
+        value: ${rcpsdb.PASSWORD}
       - key: APP_DATABASE__HOST
         scope: RUN_TIME
-        value: ${assets.HOSTNAME}
+        value: ${rcpsdb.HOSTNAME}
       - key: APP_DATABASE__PORT
         scope: RUN_TIME
-        value: ${assets.PORT}
+        value: ${rcpsdb.PORT}
       - key: APP_DATABASE__DATABASE_NAME
         scope: RUN_TIME
-        value: ${assets.DATABASE}
+        value: ${rcpsdb.DATABASE}
 databases:
   # PG = Postgres
   - engine: PG
