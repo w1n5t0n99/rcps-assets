@@ -12,7 +12,7 @@ use actix_web_flash_messages::storage::CookieMessageStore;
 use actix_web_flash_messages::FlashMessagesFramework;
 use actix_web_lab::middleware::from_fn;
 use crate::configuration::{DatabaseSettings, Settings};
-use crate::routes::{health_check, home, add_asset_form, add_asset, assets};
+use crate::routes::{health_check, get_image, home, add_asset_form, add_asset, assets};
 
 pub struct Application {
     port: u16,
@@ -85,6 +85,7 @@ async fn run (
             .wrap(message_framework.clone())
             .route("/", web::get().to(home))
             .route("/health_check", web::get().to(health_check))
+            .route("/{name}.png", web::get().to(get_image))
             .route("/assets/add", web::get().to(add_asset_form))
             .route("/assets/add", web::post().to(add_asset))
             .route("/assets", web::get().to(assets))
