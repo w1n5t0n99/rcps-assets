@@ -6,7 +6,7 @@
 </head>
 <body>
     <% for msg in &messages { %>
-        <% if msg.0 == MsgType::Error { %>
+        <% if msg.0 == Level::Error { %>
             <p style="color:red;"><i><%= msg.1 %></i></p>
         <% } %>
     <% } %>

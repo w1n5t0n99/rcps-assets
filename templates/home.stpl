@@ -7,7 +7,7 @@
     <body>
         <img src="/grizzly.png" alt="Grizzly">
         <% for msg in &messages { %>
-            <% if msg.0 == MsgType::Success { %>
+            <% if msg.0 == Level::Success { %>
                 <p style="color:green;"><i><%= msg.1 %></i></p>
             <% } %>
         <% } %>

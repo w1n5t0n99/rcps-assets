@@ -11,26 +11,6 @@ use actix_web_flash_messages::FlashMessage;
 use crate::utils::{error_chain_fmt, see_other, e500};
 use crate::domain::Asset;
 
-#[derive(serde::Deserialize)]
-pub struct FormData {
-    pub asset_id: String,
-    pub name: String,
-    pub serial_num: String,
-    pub brand: String,
-    pub model: String,
-}
-
-impl From<FormData> for Asset {
-    fn from(a: FormData) -> Self {
-        Asset {
-            asset_id: a.asset_id,
-            name: a.name,
-            serial_num: a.serial_num,
-            brand: a.brand,
-            model: a.model,
-        }
-    }
-}
 
 #[derive(thiserror::Error)]
 pub enum AddAssetError {
@@ -78,11 +58,11 @@ impl ResponseError for AddAssetError {
     )
 )]
 pub async fn add_asset(
-    form: web::Form<FormData>,
+    form: web::Form<Asset>,
     pool: web::Data<PgPool>,
 ) -> Result<HttpResponse, AddAssetError> {
 
-    let asset = Asset::from(form.0);
+    let asset = form.0;
     asset.validate()
         .context("Failed to convert form to asset.")
         .map_err(AddAssetError::ValidationError)?;
