@@ -11,6 +11,7 @@
             <li><a href="/">Home</a></li>
             <li><a class="active" href="/asset_items">Asset Items</a></li>
             <li><a href="/">User Items</a></li>
+            <li><a href="/">Associations</a></li>
             <li><a href="/">Settings</a></li>
             <li style="float:right"><a href="/">Logout</a></li>
         </ul>
@@ -30,7 +31,7 @@
             <% for asset in assets.iter() { %>
                 <ul class="asset-row">
                     <li><%= asset.asset_id %></li>
-                    <li><%= asset.name %></li>
+                    <li><a href="/asset_items/<%= asset.asset_id %>"><%= asset.name %></a></li>
                     <li><%= asset.serial_num %></li>
                 </ul>
             <% } %>

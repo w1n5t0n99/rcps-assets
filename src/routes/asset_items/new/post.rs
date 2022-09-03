@@ -1,14 +1,13 @@
 use actix_web::http::StatusCode;
 use actix_web::http::header::ContentType;
 use actix_web::{web, HttpResponse, ResponseError};
-use actix_web::error::InternalError;
 use anyhow::Context;
 use sqlx::{PgPool, Postgres, Transaction};
 use validator::Validate;
 use chrono::Utc;
 use actix_web_flash_messages::FlashMessage;
 
-use crate::utils::{error_chain_fmt, see_other, e500};
+use crate::utils::{error_chain_fmt, see_other};
 use crate::domain::Asset;
 
 
@@ -31,15 +30,15 @@ impl std::fmt::Debug for AddAssetError {
 impl ResponseError for AddAssetError {
     fn error_response(&self) -> HttpResponse<actix_web::body::BoxBody> {
         match self {
-            AddAssetError::ValidationError(e) => {
+            AddAssetError::ValidationError(_) => {
                 FlashMessage::error("Invalid user input.".to_string()).send();
                 see_other("/asset_items/new")
             },
-            AddAssetError::InsertError(e) => {
+            AddAssetError::InsertError(_) => {
                 FlashMessage::error("Could not add asset".to_string()).send();
                 see_other("/asset_items/new")
             },
-            AddAssetError::UnexpectedError(e) => {
+            AddAssetError::UnexpectedError(_) => {
                 HttpResponse::build(StatusCode::INTERNAL_SERVER_ERROR)
                 .insert_header(ContentType::html())
                 .body(self.to_string())

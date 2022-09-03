@@ -1,6 +1,6 @@
 <style>
     body {margin:0;}
-
+    
     ul.nav {
     list-style-type: none;
     margin: 0;
@@ -52,5 +52,14 @@
     padding: 15px 50px;
     }
 
+    .info {
+    display: flex;
+    flex-wrap: wrap;
+    }
+
+    .info * { box-sizing: border-box; }
+    .colA, .colB { width: 50%; }
+    .colA, .colB { padding: 10px; }
+    .colA, .colB { text-align: center; }
 
 </style>

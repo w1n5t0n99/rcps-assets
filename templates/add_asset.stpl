@@ -11,6 +11,7 @@
         <li><a href="/">Home</a></li>
         <li><a class="active" href="/asset_items">Asset Items</a></li>
         <li><a href="/">User Items</a></li>
+        <li><a href="/">Associations</a></li>
         <li><a href="/">Settings</a></li>
         <li style="float:right"><a href="/">Logout</a></li>
     </ul>

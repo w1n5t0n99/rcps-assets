@@ -9,7 +9,7 @@ pub struct PartialAsset {
     pub serial_num: String,
 }
 
-#[derive(Debug, Validate, serde::Deserialize)]
+#[derive(Debug, PartialEq, Validate, serde::Deserialize)]
 pub struct Asset {
     #[validate(custom = "custom_validate")]
     pub asset_id: String,

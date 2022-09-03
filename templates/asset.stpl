@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta http-equiv="content-type" content="text/html; charset=utf-8">
+        <title>Home</title>
+        <% include!("./nav_style.stpl"); %>
+    </head>
+    <body>
+        <ul class="nav">
+            <li><img src="/r-logo.png" alt="Grizzly"></li>
+            <li><a href="/">Home</a></li>
+            <li><a class="active" href="/asset_items">Asset Items</a></li>
+            <li><a href="/">User Items</a></li>
+            <li><a href="/">Associations</a></li>
+            <li><a href="/">Settings</a></li>
+            <li style="float:right"><a href="/">Logout</a></li>
+        </ul>
+        <div style="padding:75px;margin-top:30px;background-color:#ffffff;">
+            <div class="info">
+                <!-- FIRST ROW -->
+                <div class="colA">Asset ID:  <%= asset.asset_id %></div>
+                <div class="colB">Name:  <%= asset.name %></div>
+               
+                <!-- SECOND ROW -->
+                <div class="colA">Brand:  <%= asset.brand %></div>
+                <div class="colB">Model:  <%= asset.model %></div>
+
+                <!-- THIRD ROW -->
+                <div class="colA">Serial Number:  <%= asset.serial_num %></div>
+              </div>
+              <p><a href="/">Edit</a></p>
+        </div>
+    </body>
+</html>
