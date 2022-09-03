@@ -36,6 +36,44 @@
     },
     "query": "SELECT id, asset_id, name, serial_num FROM assets"
   },
+  "36f4ee766ccccc450c893c95664d89200b0aeca9e6675c7f90daac61b4459675": {
+    "describe": {
+      "columns": [
+        {
+          "name": "id",
+          "ordinal": 0,
+          "type_info": "Uuid"
+        },
+        {
+          "name": "asset_id",
+          "ordinal": 1,
+          "type_info": "Text"
+        },
+        {
+          "name": "name",
+          "ordinal": 2,
+          "type_info": "Text"
+        },
+        {
+          "name": "serial_num",
+          "ordinal": 3,
+          "type_info": "Text"
+        }
+      ],
+      "nullable": [
+        false,
+        false,
+        false,
+        false
+      ],
+      "parameters": {
+        "Left": [
+          "Text"
+        ]
+      }
+    },
+    "query": "SELECT id, asset_id, name, serial_num FROM assets WHERE name ILIKE $1"
+  },
   "43970bbf5af11e106a66d74070c6ba7552a58b4fac1430dbdd184f2717bb1a14": {
     "describe": {
       "columns": [],
