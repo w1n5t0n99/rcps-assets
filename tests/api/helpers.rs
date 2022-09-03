@@ -49,7 +49,7 @@ impl TestApplication {
     }
 
     pub async fn post_add_asset(&self, body: &impl serde::Serialize) -> reqwest::Response {
-        self.post_form("assets/add", body).await
+        self.post_form("asset_items/new", body).await
     }
 }
 

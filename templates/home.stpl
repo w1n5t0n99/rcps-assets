@@ -3,16 +3,24 @@
     <head>
         <meta http-equiv="content-type" content="text/html; charset=utf-8">
         <title>Home</title>
+        <% include!("./nav_style.stpl"); %>
     </head>
     <body>
-        <img src="/grizzly.png" alt="Grizzly">
-        <% for msg in &messages { %>
-            <% if msg.0 == Level::Success { %>
-                <p style="color:green;"><i><%= msg.1 %></i></p>
+        <ul class="nav">
+            <li><img src="/r-logo.png" alt="Grizzly"></li>
+            <li><a class="active" href="/">Home</a></li>
+            <li><a href="/asset_items">Asset Items</a></li>
+            <li><a href="/">User Items</a></li>
+            <li><a href="/">Settings</a></li>
+            <li style="float:right"><a href="/">Logout</a></li>
+        </ul>
+        <div style="padding:75px;margin-top:30px;background-color:#ffffff;">
+            <% for msg in &messages { %>
+                <% if msg.0 == Level::Success { %>
+                    <p style="color:green;"><i><%= msg.1 %></i></p>
+                <% } %>
             <% } %>
-        <% } %>
-        <p>Welcome to RCPS-ASSETS-GRIZZLY</p>
-        <p><a href="/assets">View Assets</a></p>
-        <p><a href="/assets/add">Add Asset</a></p>
+            <p>Welcome to RCPS-ASSETS</p>
+        </div>
     </body>
 </html>

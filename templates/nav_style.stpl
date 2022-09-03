@@ -1,0 +1,56 @@
+<style>
+    body {margin:0;}
+
+    ul.nav {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    background-color: rgb(100, 100, 100);
+    position: fixed;
+    top: 0;
+    width: 100%;
+    }
+
+    ul.nav img {
+        max-height: 75px;
+    }
+
+    ul.nav > li {
+    float: left;
+    }
+
+    ul.nav > li > a {
+    display: block;
+    color: white;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+    }
+
+    ul.nav > li > a:hover:not(.active) {
+    background-color: #111;
+    }
+
+    ul.nav .active {
+    background-color: #ae120c;
+    }
+
+    ul.asset-row {
+    list-style-type: none;
+    padding: 15;
+    overflow: hidden;
+    width: 100%;
+    }
+
+    ul.asset-row:hover {
+    background-color: rgb(136, 136, 136);
+    }
+
+    ul.asset-row > li {
+    float: left;
+    padding: 15px 50px;
+    }
+
+
+</style>

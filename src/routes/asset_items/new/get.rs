@@ -6,8 +6,7 @@ use sailfish::TemplateOnce;
 use crate::domain::AddAssetTemplate;
 
 
-#[tracing::instrument(name = "Add an asset form", skip(flash_messages))]
-pub async fn add_asset_form(flash_messages: IncomingFlashMessages) -> Result<HttpResponse, actix_web::Error> {
+pub async fn new_asset_form(flash_messages: IncomingFlashMessages) -> Result<HttpResponse, actix_web::Error> {
     let error_messages: Vec<(Level, String)> = flash_messages.iter()
         .map(|m| {
             (m.level(), m.content().to_string())     

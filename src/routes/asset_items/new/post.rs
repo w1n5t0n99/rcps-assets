@@ -33,11 +33,11 @@ impl ResponseError for AddAssetError {
         match self {
             AddAssetError::ValidationError(e) => {
                 FlashMessage::error("Invalid user input.".to_string()).send();
-                see_other("/assets/add")
+                see_other("/asset_items/new")
             },
             AddAssetError::InsertError(e) => {
                 FlashMessage::error("Could not add asset".to_string()).send();
-                see_other("/assets/add")
+                see_other("/asset_items/new")
             },
             AddAssetError::UnexpectedError(e) => {
                 HttpResponse::build(StatusCode::INTERNAL_SERVER_ERROR)
@@ -49,7 +49,7 @@ impl ResponseError for AddAssetError {
 }
 
 #[tracing::instrument(
-    name = "Add an asset",
+    name = "Add a new asset",
     skip(form, pool),
     fields(
         asset_id = %form.asset_id,
@@ -57,7 +57,7 @@ impl ResponseError for AddAssetError {
         serial_num = %form.serial_num
     )
 )]
-pub async fn add_asset(
+pub async fn new_asset(
     form: web::Form<Asset>,
     pool: web::Data<PgPool>,
 ) -> Result<HttpResponse, AddAssetError> {

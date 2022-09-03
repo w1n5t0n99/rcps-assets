@@ -1,9 +1,9 @@
 mod health_check;
 mod get_image;
 mod home;
-mod assets;
+mod asset_items;
 
 pub use health_check::*;
 pub use get_image::*;
 pub use home::*;
-pub use assets::*;
+pub use asset_items::*;

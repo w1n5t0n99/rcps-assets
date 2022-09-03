@@ -3,18 +3,38 @@
     <head>
         <meta http-equiv="content-type" content="text/html; charset=utf-8">
         <title>Assets</title>
+        <% include!("./nav_style.stpl"); %>
     </head>
     <body>
-        <p>Assets</p>
-
-        <% for (pos, asset) in assets.iter().enumerate() { %>
-            <% if pos.rem_euclid(2) == 0 { %>
-                <p style="color:gray;"><i><%= asset.name %></i></p>
-            <% } else { %>
-                <p><i><%= asset.name %></i></p>
+        <ul class="nav">
+            <li><img src="/r-logo.png" alt="Grizzly"></li>
+            <li><a href="/">Home</a></li>
+            <li><a class="active" href="/asset_items">Asset Items</a></li>
+            <li><a href="/">User Items</a></li>
+            <li><a href="/">Settings</a></li>
+            <li style="float:right"><a href="/">Logout</a></li>
+        </ul>
+        <div style="padding:75px;margin-top:30px;background-color:#ffffff;">
+            <form action="/asset_items" method="get">
+                <label>Search:<br>
+                    <input
+                        type="text"
+                        placeholder="asset name"
+                        name="name"
+                    >
+                </label>
+                <br>
+                <button type="submit">Search</button>
+            </form>
+    
+            <% for asset in assets.iter() { %>
+                <ul class="asset-row">
+                    <li><%= asset.asset_id %></li>
+                    <li><%= asset.name %></li>
+                    <li><%= asset.serial_num %></li>
+                </ul>
             <% } %>
-        <% } %>
-        <p><a href="/assets/add">Add Asset</a></p>
-        <p><a href="/">&lt;- Back</a></p>
+            <p><a href="/asset_items/new">Add Asset</a></p>
+        </div>
     </body>
 </html>

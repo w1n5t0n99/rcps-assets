@@ -3,15 +3,26 @@
 <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8">
     <title>Add Asset</title>
+    <% include!("./nav_style.stpl"); %>
 </head>
 <body>
+    <ul class="nav">
+        <li><img src="/r-logo.png" alt="Grizzly"></li>
+        <li><a href="/">Home</a></li>
+        <li><a class="active" href="/asset_items">Asset Items</a></li>
+        <li><a href="/">User Items</a></li>
+        <li><a href="/">Settings</a></li>
+        <li style="float:right"><a href="/">Logout</a></li>
+    </ul>
+    <div style="padding:75px;margin-top:30px;background-color:#ffffff;">
+
     <% for msg in &messages { %>
         <% if msg.0 == Level::Error { %>
             <p style="color:red;"><i><%= msg.1 %></i></p>
         <% } %>
     <% } %>
-
-    <form action="/assets/add" method="post">
+    
+    <form action="/asset_items/new" method="post">
         <label>Asset ID:<br>
             <input
                 type="text"
@@ -54,6 +65,6 @@
         <br>
         <button type="submit">Add</button>
     </form>
-    <p><a href="/">&lt;- Back</a></p>
+    </div>
 </body>
 </html>
