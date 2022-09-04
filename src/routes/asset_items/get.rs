@@ -1,9 +1,9 @@
-use actix_web::http::header::ContentType;
+use actix_web::http::header::{ContentType, CacheControl, CacheDirective};
 use actix_web::{HttpResponse, web, HttpRequest};
 use sailfish::TemplateOnce;
 use sqlx::PgPool;
 use crate::utils::e500;
-use crate::domain::{Asset, PartialAsset, AssetsTemplate};
+use crate::domain::{PartialAsset, AssetsTemplate};
 
 
 #[derive(serde::Deserialize)]
@@ -26,6 +26,11 @@ pub async fn asset_items_form(req: HttpRequest, pool: web::Data<PgPool>, query: 
 
     Ok(HttpResponse::Ok()
         .content_type(ContentType::html())
+        .insert_header(CacheControl( vec![
+            CacheDirective::NoCache,
+            CacheDirective::NoStore,
+            CacheDirective::MustRevalidate,
+        ]))
         .body(body))
 }
 
@@ -42,6 +47,7 @@ async fn retrieve_assets_filter(pool: &PgPool, search: &QueryParams) -> Result<V
             .iter()
             .map(|r| {
                 PartialAsset {
+                    id: r.id,
                     asset_id: r.asset_id.clone(),
                     name: r.name.clone(),
                     serial_num: r.serial_num.clone(),
@@ -59,6 +65,7 @@ async fn retrieve_assets_filter(pool: &PgPool, search: &QueryParams) -> Result<V
             .iter()
             .map(|r| {
                 PartialAsset {
+                    id: r.id,
                     asset_id: r.asset_id.clone(),
                     name: r.name.clone(),
                     serial_num: r.serial_num.clone(),

@@ -1,4 +1,5 @@
 use actix_web::http::header::ContentType;
+use actix_web::http::header::{CacheControl, CacheDirective};
 use actix_web::{HttpResponse, web};
 use sailfish::TemplateOnce;
 use sqlx::PgPool;
@@ -11,12 +12,12 @@ use crate::utils::e500;
     skip(path, pool),
     fields(asset_id=tracing::field::Empty)
 )]
-pub async fn edit_asset_form(path: web::Path<String>, pool: web::Data<PgPool>) -> Result<HttpResponse, actix_web::Error> {
-    let asset_id = path.into_inner();
+pub async fn edit_asset_form(path: web::Path<uuid::Uuid>, pool: web::Data<PgPool>) -> Result<HttpResponse, actix_web::Error> {
+    let id = path.into_inner();
 
-    tracing::Span::current().record("asset_id", &tracing::field::display(&asset_id));
+    tracing::Span::current().record("asset_id", &tracing::field::display(id));
 
-    let asset = retrieve_asset(&pool, &asset_id)
+    let asset = retrieve_asset(&pool, id)
         .await
         .map_err(e500)?;
 
@@ -24,21 +25,27 @@ pub async fn edit_asset_form(path: web::Path<String>, pool: web::Data<PgPool>) -
 
     Ok(HttpResponse::Ok()
         .content_type(ContentType::html())
+        .insert_header(CacheControl( vec![
+            CacheDirective::NoCache,
+            CacheDirective::NoStore,
+            CacheDirective::MustRevalidate,
+        ]))
         .body(body))
 }
 
-#[tracing::instrument(name = "Retrieve asset from database", skip(pool, asset_id))]
-async fn retrieve_asset(pool: &PgPool, asset_id: &str) -> Result<Asset, sqlx::Error> {
+#[tracing::instrument(name = "Retrieve asset from database", skip(pool, id))]
+async fn retrieve_asset(pool: &PgPool, id: uuid::Uuid) -> Result<Asset, sqlx::Error> {
 
     let r = sqlx::query!(
-        r#"SELECT * FROM assets WHERE asset_id = $1"#,
-        asset_id,
+        r#"SELECT * FROM assets WHERE id = $1"#,
+        id,
     )
     .fetch_one(pool)
     .await?;
 
     Ok(
         Asset {
+            id: r.id,
             asset_id: r.asset_id,
             name: r.name,
             serial_num: r.serial_num,

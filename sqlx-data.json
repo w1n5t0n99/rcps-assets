@@ -92,7 +92,24 @@
     },
     "query": "\n        INSERT INTO assets (id, asset_id, name, serial_num, model, brand, date_added)\n        VALUES ($1, $2, $3, $4, $5, $6, $7)\n        "
   },
-  "b10375d0cbd6c8db0ec6364e31ce600c14a6e8b8c3f9d6a7cc83a24da6182365": {
+  "bd96a08a02dd775d4249814d9923bec67e13890aaf6ab66873da80cf8957f5ee": {
+    "describe": {
+      "columns": [],
+      "nullable": [],
+      "parameters": {
+        "Left": [
+          "Text",
+          "Text",
+          "Text",
+          "Text",
+          "Text",
+          "Uuid"
+        ]
+      }
+    },
+    "query": "\n        UPDATE assets SET asset_id = $1, name = $2, serial_num = $3, model = $4, brand = $5\n        WHERE id = $6\n        "
+  },
+  "db0513d0023efff40c216d11ed9ec781586b797ac3460e66c5cfdfcbbc9c0506": {
     "describe": {
       "columns": [
         {
@@ -142,27 +159,10 @@
       ],
       "parameters": {
         "Left": [
-          "Text"
+          "Uuid"
         ]
       }
     },
-    "query": "SELECT * FROM assets WHERE asset_id = $1"
-  },
-  "cb4218ba05260ebb93677737a6d183acdd83b9a47cdbad5f59c63d1de758531a": {
-    "describe": {
-      "columns": [],
-      "nullable": [],
-      "parameters": {
-        "Left": [
-          "Text",
-          "Text",
-          "Text",
-          "Text",
-          "Text",
-          "Text"
-        ]
-      }
-    },
-    "query": "\n        UPDATE assets SET asset_id = $1, name = $2, serial_num = $3, model = $4, brand = $5\n        WHERE asset_id = $6\n        "
+    "query": "SELECT * FROM assets WHERE id = $1"
   }
 }

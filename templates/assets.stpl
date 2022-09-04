@@ -31,7 +31,7 @@
             <% for asset in assets.iter() { %>
                 <ul class="asset-row">
                     <li><%= asset.asset_id %></li>
-                    <li><a href="/asset_items/<%= asset.asset_id %>"><%= asset.name %></a></li>
+                    <li><a href="/asset_items/<%= asset.id.to_string() %>"><%= asset.name %></a></li>
                     <li><%= asset.serial_num %></li>
                 </ul>
             <% } %>

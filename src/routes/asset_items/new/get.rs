@@ -1,4 +1,4 @@
-use actix_web::http::header::ContentType;
+use actix_web::http::header::{ContentType, CacheControl, CacheDirective};
 use actix_web::HttpResponse;
 use actix_web_flash_messages::{IncomingFlashMessages, Level};
 use crate::utils::e500;
@@ -17,5 +17,10 @@ pub async fn new_asset_form(flash_messages: IncomingFlashMessages) -> Result<Htt
         
     Ok(HttpResponse::Ok()
         .content_type(ContentType::html())
+        .insert_header(CacheControl( vec![
+            CacheDirective::NoCache,
+            CacheDirective::NoStore,
+            CacheDirective::MustRevalidate,
+        ]))
         .body(body))
 }

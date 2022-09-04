@@ -16,7 +16,7 @@
             <li style="float:right"><a href="/">Logout</a></li>
         </ul>
         <div style="padding:75px;margin-top:30px;background-color:#ffffff;">
-            <form action="/asset_items/<%= asset.asset_id %>/edit" method="post">
+            <form action="/asset_items/<%= asset.id.to_string() %>/edit" method="post">
                 <div class="info">
                     <!-- FIRST ROW -->
                     <div class="colA"> <label>Asset ID:</label><input type="text" value="<%= asset.asset_id %>" name="asset_id"></div>

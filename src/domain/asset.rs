@@ -4,6 +4,7 @@ use unicode_segmentation::UnicodeSegmentation;
 
 #[derive(Debug, PartialEq)]
 pub struct PartialAsset {
+    pub id: uuid::Uuid,
     pub asset_id: String,
     pub name: String,
     pub serial_num: String,
@@ -11,6 +12,8 @@ pub struct PartialAsset {
 
 #[derive(Debug, PartialEq, Validate, serde::Deserialize)]
 pub struct Asset {
+    #[serde(default)]
+    pub id: uuid::Uuid,
     #[validate(custom = "custom_validate")]
     pub asset_id: String,
     #[validate(custom = "custom_validate")]
@@ -42,6 +45,7 @@ mod tests {
 
     fn get_test_asset(name: String) -> Asset {
         Asset {
+            id: uuid::Uuid::new_v4(),
             asset_id: "1156973".to_string(),
             name: name,
             serial_num: "".to_string(),
