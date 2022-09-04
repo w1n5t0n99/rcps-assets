@@ -1,10 +1,11 @@
 use actix_web::http::header::ContentType;
 use actix_web::http::header::{CacheControl, CacheDirective};
 use actix_web::{HttpResponse, web};
+use anyhow::Context;
 use sailfish::TemplateOnce;
 use sqlx::PgPool;
 use crate::domain::{Asset, EditAssetTemplate};
-use crate::utils::e500;
+use crate::utils::{e500, RedirectError};
 
 
 #[tracing::instrument( 
@@ -12,8 +13,10 @@ use crate::utils::e500;
     skip(path, pool),
     fields(asset_id=tracing::field::Empty)
 )]
-pub async fn edit_asset_form(path: web::Path<uuid::Uuid>, pool: web::Data<PgPool>) -> Result<HttpResponse, actix_web::Error> {
-    let id = path.into_inner();
+pub async fn edit_asset_form(path: web::Path<String>, pool: web::Data<PgPool>) -> Result<HttpResponse, actix_web::Error> {
+    let id = uuid::Uuid::parse_str(path.into_inner().as_str())
+        .context("Failed to parse id")
+        .map_err(|e| RedirectError::E500(e, "/asset_items".to_string()))?;
 
     tracing::Span::current().record("asset_id", &tracing::field::display(id));
 

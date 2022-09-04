@@ -1,13 +1,15 @@
 mod edit;
 pub use edit::{edit_asset, edit_asset_form};
+
 use actix_web::http::header::{CacheControl, CacheDirective};
 use actix_web_flash_messages::{IncomingFlashMessages, Level};
 use actix_web::http::header::ContentType;
 use actix_web::{HttpResponse, web};
 use sailfish::TemplateOnce;
 use sqlx::PgPool;
+use anyhow::Context;
 use crate::domain::{Asset, AssetTemplate};
-use crate::utils::e500;
+use crate::utils::{RedirectError, e500};
 
 
 #[tracing::instrument( 
@@ -15,8 +17,11 @@ use crate::utils::e500;
     skip(flash_messages, path, pool),
     fields(asset_id=tracing::field::Empty)
 )]
-pub async fn get_asset(flash_messages: IncomingFlashMessages, path: web::Path<uuid::Uuid>, pool: web::Data<PgPool>) -> Result<HttpResponse, actix_web::Error> {
-    let id = path.into_inner();
+pub async fn get_asset(flash_messages: IncomingFlashMessages, path: web::Path<String>, pool: web::Data<PgPool>) -> Result<HttpResponse, actix_web::Error> {
+    let id = uuid::Uuid::parse_str(path.into_inner().as_str())
+        .context("Failed to parse id")
+        .map_err(|e| RedirectError::E500(e, "/asset_items".to_string()))?;
+
     let error_messages: Vec<(Level, String)> = flash_messages.iter()
         .map(|m| {
             (m.level(), m.content().to_string())     
@@ -27,7 +32,8 @@ pub async fn get_asset(flash_messages: IncomingFlashMessages, path: web::Path<uu
 
     let asset = retrieve_asset(&pool, id)
         .await
-        .map_err(e500)?;
+        .context("Failed to retrieve asset")
+        .map_err(|e| RedirectError::E500(e, "/asset_items".to_string()))?;
 
     let body = AssetTemplate{messages: error_messages, asset: asset}.render_once().map_err(e500)?;
 
