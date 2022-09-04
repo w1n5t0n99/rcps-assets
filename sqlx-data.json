@@ -147,5 +147,22 @@
       }
     },
     "query": "SELECT * FROM assets WHERE asset_id = $1"
+  },
+  "cb4218ba05260ebb93677737a6d183acdd83b9a47cdbad5f59c63d1de758531a": {
+    "describe": {
+      "columns": [],
+      "nullable": [],
+      "parameters": {
+        "Left": [
+          "Text",
+          "Text",
+          "Text",
+          "Text",
+          "Text",
+          "Text"
+        ]
+      }
+    },
+    "query": "\n        UPDATE assets SET asset_id = $1, name = $2, serial_num = $3, model = $4, brand = $5\n        WHERE asset_id = $6\n        "
   }
 }

@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta http-equiv="content-type" content="text/html; charset=utf-8">
+        <title>Home</title>
+        <% include!("./nav_style.stpl"); %>
+    </head>
+    <body>
+        <ul class="nav">
+            <li><img src="/r-logo.png" alt="Grizzly"></li>
+            <li><a href="/">Home</a></li>
+            <li><a class="active" href="/asset_items">Asset Items</a></li>
+            <li><a href="/">User Items</a></li>
+            <li><a href="/">Associations</a></li>
+            <li><a href="/">Settings</a></li>
+            <li style="float:right"><a href="/">Logout</a></li>
+        </ul>
+        <div style="padding:75px;margin-top:30px;background-color:#ffffff;">
+            <form action="/asset_items/<%= asset.asset_id %>/edit" method="post">
+                <div class="info">
+                    <!-- FIRST ROW -->
+                    <div class="colA"> <label>Asset ID:</label><input type="text" value="<%= asset.asset_id %>" name="asset_id"></div>
+                    <div class="colB"> <label>Name:</label><input type="text" value="<%= asset.name %>" name="name"></div>
+                   
+                    <!-- SECOND ROW -->
+                    <div class="colA"> <label>Brand:</label><input type="text" value="<%= asset.brand %>" name="brand"></div>
+                    <div class="colB"> <label>Model:</label><input type="text" value="<%= asset.model %>" name="model"></div>
+    
+                    <!-- THIRD ROW -->
+                    <div class="colA"> <label>Serial Number:</label><input type="text" value="<%= asset.serial_num %>" name="serial_num"></div>
+                </div>
+                <button type="submit">Save</button>
+            </form>
+        </div>
+    </body>
+</html>

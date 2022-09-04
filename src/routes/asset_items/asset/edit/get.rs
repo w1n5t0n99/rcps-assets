@@ -1,27 +1,18 @@
-mod edit;
-pub use edit::{edit_asset, edit_asset_form};
-
-use actix_web_flash_messages::{IncomingFlashMessages, Level};
 use actix_web::http::header::ContentType;
 use actix_web::{HttpResponse, web};
 use sailfish::TemplateOnce;
 use sqlx::PgPool;
-use crate::domain::{Asset, AssetTemplate};
+use crate::domain::{Asset, EditAssetTemplate};
 use crate::utils::e500;
 
 
 #[tracing::instrument( 
-    name = "View asset",
-    skip(flash_messages, path, pool),
+    name = "Edit asset form",
+    skip(path, pool),
     fields(asset_id=tracing::field::Empty)
 )]
-pub async fn get_asset(flash_messages: IncomingFlashMessages, path: web::Path<String>, pool: web::Data<PgPool>) -> Result<HttpResponse, actix_web::Error> {
+pub async fn edit_asset_form(path: web::Path<String>, pool: web::Data<PgPool>) -> Result<HttpResponse, actix_web::Error> {
     let asset_id = path.into_inner();
-    let error_messages: Vec<(Level, String)> = flash_messages.iter()
-        .map(|m| {
-            (m.level(), m.content().to_string())     
-        })
-        .collect();
 
     tracing::Span::current().record("asset_id", &tracing::field::display(&asset_id));
 
@@ -29,7 +20,7 @@ pub async fn get_asset(flash_messages: IncomingFlashMessages, path: web::Path<St
         .await
         .map_err(e500)?;
 
-    let body = AssetTemplate{messages: error_messages, asset: asset}.render_once().map_err(e500)?;
+    let body = EditAssetTemplate{asset: asset}.render_once().map_err(e500)?;
 
     Ok(HttpResponse::Ok()
         .content_type(ContentType::html())
