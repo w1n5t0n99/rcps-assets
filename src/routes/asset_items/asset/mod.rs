@@ -20,7 +20,7 @@ use crate::utils::{RedirectError, e500};
 pub async fn get_asset(flash_messages: IncomingFlashMessages, path: web::Path<String>, pool: web::Data<PgPool>) -> Result<HttpResponse, actix_web::Error> {
     let id = uuid::Uuid::parse_str(path.into_inner().as_str())
         .context("Failed to parse id")
-        .map_err(|e| RedirectError::E500(e, "/asset_items".to_string()))?;
+        .map_err(|e| RedirectError::new(e, "/asset_items".to_string()))?;
 
     let error_messages: Vec<(Level, String)> = flash_messages.iter()
         .map(|m| {
@@ -33,7 +33,7 @@ pub async fn get_asset(flash_messages: IncomingFlashMessages, path: web::Path<St
     let asset = retrieve_asset(&pool, id)
         .await
         .context("Failed to retrieve asset")
-        .map_err(|e| RedirectError::E500(e, "/asset_items".to_string()))?;
+        .map_err(|e| RedirectError::new(e, "/asset_items".to_string()))?;
 
     let body = AssetTemplate{messages: error_messages, asset: asset}.render_once().map_err(e500)?;
 

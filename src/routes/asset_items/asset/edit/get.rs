@@ -16,7 +16,7 @@ use crate::utils::{e500, RedirectError};
 pub async fn edit_asset_form(path: web::Path<String>, pool: web::Data<PgPool>) -> Result<HttpResponse, actix_web::Error> {
     let id = uuid::Uuid::parse_str(path.into_inner().as_str())
         .context("Failed to parse id")
-        .map_err(|e| RedirectError::E500(e, "/asset_items".to_string()))?;
+        .map_err(|e| RedirectError::new(e, "/asset_items".to_string()))?;
 
     tracing::Span::current().record("asset_id", &tracing::field::display(id));
 

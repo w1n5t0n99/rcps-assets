@@ -27,7 +27,7 @@ pub async fn edit_asset(
         .context("Failed to convert form to asset.")
         .map_err(|e| {
             FlashMessage::error("Invalid user input.".to_string()).send();
-            RedirectError::E400(e, format!("/asset_items/{}", asset.id))
+            RedirectError::new(e, format!("/asset_items/{}", asset.id))
         })?;
 
     let mut transaction = pool.begin()
@@ -40,7 +40,7 @@ pub async fn edit_asset(
         .context("Failed to update asset in database")
         .map_err(|e| {
             FlashMessage::error("Could not update asset".to_string()).send();
-            RedirectError::E500(e, format!("/asset_items/{}", asset.id))
+            RedirectError::new(e, format!("/asset_items/{}", asset.id))
         })?;
 
     transaction

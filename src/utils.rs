@@ -1,6 +1,6 @@
+
 use actix_web::http::header::LOCATION;
 use actix_web::{HttpResponse, ResponseError};
-use reqwest::StatusCode;
 
 
 pub fn error_chain_fmt(
@@ -17,11 +17,19 @@ pub fn error_chain_fmt(
 }
 
 #[derive(thiserror::Error)]
-pub enum RedirectError {
-    #[error("Error 500 - redirect")]
-    E500(#[source] anyhow::Error, String),
-    #[error("Error 400 - redirect")]
-    E400(#[source] anyhow::Error, String),
+#[error("Redirect on Error")]
+pub struct RedirectError {
+    location: String,
+    source: anyhow::Error,
+}
+
+impl RedirectError {
+    pub fn new(source: anyhow::Error, location: String) -> Self {
+        Self {
+            location,
+            source,
+        }
+    }
 }
 
 impl std::fmt::Debug for RedirectError {
@@ -31,26 +39,8 @@ impl std::fmt::Debug for RedirectError {
 }
 
 impl ResponseError for RedirectError {
-    fn status_code(&self) -> StatusCode {
-        match self {
-            RedirectError::E500(_, _) => StatusCode::INTERNAL_SERVER_ERROR,
-            RedirectError::E400(_, _) => StatusCode::BAD_REQUEST,
-        }
-    }
-
     fn error_response(&self) -> HttpResponse<actix_web::body::BoxBody> {
-        match self {
-            RedirectError::E500(_, location) => {
-                HttpResponse::SeeOther()
-                    .insert_header((LOCATION, location.as_str()))
-                    .finish()
-            },
-            RedirectError::E400(_, location) => {
-                HttpResponse::SeeOther()
-                    .insert_header((LOCATION, location.as_str()))
-                    .finish()
-            },
-        }
+        see_other(self.location.as_str())
     }
 }
 
