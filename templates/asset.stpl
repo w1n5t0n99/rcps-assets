@@ -37,7 +37,7 @@
                 <!-- THIRD ROW -->
                 <div class="colA">Serial Number:  <%= asset.serial_num %></div>
               </div>
-              <p><a href="/asset_items/<%= asset.id.to_string() %>/edit">Edit</a></p>
+              <p><a href="/asset_items/<%= asset.sid.to_string() %>/edit">Edit</a></p>
         </div>
     </body>
 </html>

@@ -31,11 +31,15 @@
             <% for asset in assets.iter() { %>
                 <ul class="asset-row">
                     <li><%= asset.asset_id %></li>
-                    <li><a href="/asset_items/<%= asset.id.to_string() %>"><%= asset.name %></a></li>
+                    <li><a href="/asset_items/<%= asset.sid.to_string() %>"><%= asset.name %></a></li>
                     <li><%= asset.serial_num %></li>
                 </ul>
             <% } %>
             <p><a href="/asset_items/new">Add Asset</a></p>
+        </div>
+        <div class="Paginate">
+            <a href="<%= prev_uri %>" class="PagPrev">Prev</a>
+            <a href="<%= next_uri %>" class="PagNext">Next</a>
         </div>
     </body>
 </html>

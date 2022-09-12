@@ -13,13 +13,13 @@ use crate::domain::Asset;
     skip(path, form, pool),
 )]
 pub async fn edit_asset(
-    path: web::Path<uuid::Uuid>,
+    path: web::Path<i32>,
     form: web::Form<Asset>,
     pool: web::Data<PgPool>,
 ) -> Result<HttpResponse, actix_web::Error> {
     let asset = { 
         let mut a = form.0;
-        a.id = path.into_inner();
+        a.sid = path.into_inner();
         a
     };
 
@@ -27,7 +27,7 @@ pub async fn edit_asset(
         .context("Failed to convert form to asset.")
         .map_err(|e| {
             FlashMessage::error("Invalid user input.".to_string()).send();
-            RedirectError::new(e, format!("/asset_items/{}", asset.id))
+            RedirectError::new(e, format!("/asset_items/{}", asset.sid))
         })?;
 
     let mut transaction = pool.begin()
@@ -40,7 +40,7 @@ pub async fn edit_asset(
         .context("Failed to update asset in database")
         .map_err(|e| {
             FlashMessage::error("Could not update asset".to_string()).send();
-            RedirectError::new(e, format!("/asset_items/{}", asset.id))
+            RedirectError::new(e, format!("/asset_items/{}", asset.sid))
         })?;
 
     transaction
@@ -51,7 +51,7 @@ pub async fn edit_asset(
 
     FlashMessage::success("Asset successfully added.".to_string()).send();
     // Asset was updated redirect to new ID
-    Ok(see_other(format!("/asset_items/{}", asset.id).as_str()))
+    Ok(see_other(format!("/asset_items/{}", asset.sid).as_str()))
 }
 
 #[tracing::instrument(name = "Updating asset details in database", skip(transaction, asset))]
@@ -59,14 +59,14 @@ async fn update_asset( transaction: &mut Transaction<'_, Postgres>, asset: &Asse
     sqlx::query!(
         r#"
         UPDATE assets SET asset_id = $1, name = $2, serial_num = $3, model = $4, brand = $5
-        WHERE id = $6
+        WHERE sid = $6
         "#,
         asset.asset_id,
         asset.name,
         asset.serial_num,
         asset.model,
         asset.brand,
-        asset.id,
+        asset.sid,
     )
     .execute(transaction)
     .await?;

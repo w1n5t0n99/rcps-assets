@@ -62,6 +62,21 @@
     .colA, .colB { padding: 10px; }
     .colA, .colB { text-align: center; }
 
-    
+    .Paginate {
+        background-color: rgb(100, 100, 100);
+        font-family: 'Oswald', sans-serif;
+        font-size: 1rem;
+        min-height: 2.75rem;
+        display: flex;
+        align-items: center;
+        padding: 0 1rem;
+    }
+
+    .PagPrev {
+        margin-right: 1rem;
+    }
+    .PagNext {
+        margin-left: auto;
+    }
 
 </style>

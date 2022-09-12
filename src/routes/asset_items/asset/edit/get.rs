@@ -13,12 +13,9 @@ use crate::utils::{e500, RedirectError};
     skip(path, pool),
     fields(asset_id=tracing::field::Empty)
 )]
-pub async fn edit_asset_form(path: web::Path<String>, pool: web::Data<PgPool>) -> Result<HttpResponse, actix_web::Error> {
-    let id = uuid::Uuid::parse_str(path.into_inner().as_str())
-        .context("Failed to parse id")
-        .map_err(|e| RedirectError::new(e, "/asset_items".to_string()))?;
-
-    tracing::Span::current().record("asset_id", &tracing::field::display(id));
+pub async fn edit_asset_form(path: web::Path<i32>, pool: web::Data<PgPool>) -> Result<HttpResponse, actix_web::Error> {
+    let id = path.into_inner();
+    tracing::Span::current().record("id", &tracing::field::display(id));
 
     let asset = retrieve_asset(&pool, id)
         .await
@@ -37,10 +34,10 @@ pub async fn edit_asset_form(path: web::Path<String>, pool: web::Data<PgPool>) -
 }
 
 #[tracing::instrument(name = "Retrieve asset from database", skip(pool, id))]
-async fn retrieve_asset(pool: &PgPool, id: uuid::Uuid) -> Result<Asset, sqlx::Error> {
+async fn retrieve_asset(pool: &PgPool, id: i32) -> Result<Asset, sqlx::Error> {
 
     let r = sqlx::query!(
-        r#"SELECT * FROM assets WHERE id = $1"#,
+        r#"SELECT * FROM assets WHERE sid = $1"#,
         id,
     )
     .fetch_one(pool)
@@ -48,7 +45,7 @@ async fn retrieve_asset(pool: &PgPool, id: uuid::Uuid) -> Result<Asset, sqlx::Er
 
     Ok(
         Asset {
-            id: r.id,
+            sid: r.sid,
             asset_id: r.asset_id,
             name: r.name,
             serial_num: r.serial_num,

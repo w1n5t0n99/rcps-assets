@@ -2,18 +2,18 @@ use validator::{ValidationError, Validate};
 use unicode_segmentation::UnicodeSegmentation;
 
 
-#[derive(Debug, PartialEq)]
+#[derive(Debug, PartialEq, sqlx::FromRow)]
 pub struct PartialAsset {
-    pub id: uuid::Uuid,
+    pub sid: i32,
     pub asset_id: String,
     pub name: String,
     pub serial_num: String,
 }
 
-#[derive(Debug, PartialEq, Validate, serde::Deserialize)]
+#[derive(Debug, PartialEq, Validate, serde::Deserialize, sqlx::FromRow)]
 pub struct Asset {
     #[serde(default)]
-    pub id: uuid::Uuid,
+    pub sid: i32,
     #[validate(custom = "custom_validate")]
     pub asset_id: String,
     #[validate(custom = "custom_validate")]
@@ -45,7 +45,7 @@ mod tests {
 
     fn get_test_asset(name: String) -> Asset {
         Asset {
-            id: uuid::Uuid::new_v4(),
+            sid: 0,
             asset_id: "1156973".to_string(),
             name: name,
             serial_num: "".to_string(),

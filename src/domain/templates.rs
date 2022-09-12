@@ -12,6 +12,8 @@ pub struct HomeTemplate {
 #[derive(TemplateOnce, Debug, PartialEq)] 
 #[template(path = "assets.stpl")]
 pub struct AssetsTemplate {
+    pub next_uri: String,
+    pub prev_uri: String,
     pub assets: Vec<PartialAsset>,
 }
 
