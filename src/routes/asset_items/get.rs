@@ -181,7 +181,7 @@ async fn retrieve_rev_assets(pool: &PgPool, id: i32) -> Result<Vec<PartialAsset>
             r#"SELECT sid, asset_id, name, serial_num
             FROM (
                 SELECT sid, asset_id, name, serial_num FROM assets
-                WHERE sid <= $1
+                WHERE sid < $1
                 ORDER BY sid DESC
                 LIMIT 5
             ) as t
