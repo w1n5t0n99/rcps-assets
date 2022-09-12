@@ -26,7 +26,6 @@ pub enum QueryPag {
     #[serde(rename = "prev")]
     #[serde(deserialize_with = "deserialize_number_from_string")]
     Prev(i32),
-    None,
 }
 
 #[derive(serde::Deserialize, serde::Serialize, Debug, Clone)]
@@ -43,12 +42,19 @@ pub struct QueryParams {
     fields(query=req.query_string())
 )]
 pub async fn asset_items_form(req: HttpRequest, pool: web::Data<PgPool>, query: web::Query<QueryParams>) -> Result<HttpResponse, actix_web::Error> {
-    let assets = retrieve_assets(&pool, query.0.clone())
+    let mut assets = retrieve_assets(&pool, query.0.search.clone(), query.0.pag.clone())
         .await
         .map_err(e500)?;
 
-    let next = assets.last().map_or(QueryPag::None, |a| QueryPag::Next(a.sid));
-    let prev = assets.first().map_or(QueryPag::None, |a| QueryPag::Prev(a.sid));
+    //if no assets were found try wrapping around to the first page
+    if assets.len() == 0 {
+        assets = retrieve_assets(&pool, query.0.search.clone(), Some(QueryPag::Next(0)))
+            .await
+            .map_err(e500)?;
+    }
+
+    let next = assets.last().map_or(QueryPag::Next(0), |a| QueryPag::Next(a.sid));
+    let prev = assets.first().map_or(QueryPag::Next(0), |a| QueryPag::Prev(a.sid));
 
     let next_uri = get_pag_uri(req.uri().path(), query.0.clone(), next);
     let prev_uri = get_pag_uri(req.uri().path(), query.0.clone(), prev);
@@ -77,24 +83,31 @@ fn get_pag_uri(path: &str, mut query: QueryParams, pag: QueryPag) -> String {
 }
 
 
-#[tracing::instrument(name = "Retrieve assets from database", skip(pool, params))]
-async fn retrieve_assets(pool: &PgPool, params: QueryParams) -> Result<Vec<PartialAsset>, sqlx::Error> {
-    let search = params.search.unwrap_or(QuerySearch::None);
-    let pag = params.pag.unwrap_or(QueryPag::None);
+#[tracing::instrument(name = "Retrieve assets from database", skip(pool, search, pag))]
+async fn retrieve_assets(pool: &PgPool, search: Option<QuerySearch>, pag: Option<QueryPag>) -> Result<Vec<PartialAsset>, sqlx::Error> {
+    let search = search.unwrap_or(QuerySearch::None);
+    let pag = pag.unwrap_or(QueryPag::Next(0));
 
-    let id = match pag {
-        QueryPag::Next(id) => id,
-        QueryPag::Prev(id) => id,
-        QueryPag::None => 0,
-    };
-
-    match search {
-       QuerySearch::AssetID(asset_id) => retrieve_fwd_assets_filter_by_asset_id(pool, id, asset_id).await,
-       QuerySearch::Name(name) => retrieve_fwd_assets_filter_by_name(pool, id, name).await,
-       QuerySearch::Serial(serial_num) => retrieve_fwd_assets_filter_by_serial_num(pool, id, serial_num).await,
-       QuerySearch::None => retrieve_fwd_assets(pool, id).await,
+   match pag {
+        QueryPag::Next(id) => {
+            match search {
+                QuerySearch::AssetID(asset_id) => retrieve_fwd_assets_filter_by_asset_id(pool, id, asset_id).await,
+                QuerySearch::Name(name) => retrieve_fwd_assets_filter_by_name(pool, id, name).await,
+                QuerySearch::Serial(serial_num) => retrieve_fwd_assets_filter_by_serial_num(pool, id, serial_num).await,
+                QuerySearch::None => retrieve_fwd_assets(pool, id).await,
+            }
+        }
+        QueryPag::Prev(id) => {
+            match search {
+                QuerySearch::AssetID(asset_id) => retrieve_fwd_assets_filter_by_asset_id(pool, id, asset_id).await,
+                QuerySearch::Name(name) => retrieve_fwd_assets_filter_by_name(pool, id, name).await,
+                QuerySearch::Serial(serial_num) => retrieve_fwd_assets_filter_by_serial_num(pool, id, serial_num).await,
+                QuerySearch::None => retrieve_rev_assets(pool, id).await,
+            }
+        }
     }
 }
+
 
 async fn retrieve_fwd_assets_filter_by_name(pool: &PgPool, id: i32, name: String) -> Result<Vec<PartialAsset>, sqlx::Error> {
     let results: Vec<PartialAsset> = sqlx::query_as!(
@@ -154,6 +167,25 @@ async fn retrieve_fwd_assets(pool: &PgPool, id: i32) -> Result<Vec<PartialAsset>
             WHERE sid > $1
             ORDER BY sid ASC
             LIMIT 5"#,
+            id
+        )
+        .fetch_all(pool)
+        .await?;    
+
+    Ok(results)
+}
+
+async fn retrieve_rev_assets(pool: &PgPool, id: i32) -> Result<Vec<PartialAsset>, sqlx::Error> {
+    let results: Vec<PartialAsset> = sqlx::query_as!(
+            PartialAsset,
+            r#"SELECT sid, asset_id, name, serial_num
+            FROM (
+                SELECT sid, asset_id, name, serial_num FROM assets
+                WHERE sid <= $1
+                ORDER BY sid DESC
+                LIMIT 5
+            ) as t
+            ORDER BY sid ASC"#,
             id
         )
         .fetch_all(pool)
