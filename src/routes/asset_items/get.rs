@@ -99,9 +99,9 @@ async fn retrieve_assets(pool: &PgPool, search: Option<QuerySearch>, pag: Option
         }
         QueryPag::Prev(id) => {
             match search {
-                QuerySearch::AssetID(asset_id) => retrieve_fwd_assets_filter_by_asset_id(pool, id, asset_id).await,
-                QuerySearch::Name(name) => retrieve_fwd_assets_filter_by_name(pool, id, name).await,
-                QuerySearch::Serial(serial_num) => retrieve_fwd_assets_filter_by_serial_num(pool, id, serial_num).await,
+                QuerySearch::AssetID(asset_id) => retrieve_rev_assets_filter_by_asset_id(pool, id, asset_id).await,
+                QuerySearch::Name(name) => retrieve_rev_assets_filter_by_name(pool, id, name).await,
+                QuerySearch::Serial(serial_num) => retrieve_rev_assets_filter_by_serial_num(pool, id, serial_num).await,
                 QuerySearch::None => retrieve_rev_assets(pool, id).await,
             }
         }
@@ -167,6 +167,69 @@ async fn retrieve_fwd_assets(pool: &PgPool, id: i32) -> Result<Vec<PartialAsset>
             WHERE sid > $1
             ORDER BY sid ASC
             LIMIT 5"#,
+            id
+        )
+        .fetch_all(pool)
+        .await?;    
+
+    Ok(results)
+}
+
+async fn retrieve_rev_assets_filter_by_name(pool: &PgPool, id: i32, name: String) -> Result<Vec<PartialAsset>, sqlx::Error> {
+    let results: Vec<PartialAsset> = sqlx::query_as!(
+            PartialAsset,
+            r#"SELECT sid, asset_id, name, serial_num
+            FROM (
+                SELECT sid, asset_id, name, serial_num FROM assets
+                WHERE name ILIKE $1
+                AND sid < $2
+                ORDER BY sid DESC
+                LIMIT 5
+            ) as t
+            ORDER BY sid ASC"#,
+            format!("%{}%", name),
+            id
+        )
+        .fetch_all(pool)
+        .await?;    
+
+    Ok(results)
+}
+
+async fn retrieve_rev_assets_filter_by_serial_num(pool: &PgPool, id: i32, serial_num: String) -> Result<Vec<PartialAsset>, sqlx::Error> {
+    let results: Vec<PartialAsset> = sqlx::query_as!(
+            PartialAsset,
+            r#"SELECT sid, asset_id, name, serial_num
+            FROM (
+                SELECT sid, asset_id, name, serial_num FROM assets
+                WHERE serial_num ILIKE $1
+                AND sid < $2
+                ORDER BY sid DESC
+                LIMIT 5
+            ) as t
+            ORDER BY sid ASC"#,
+            format!("%{}%", serial_num),
+            id
+        )
+        .fetch_all(pool)
+        .await?;    
+
+    Ok(results)
+}
+
+async fn retrieve_rev_assets_filter_by_asset_id(pool: &PgPool, id: i32, asset_id: String) -> Result<Vec<PartialAsset>, sqlx::Error> {
+    let results: Vec<PartialAsset> = sqlx::query_as!(
+            PartialAsset,
+            r#"SELECT sid, asset_id, name, serial_num
+            FROM (
+                SELECT sid, asset_id, name, serial_num FROM assets
+                WHERE asset_id ILIKE $1
+                AND sid < $2
+                ORDER BY sid DESC
+                LIMIT 5
+            ) as t
+            ORDER BY sid ASC"#,
+            format!("%{}%", asset_id),
             id
         )
         .fetch_all(pool)

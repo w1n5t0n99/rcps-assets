@@ -62,6 +62,84 @@
     },
     "query": "SELECT * FROM assets WHERE sid = $1"
   },
+  "0d5ba75807827bc39f52a8b8ef570fed3fb58a37e10ecb752cdbf85eb6dda5fe": {
+    "describe": {
+      "columns": [
+        {
+          "name": "sid",
+          "ordinal": 0,
+          "type_info": "Int4"
+        },
+        {
+          "name": "asset_id",
+          "ordinal": 1,
+          "type_info": "Text"
+        },
+        {
+          "name": "name",
+          "ordinal": 2,
+          "type_info": "Text"
+        },
+        {
+          "name": "serial_num",
+          "ordinal": 3,
+          "type_info": "Text"
+        }
+      ],
+      "nullable": [
+        false,
+        false,
+        false,
+        false
+      ],
+      "parameters": {
+        "Left": [
+          "Text",
+          "Int4"
+        ]
+      }
+    },
+    "query": "SELECT sid, asset_id, name, serial_num\n            FROM (\n                SELECT sid, asset_id, name, serial_num FROM assets\n                WHERE serial_num ILIKE $1\n                AND sid < $2\n                ORDER BY sid DESC\n                LIMIT 5\n            ) as t\n            ORDER BY sid ASC"
+  },
+  "3269d43b65b50b503f136f6a711a529b3fbba6bb02e99faa9048ee9a16c7b1e4": {
+    "describe": {
+      "columns": [
+        {
+          "name": "sid",
+          "ordinal": 0,
+          "type_info": "Int4"
+        },
+        {
+          "name": "asset_id",
+          "ordinal": 1,
+          "type_info": "Text"
+        },
+        {
+          "name": "name",
+          "ordinal": 2,
+          "type_info": "Text"
+        },
+        {
+          "name": "serial_num",
+          "ordinal": 3,
+          "type_info": "Text"
+        }
+      ],
+      "nullable": [
+        false,
+        false,
+        false,
+        false
+      ],
+      "parameters": {
+        "Left": [
+          "Text",
+          "Int4"
+        ]
+      }
+    },
+    "query": "SELECT sid, asset_id, name, serial_num\n            FROM (\n                SELECT sid, asset_id, name, serial_num FROM assets\n                WHERE name ILIKE $1\n                AND sid < $2\n                ORDER BY sid DESC\n                LIMIT 5\n            ) as t\n            ORDER BY sid ASC"
+  },
   "39f670e7cea5b495feb9f0a6ca7d6e9b713c2bf54ba2fbbeb46b127d4ae832e5": {
     "describe": {
       "columns": [
@@ -99,6 +177,45 @@
       }
     },
     "query": "SELECT sid, asset_id, name, serial_num FROM assets\n            WHERE sid > $1\n            ORDER BY sid ASC\n            LIMIT 5"
+  },
+  "3e281f1e53d6e5e881c264e2602317ccf77523038d39c247fdb3dec1e0fdc8e6": {
+    "describe": {
+      "columns": [
+        {
+          "name": "sid",
+          "ordinal": 0,
+          "type_info": "Int4"
+        },
+        {
+          "name": "asset_id",
+          "ordinal": 1,
+          "type_info": "Text"
+        },
+        {
+          "name": "name",
+          "ordinal": 2,
+          "type_info": "Text"
+        },
+        {
+          "name": "serial_num",
+          "ordinal": 3,
+          "type_info": "Text"
+        }
+      ],
+      "nullable": [
+        false,
+        false,
+        false,
+        false
+      ],
+      "parameters": {
+        "Left": [
+          "Text",
+          "Int4"
+        ]
+      }
+    },
+    "query": "SELECT sid, asset_id, name, serial_num\n            FROM (\n                SELECT sid, asset_id, name, serial_num FROM assets\n                WHERE asset_id ILIKE $1\n                AND sid < $2\n                ORDER BY sid DESC\n                LIMIT 5\n            ) as t\n            ORDER BY sid ASC"
   },
   "43970bbf5af11e106a66d74070c6ba7552a58b4fac1430dbdd184f2717bb1a14": {
     "describe": {
