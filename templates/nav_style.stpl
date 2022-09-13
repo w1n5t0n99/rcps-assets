@@ -1,5 +1,43 @@
 <style>
     body {margin:0;}
+
+    .MenuWrap {
+        background-color: rgb(100, 100, 100);
+        font-family: 'Oswald', sans-serif;
+        font-size: 1rem;
+        min-height: 2.75rem;
+        display: flex;
+        align-items: center;
+        padding: 0 1rem;
+    }
+
+    .LogoItem,
+    .ListItem,
+    .LastItem {
+        color: #ebebeb;
+        text-decoration: none;
+    }
+
+    .ListItem:hover {
+    background-color: #111;
+    }
+
+    .ListItem .active {
+    background-color: #ae120c;
+    }
+
+    .LogoItem,
+    .ListItem {
+        margin-right: 1rem;
+    }
+
+    .LastItem {
+        margin-left: auto;
+    }
+
+    .LogoItem {
+        max-height: 75px;
+    }
     
     ul.nav {
     list-style-type: none;
