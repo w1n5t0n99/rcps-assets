@@ -27,6 +27,7 @@
                 min-height: 100vh;
                 flex-direction: column;
                 margin: 0;
+                overflow: auto;
             }
 
             .AssetRow {
@@ -113,9 +114,9 @@
         </div>
         <div class="AssetsWrap">
             <% for asset in assets.iter() { %>
-                <div class="AssetRow">
+                <div class="AssetsWrap">
                     <div class="AssetPad"></div>
-                    <div class="AssetItem"><a href="/asset_items/<%= asset.sid.to_string() %>"></a><%= asset.asset_id %></div>
+                    <div class="AssetItem"><a href="/asset_items/<%= asset.sid.to_string() %>"><%= asset.asset_id %></a></div>
                     <div class="AssetItem"><%= asset.name %></div>
                     <div class="AssetItem"><%= asset.serial_num %></div>
                     <div class="AssetPad"></div>

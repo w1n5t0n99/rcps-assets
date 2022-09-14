@@ -1,5 +1,6 @@
 mod get;
 mod new;
+mod uploads;
 mod asset;
 
 pub use get::asset_items_form;
