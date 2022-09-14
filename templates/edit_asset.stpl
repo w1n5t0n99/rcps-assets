@@ -6,15 +6,14 @@
         <% include!("./nav_style.stpl"); %>
     </head>
     <body>
-        <ul class="nav">
-            <li><img src="/r-logo.png" alt="Grizzly"></li>
-            <li><a href="/">Home</a></li>
-            <li><a class="active" href="/asset_items">Asset Items</a></li>
-            <li><a href="/">User Items</a></li>
-            <li><a href="/">Associations</a></li>
-            <li><a href="/">Settings</a></li>
-            <li style="float:right"><a href="/">Logout</a></li>
-        </ul>
+        <div class="NavWrap">
+            <img src="/r-logo.png" alt="logo" class="LogoItem">
+            <a href="/" class="ListItem">Home</a>
+            <a href="/asset_items" class="ListItem Active">Asset Items</a>
+            <a href="/" class="ListItem">User Items</a>
+            <a href="/" class="ListItem">Associations</a>
+            <a href="/" class="LastItem">Logout</a>
+        </div>
         <div style="padding:75px;margin-top:30px;background-color:#ffffff;">
             <form action="/asset_items/<%= asset.sid.to_string() %>/edit" method="post">
                 <div class="info">

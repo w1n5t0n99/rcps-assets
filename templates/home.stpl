@@ -6,9 +6,9 @@
         <% include!("./nav_style.stpl"); %>
     </head>
     <body>
-        <div class="MenuWrap">
+        <div class="NavWrap">
             <img src="/r-logo.png" alt="logo" class="LogoItem">
-            <a href="/" class="ListItem">Home</a>
+            <a href="/" class="ListItem Active">Home</a>
             <a href="/asset_items" class="ListItem">Asset Items</a>
             <a href="/" class="ListItem">User Items</a>
             <a href="/" class="ListItem">Associations</a>

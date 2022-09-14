@@ -1,29 +1,33 @@
 <style>
     body {margin:0;}
 
-    .MenuWrap {
+    .NavWrap {
         background-color: rgb(100, 100, 100);
         font-family: 'Oswald', sans-serif;
-        font-size: 1rem;
-        min-height: 2.75rem;
+        font-size: 1.25rem;
+        min-height: 2.50rem;
         display: flex;
         align-items: center;
         padding: 0 1rem;
     }
 
-    .LogoItem,
     .ListItem,
     .LastItem {
         color: #ebebeb;
         text-decoration: none;
+        padding: 1rem 1rem 1rem 1rem;
+        border-radius: 5px;
     }
 
-    .ListItem:hover {
-    background-color: #111;
+    .ListItem:hover:not(.Active),
+    .LastItem:hover:not(.Active) {
+        background-color: rgb(75, 75, 75);
+        box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
     }
 
-    .ListItem .active {
-    background-color: #ae120c;
+    .Active {
+        background-color: #A70C05;
+        box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
     }
 
     .LogoItem,
@@ -37,41 +41,6 @@
 
     .LogoItem {
         max-height: 75px;
-    }
-    
-    ul.nav {
-    list-style-type: none;
-    margin: 0;
-    padding: 0;
-    overflow: hidden;
-    background-color: rgb(100, 100, 100);
-    position: fixed;
-    top: 0;
-    width: 100%;
-    }
-
-    ul.nav img {
-        max-height: 75px;
-    }
-
-    ul.nav > li {
-    float: left;
-    }
-
-    ul.nav > li > a {
-    display: block;
-    color: white;
-    text-align: center;
-    padding: 14px 16px;
-    text-decoration: none;
-    }
-
-    ul.nav > li > a:hover:not(.active) {
-    background-color: #111;
-    }
-
-    ul.nav .active {
-    background-color: #ae120c;
     }
 
     ul.asset-row {

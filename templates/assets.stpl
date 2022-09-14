@@ -4,39 +4,62 @@
         <meta http-equiv="content-type" content="text/html; charset=utf-8">
         <title>Assets</title>
         <% include!("./nav_style.stpl"); %>
+        <% include!("./search_style.stpl"); %>
+        <style>
+            .InfoWrap {
+                font-size: 1rem;
+                min-height: 1rem;
+                display: flex;
+                justify-content: space-between;
+                width: 100%;
+            }
+            .InfoItem {
+                padding: 3rem 3rem 0.5rem 0.5rem;
+                width: 20%;
+            }
+            .InfoPad {
+                padding: 3rem 3rem;
+                width: 20%;
+            }
+        </style>
     </head>
     <body>
-        <ul class="nav">
-            <li><img src="/r-logo.png" alt="Grizzly"></li>
-            <li><a href="/">Home</a></li>
-            <li><a class="active" href="/asset_items">Asset Items</a></li>
-            <li><a href="/">User Items</a></li>
-            <li><a href="/">Associations</a></li>
-            <li><a href="/">Settings</a></li>
-            <li style="float:right"><a href="/">Logout</a></li>
-        </ul>
-        <div style="padding:75px;margin-top:30px;background-color:#ffffff;">
-            <form action="/asset_items" method="get">
-                <label>Search:<br>
-                    <input
-                        type="text"
-                        placeholder="asset name"
-                        name="name"
-                    >
-                </label>
-                <br>
-                <button type="submit">Search</button>
-            </form>
-    
-            <% for asset in assets.iter() { %>
-                <ul class="asset-row">
-                    <li><%= asset.asset_id %></li>
-                    <li><a href="/asset_items/<%= asset.sid.to_string() %>"><%= asset.name %></a></li>
-                    <li><%= asset.serial_num %></li>
-                </ul>
-            <% } %>
-            <p><a href="/asset_items/new">Add Asset</a></p>
+        <div class="NavWrap">
+            <img src="/r-logo.png" alt="logo" class="LogoItem">
+            <a href="/" class="ListItem">Home</a>
+            <a href="/asset_items" class="ListItem Active">Asset Items</a>
+            <a href="/" class="ListItem">User Items</a>
+            <a href="/" class="ListItem">Associations</a>
+            <a href="/" class="LastItem">Logout</a>
         </div>
+        <div class ="SearchWrap">
+            <div class="SearchItem">
+                <form action="/asset_items" method="get">
+                    <input id="search" name="name" type="search" placeholder="asset name">
+                    <button type="submit">Search</button>
+                </form>
+            </div>
+            <div class="SearchLast">
+                <a href="/asset_items/new">Add Asset</a>
+                <a href="/asset_items/new">Upload Assets</a>
+            </div>
+        </div>
+        <div class="InfoWrap">
+            <div class="InfoPad"></div>
+            <div class="InfoItem"><strong>Asset ID</strong></div>
+            <div class="InfoItem"><strong>Name</strong></div>
+            <div class="InfoItem"><strong>Serial Number</strong></div>      
+            <div class="InfoPad"></div>     
+        </div>
+         <% for asset in assets.iter() { %>
+                <div class="InfoWrap"></div>
+                    <div class="InfoPad"></div>
+                    <div class="InfoItem"><a href="/asset_items/<%= asset.sid.to_string() %>"></a><%= asset.asset_id %></div>
+                    <div class="InfoItem"><%= asset.name %></div>
+                    <div class="InfoItem"><%= asset.serial_num %></div>
+                    <div class="InfoPad"></div>
+                </div>
+        <% } %>
         <div class="Paginate">
             <a href="<%= prev_uri %>" class="PagPrev">Prev</a>
             <a href="<%= next_uri %>" class="PagNext">Next</a>
