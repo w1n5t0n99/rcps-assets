@@ -42,48 +42,4 @@
     .LogoItem {
         max-height: 75px;
     }
-
-    ul.asset-row {
-    list-style-type: none;
-    padding: 15;
-    overflow: hidden;
-    width: 100%;
-    }
-
-    ul.asset-row:hover {
-    background-color: rgb(136, 136, 136);
-    }
-
-    ul.asset-row > li {
-    float: left;
-    padding: 15px 50px;
-    }
-
-    .info {
-    display: flex;
-    flex-wrap: wrap;
-    }
-
-    .info * { box-sizing: border-box; }
-    .colA, .colB { width: 50%; }
-    .colA, .colB { padding: 10px; }
-    .colA, .colB { text-align: center; }
-
-    .Paginate {
-        background-color: rgb(100, 100, 100);
-        font-family: 'Oswald', sans-serif;
-        font-size: 1rem;
-        min-height: 2.75rem;
-        display: flex;
-        align-items: center;
-        padding: 0 1rem;
-    }
-
-    .PagPrev {
-        margin-right: 1rem;
-    }
-    .PagNext {
-        margin-left: auto;
-    }
-
 </style>
