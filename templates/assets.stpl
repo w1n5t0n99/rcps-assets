@@ -51,9 +51,8 @@
                 flex: 1;
                 font-family: 'Oswald', sans-serif;
                 font-size: 1.25rem;
+                min-height: 1.50rem;
                 max-height: 10vh;
-                position: fixed;
-                margin-bottom: 0px;
             }
 
             .PagPrev,
