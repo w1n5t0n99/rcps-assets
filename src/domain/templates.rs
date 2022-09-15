@@ -36,3 +36,15 @@ pub struct EditAssetTemplate {
     pub asset: Asset,
 }
 
+#[derive(TemplateOnce, Debug, PartialEq)] 
+#[template(path = "uploads.stpl")]
+pub struct UploadsTemplate {
+    pub messages: Vec<(Level, String)>,
+}
+
+#[derive(TemplateOnce, Debug, PartialEq)] 
+#[template(path = "new_upload.stpl")]
+pub struct NewUploadTemplate {
+    pub messages: Vec<(Level, String)>,
+}
+

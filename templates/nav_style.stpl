@@ -1,6 +1,10 @@
 <style>
     body {margin:0;}
-
+    html,
+    body {
+	    height: 100%;
+    }
+    
     .NavWrap {
         background-color: rgb(100, 100, 100);
         font-family: 'Oswald', sans-serif;

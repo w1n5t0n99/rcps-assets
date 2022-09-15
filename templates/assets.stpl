@@ -24,7 +24,9 @@
 
             .AssetsWrap {
                 display: flex;
-                min-height: 100vh;
+                height: 84%;
+                min-height: 84%;
+                flex: 1;
                 flex-direction: column;
                 margin: 0;
                 overflow: auto;
@@ -32,7 +34,6 @@
 
             .AssetRow {
                 display: flex;
-                flex: 1;
                 max-height: 10vh;
             }
 
@@ -46,13 +47,17 @@
                 flex: 0 0 20vw;
             }
 
+            .ColumnPad {
+                flex: 1 1 20vw;
+            }
+
             .PagWrap {
                 background-color: rgb(100, 100, 100);
                 display: flex;
-                flex: 1;
                 font-family: 'Oswald', sans-serif;
                 font-size: 1.25rem;
                 min-height: 1.50rem;
+                margin-bottom: auto;
                 max-height: 10vh;
             }
 
@@ -102,7 +107,7 @@
             </div>
             <div class="SearchLast">
                 <a href="/asset_items/new">Add Asset</a>
-                <a href="/asset_items/new">Upload Assets</a>
+                <a href="/asset_items/uploads">Upload Assets</a>
             </div>
         </div>
         <div class="InfoWrap">
@@ -114,7 +119,7 @@
         </div>
         <div class="AssetsWrap">
             <% for asset in assets.iter() { %>
-                <div class="AssetsWrap">
+                <div class="AssetRow">
                     <div class="AssetPad"></div>
                     <div class="AssetItem"><a href="/asset_items/<%= asset.sid.to_string() %>"><%= asset.asset_id %></a></div>
                     <div class="AssetItem"><%= asset.name %></div>
@@ -122,6 +127,8 @@
                     <div class="AssetPad"></div>
                 </div>
             <% } %>
+            <div class="ColumnPad">
+            </div>
             <div class="PagWrap">
                 <div class="PagPrev"><a href="<%= prev_uri %>">Prev</a></div>
                 <div class="PagNext"><a href="<%= next_uri %>">Next</a></div>
