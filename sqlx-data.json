@@ -1,67 +1,5 @@
 {
   "db": "PostgreSQL",
-  "03248e29cb1d4c5ca0a6725a6bd666618f54d113c4429c67d2521c06d5aa86bc": {
-    "describe": {
-      "columns": [
-        {
-          "name": "id",
-          "ordinal": 0,
-          "type_info": "Uuid"
-        },
-        {
-          "name": "asset_id",
-          "ordinal": 1,
-          "type_info": "Text"
-        },
-        {
-          "name": "name",
-          "ordinal": 2,
-          "type_info": "Text"
-        },
-        {
-          "name": "serial_num",
-          "ordinal": 3,
-          "type_info": "Text"
-        },
-        {
-          "name": "model",
-          "ordinal": 4,
-          "type_info": "Text"
-        },
-        {
-          "name": "brand",
-          "ordinal": 5,
-          "type_info": "Text"
-        },
-        {
-          "name": "date_added",
-          "ordinal": 6,
-          "type_info": "Timestamptz"
-        },
-        {
-          "name": "sid",
-          "ordinal": 7,
-          "type_info": "Int4"
-        }
-      ],
-      "nullable": [
-        false,
-        false,
-        false,
-        false,
-        true,
-        true,
-        false,
-        false
-      ],
-      "parameters": {
-        "Left": [
-          "Int4"
-        ]
-      }
-    },
-    "query": "SELECT * FROM assets WHERE sid = $1"
-  },
   "0d5ba75807827bc39f52a8b8ef570fed3fb58a37e10ecb752cdbf85eb6dda5fe": {
     "describe": {
       "columns": [
@@ -273,6 +211,62 @@
       }
     },
     "query": "SELECT sid, asset_id, name, serial_num FROM assets\n            WHERE name ILIKE $1\n            AND sid > $2\n            ORDER BY sid ASC\n            LIMIT 5"
+  },
+  "58cb4d0759e3edb28dbc914cbb35693632e72c87ab0baa1a295e0eb2b287f116": {
+    "describe": {
+      "columns": [
+        {
+          "name": "sid",
+          "ordinal": 0,
+          "type_info": "Int4"
+        },
+        {
+          "name": "asset_id",
+          "ordinal": 1,
+          "type_info": "Text"
+        },
+        {
+          "name": "name",
+          "ordinal": 2,
+          "type_info": "Text"
+        },
+        {
+          "name": "serial_num",
+          "ordinal": 3,
+          "type_info": "Text"
+        },
+        {
+          "name": "model",
+          "ordinal": 4,
+          "type_info": "Text"
+        },
+        {
+          "name": "brand",
+          "ordinal": 5,
+          "type_info": "Text"
+        },
+        {
+          "name": "date_added",
+          "ordinal": 6,
+          "type_info": "Timestamptz"
+        }
+      ],
+      "nullable": [
+        false,
+        false,
+        false,
+        false,
+        true,
+        true,
+        false
+      ],
+      "parameters": {
+        "Left": [
+          "Int4"
+        ]
+      }
+    },
+    "query": "SELECT sid, asset_id, name, serial_num, model, brand, date_added FROM assets WHERE sid = $1"
   },
   "6034217897d11863b9d97dc5ad77e3f18898fed93f00448a22450a44fcd8c39b": {
     "describe": {
