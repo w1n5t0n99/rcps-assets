@@ -91,14 +91,12 @@ async fn insert_asset(
     transaction: &mut Transaction<'_, Postgres>,
     asset: &Asset,
 ) -> Result<(), sqlx::Error> {
-    let id = uuid::Uuid::new_v4();
-
     sqlx::query!(
         r#"
         INSERT INTO assets (id, asset_id, name, serial_num, model, brand, date_added)
         VALUES ($1, $2, $3, $4, $5, $6, $7)
         "#,
-        id,
+        uuid::Uuid::new_v4(),
         asset.asset_id,
         asset.name,
         asset.serial_num,

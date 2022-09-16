@@ -22,8 +22,10 @@
                     <div class="colB"> <label>Name:</label><input type="text" value="<%= asset.name %>" name="name"></div>
                    
                     <!-- SECOND ROW -->
-                    <div class="colA"> <label>Brand:</label><input type="text" value="<%= asset.brand %>" name="brand"></div>
-                    <div class="colB"> <label>Model:</label><input type="text" value="<%= asset.model %>" name="model"></div>
+                    <% let brand = asset.brand.unwrap_or("".to_string()); %>
+                    <% let model = asset.model.unwrap_or("".to_string()); %>
+                    <div class="colA"> <label>Brand:</label><input type="text" value="<%= brand %>" name="brand"></div>
+                    <div class="colB"> <label>Model:</label><input type="text" value="<%= model %>" name="model"></div>
     
                     <!-- THIRD ROW -->
                     <div class="colA"> <label>Serial Number:</label><input type="text" value="<%= asset.serial_num %>" name="serial_num"></div>

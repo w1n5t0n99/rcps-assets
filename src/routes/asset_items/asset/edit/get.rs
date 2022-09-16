@@ -36,21 +36,13 @@ pub async fn edit_asset_form(path: web::Path<i32>, pool: web::Data<PgPool>) -> R
 #[tracing::instrument(name = "Retrieve asset from database", skip(pool, id))]
 async fn retrieve_asset(pool: &PgPool, id: i32) -> Result<Asset, sqlx::Error> {
 
-    let r = sqlx::query!(
-        r#"SELECT * FROM assets WHERE sid = $1"#,
+    let r = sqlx::query_as!(
+        Asset,
+        r#"SELECT sid, asset_id, name, serial_num, model, brand, date_added FROM assets WHERE sid = $1"#,
         id,
     )
     .fetch_one(pool)
     .await?;
 
-    Ok(
-        Asset {
-            sid: r.sid,
-            asset_id: r.asset_id,
-            name: r.name,
-            serial_num: r.serial_num,
-            model: r.model.unwrap_or("".to_string()),
-            brand: r.brand.unwrap_or("".to_string()),
-        }
-    )
+    Ok(r)
 }

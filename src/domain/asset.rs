@@ -1,5 +1,6 @@
 use validator::{ValidationError, Validate};
 use unicode_segmentation::UnicodeSegmentation;
+use chrono::prelude::*;
 
 
 #[derive(Debug, PartialEq, sqlx::FromRow)]
@@ -19,8 +20,10 @@ pub struct Asset {
     #[validate(custom = "custom_validate")]
     pub name: String,
     pub serial_num: String,
-    pub model: String,
-    pub brand: String,
+    pub model: Option<String>,
+    pub brand: Option<String>,
+    #[serde(default)]
+    pub date_added: DateTime<Utc>,
 }
 
 fn custom_validate(s: &str) -> Result<(), ValidationError> {
@@ -49,8 +52,9 @@ mod tests {
             asset_id: "1156973".to_string(),
             name: name,
             serial_num: "".to_string(),
-            model: "".to_string(),
-            brand: "".to_string(),
+            model: Some("".to_string()),
+            brand: Some("".to_string()),
+            date_added: Utc::now(),
         }
     }
 
