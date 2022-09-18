@@ -7,7 +7,7 @@ use validator::Validate;
 use chrono::Utc;
 use actix_web_flash_messages::FlashMessage;
 use actix_multipart::{Multipart, Field};
-use futures::{StreamExt, TryStreamExt};
+use futures::{StreamExt, TryStreamExt, TryFutureExt};
 use std::fs::File;
 use std::io::Write;
 use std::io::prelude::*;
@@ -27,15 +27,14 @@ pub async fn upload_assets(
 ) -> Result<HttpResponse, actix_web::Error> {
 
     while let Ok(Some(mut field)) = payload.try_next().await {
-        let content_type = field.content_disposition();
+        //let content_type = field.content_disposition();
 
         //let filename = content_type.get_filename().unwrap();
         let filepath = format!("./temp_files/{}.csv", uuid::Uuid::new_v4());
-        let fp = filepath.clone();
-        //FlashMessage::success(filepath).send();
 
         // File::create is blocking operation
-        let mut f = spawn_blocking_with_tracing(move || std::fs::File::create(filepath))
+        let fp = filepath.clone();
+        let mut f = spawn_blocking_with_tracing(move || std::fs::File::create(fp))
             .await
             .map_err(e500)??;
 
@@ -49,18 +48,36 @@ pub async fn upload_assets(
                 .map_err(e500)??;            
         }
 
+        /*
         // Parsing CSV file is blocking
         let assets = spawn_blocking_with_tracing(move || load_assets_from_csv(fp))
             .await
             .map_err(e500)?
             .map_err(e500)?;
+        */
 
-        for a in assets.iter().take(5) {
-            println!("############## {:?} #############", a.name);
-        }
+        let mut transaction = pool.begin()
+            .await
+            .context("Failed to acquire a Postgres connection from the pool")
+            .map_err(e500)?;
 
-        // Insert assets into Assets table
-        // Insert upload status into UploadHistory table
+        let fp = filepath.clone();
+        let rows_inserted = copy_to_db(&mut transaction, fp)
+            .await
+            .map_err(e500)?;
+
+        transaction
+            .commit()
+            .await
+            .context("Failed to commit SQL transaction to store a new subscriber.")
+            .map_err(e500)?;
+
+        let fp = filepath.clone();
+        spawn_blocking_with_tracing(move || std::fs::remove_file(fp))
+            .await
+            .map_err(e500)??;
+
+        FlashMessage::success(format!("Assets uploaded: {}", rows_inserted)).send();
     }
 
     Ok(see_other("/asset_items/uploads"))
@@ -85,4 +102,16 @@ fn load_assets_from_csv(filepath: String) -> Result<Vec<Asset>, anyhow::Error> {
 
 
     Ok(assets)
+}
+
+#[tracing::instrument(name = "Copy assets to database", skip(transaction, filepath))]
+async fn copy_to_db(transaction: &mut Transaction<'_, Postgres>, filepath: String) -> Result<u64, anyhow::Error> {  
+    let mut copy_in = transaction.copy_in_raw("COPY assets(id, asset_id, name, serial_num, brand, model, date_added) FROM STDIN (FORMAT CSV, HEADER TRUE)").await?;
+
+    let file = tokio::fs::File::open(filepath).await?;
+    copy_in.read_from(file).await?;
+
+    let rows_inserted = copy_in.finish().await?;
+
+    Ok(rows_inserted)
 }
