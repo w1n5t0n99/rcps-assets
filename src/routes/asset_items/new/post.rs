@@ -93,10 +93,9 @@ async fn insert_asset(
 ) -> Result<(), sqlx::Error> {
     sqlx::query!(
         r#"
-        INSERT INTO assets (id, asset_id, name, serial_num, model, brand, date_added)
-        VALUES ($1, $2, $3, $4, $5, $6, $7)
+        INSERT INTO assets (asset_id, name, serial_num, model, brand, date_added)
+        VALUES ($1, $2, $3, $4, $5, $6)
         "#,
-        uuid::Uuid::new_v4(),
         asset.asset_id,
         asset.name,
         asset.serial_num,

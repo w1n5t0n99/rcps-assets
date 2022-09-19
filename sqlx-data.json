@@ -116,6 +116,23 @@
     },
     "query": "SELECT sid, asset_id, name, serial_num FROM assets\n            WHERE sid > $1\n            ORDER BY sid ASC\n            LIMIT 5"
   },
+  "3b93693ed0acb2774b4388625d8f6542d4083f3b0ad781de4a3d98c978abb711": {
+    "describe": {
+      "columns": [],
+      "nullable": [],
+      "parameters": {
+        "Left": [
+          "Text",
+          "Text",
+          "Text",
+          "Text",
+          "Text",
+          "Timestamptz"
+        ]
+      }
+    },
+    "query": "\n        INSERT INTO assets (asset_id, name, serial_num, model, brand, date_added)\n        VALUES ($1, $2, $3, $4, $5, $6)\n        "
+  },
   "3e281f1e53d6e5e881c264e2602317ccf77523038d39c247fdb3dec1e0fdc8e6": {
     "describe": {
       "columns": [
@@ -154,24 +171,6 @@
       }
     },
     "query": "SELECT sid, asset_id, name, serial_num\n            FROM (\n                SELECT sid, asset_id, name, serial_num FROM assets\n                WHERE asset_id ILIKE $1\n                AND sid < $2\n                ORDER BY sid DESC\n                LIMIT 5\n            ) as t\n            ORDER BY sid ASC"
-  },
-  "43970bbf5af11e106a66d74070c6ba7552a58b4fac1430dbdd184f2717bb1a14": {
-    "describe": {
-      "columns": [],
-      "nullable": [],
-      "parameters": {
-        "Left": [
-          "Uuid",
-          "Text",
-          "Text",
-          "Text",
-          "Text",
-          "Text",
-          "Timestamptz"
-        ]
-      }
-    },
-    "query": "\n        INSERT INTO assets (id, asset_id, name, serial_num, model, brand, date_added)\n        VALUES ($1, $2, $3, $4, $5, $6, $7)\n        "
   },
   "54b74fcdb12632fd3f75d00aac9a879b51c3670ef1089d67412cdbea56975d8c": {
     "describe": {

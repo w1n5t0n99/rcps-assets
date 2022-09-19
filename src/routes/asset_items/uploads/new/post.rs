@@ -48,14 +48,6 @@ pub async fn upload_assets(
                 .map_err(e500)??;            
         }
 
-        /*
-        // Parsing CSV file is blocking
-        let assets = spawn_blocking_with_tracing(move || load_assets_from_csv(fp))
-            .await
-            .map_err(e500)?
-            .map_err(e500)?;
-        */
-
         let mut transaction = pool.begin()
             .await
             .context("Failed to acquire a Postgres connection from the pool")
@@ -106,7 +98,7 @@ fn load_assets_from_csv(filepath: String) -> Result<Vec<Asset>, anyhow::Error> {
 
 #[tracing::instrument(name = "Copy assets to database", skip(transaction, filepath))]
 async fn copy_to_db(transaction: &mut Transaction<'_, Postgres>, filepath: String) -> Result<u64, anyhow::Error> {  
-    let mut copy_in = transaction.copy_in_raw("COPY assets(id, asset_id, name, serial_num, brand, model, date_added) FROM STDIN (FORMAT CSV, HEADER TRUE)").await?;
+    let mut copy_in = transaction.copy_in_raw("COPY assets(asset_id, name, serial_num, brand, model, date_added) FROM STDIN (FORMAT CSV, HEADER TRUE)").await?;
 
     let file = tokio::fs::File::open(filepath).await?;
     copy_in.read_from(file).await?;
