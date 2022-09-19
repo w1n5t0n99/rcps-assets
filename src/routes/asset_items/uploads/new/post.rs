@@ -10,10 +10,9 @@ use actix_multipart::{Multipart, Field};
 use futures::{StreamExt, TryStreamExt, TryFutureExt};
 use std::fs::File;
 use std::io::Write;
-use std::io::prelude::*;
 
 use crate::telemetry::spawn_blocking_with_tracing;
-use crate::utils::{error_chain_fmt, see_other, e500};
+use crate::utils::{RedirectError, see_other, e500};
 use crate::domain::Asset;
 
 
@@ -48,50 +47,50 @@ pub async fn upload_assets(
                 .map_err(e500)??;            
         }
 
-        let mut transaction = pool.begin()
-            .await
-            .context("Failed to acquire a Postgres connection from the pool")
-            .map_err(e500)?;
-
         let fp = filepath.clone();
-        let rows_inserted = copy_to_db(&mut transaction, fp)
+        let assets = spawn_blocking_with_tracing(move|| load_assets_from_csv(fp))
             .await
-            .map_err(e500)?;
+            .map_err(e500)?
+            .context("Could not parse CSV file")
+            .map_err(|e| RedirectError::new(e, "/asset_items/uploads".to_string()))?;
 
-        transaction
-            .commit()
-            .await
-            .context("Failed to commit SQL transaction to store a new subscriber.")
-            .map_err(e500)?;
+        let total = assets.len();
+        let (assets_res, assets_err): (Vec<_>, Vec<_>) = assets.into_iter().partition(Result::is_ok);
+
+        let mut inserted = 0;
+        let mut skipped = assets_err.len();
+
+        for asset in assets_res {
+            // Assets should be guaranteed to be OK
+            let a = asset.unwrap();
+            match insert_asset(&pool, &a).await {
+                Ok(_) => {inserted = inserted + 1 },
+                Err(_) => {skipped = skipped + 1 },
+            }
+        }
 
         let fp = filepath.clone();
         spawn_blocking_with_tracing(move || std::fs::remove_file(fp))
             .await
             .map_err(e500)??;
 
-        FlashMessage::success(format!("Assets uploaded: {}", rows_inserted)).send();
+       FlashMessage::success(format!("Assets total: {} uploaded: {} skipped: {}", total, inserted, skipped)).send();
     }
 
     Ok(see_other("/asset_items/uploads"))
 }
 
 #[tracing::instrument(name = "Load assets from csv", skip(filepath))]
-fn load_assets_from_csv(filepath: String) -> Result<Vec<Asset>, anyhow::Error> {  
+fn load_assets_from_csv(filepath: String) -> Result<Vec<Result<Asset, csv::Error>>, anyhow::Error> {  
     let mut rdr = csv::Reader::from_path(filepath)?;
     
-    let assets: Vec<Asset> = rdr.deserialize().filter_map(|r| {
-        match r {
-            Ok(a) => {
-                let asset: Asset = a;
-                Some(asset)     
-            }
-            Err(_) => {
-                None
-            }
+    let assets: Vec<Result<Asset, csv::Error>> = rdr.deserialize().map(|row| {
+        match row {
+            Ok(r) => { let a: Asset = r; Ok(a) },
+            Err(e) => Err(e),
         }
     })
     .collect();
-
 
     Ok(assets)
 }
@@ -106,4 +105,24 @@ async fn copy_to_db(transaction: &mut Transaction<'_, Postgres>, filepath: Strin
     let rows_inserted = copy_in.finish().await?;
 
     Ok(rows_inserted)
+}
+
+#[tracing::instrument(name = "Saving new asset details into database", skip(pool, asset))]
+async fn insert_asset( pool: &PgPool, asset: &Asset) -> Result<(), sqlx::Error> {
+    sqlx::query!(
+        r#"
+        INSERT INTO assets (asset_id, name, serial_num, model, brand, date_added)
+        VALUES ($1, $2, $3, $4, $5, $6)
+        "#,
+        asset.asset_id,
+        asset.name,
+        asset.serial_num,
+        asset.model,
+        asset.brand,
+        asset.date_added,
+    )
+    .execute(pool)
+    .await?;
+    
+    Ok(())
 }
