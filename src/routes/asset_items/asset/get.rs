@@ -1,26 +1,36 @@
-use actix_web::http::header::ContentType;
 use actix_web::http::header::{CacheControl, CacheDirective};
+use actix_web_flash_messages::IncomingFlashMessages;
+use actix_web::http::header::ContentType;
 use actix_web::{HttpResponse, web};
 use sailfish::TemplateOnce;
 use sqlx::PgPool;
-use crate::domain::{Asset, EditAssetTemplate};
-use crate::utils::e500;
+use anyhow::Context;
+use crate::domain::{Asset, AssetTemplate};
+use crate::utils::get_success_messages;
+use crate::errors::AssetsError;
 
 
 #[tracing::instrument( 
-    name = "Edit asset form",
-    skip(path, pool),
+    name = "View asset",
+    skip(flash_messages, path, pool),
     fields(asset_id=tracing::field::Empty)
 )]
-pub async fn edit_asset_form(path: web::Path<i32>, pool: web::Data<PgPool>) -> Result<HttpResponse, actix_web::Error> {
+pub async fn get_asset(
+    flash_messages: IncomingFlashMessages,
+    path: web::Path<i32>,
+    pool: web::Data<PgPool>,
+) -> Result<HttpResponse, AssetsError> {
+    let messages = get_success_messages(flash_messages);
+
     let id = path.into_inner();
-    tracing::Span::current().record("id", &tracing::field::display(id));
+    tracing::Span::current().record("id", &tracing::field::display(&id));
 
     let asset = retrieve_asset(&pool, id)
-        .await
-        .map_err(e500)?;
+        .await?;
 
-    let body = EditAssetTemplate{asset: asset}.render_once().map_err(e500)?;
+    let body = AssetTemplate{messages, asset}
+        .render_once()
+        .context("Failed to parse template")?;
 
     Ok(HttpResponse::Ok()
         .content_type(ContentType::html())

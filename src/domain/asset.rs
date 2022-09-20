@@ -12,8 +12,9 @@ pub struct PartialAsset {
 }
 
 #[derive(Debug, PartialEq, Validate, serde::Deserialize, sqlx::FromRow)]
+#[serde(default)]
 pub struct Asset {
-    #[serde(default)]
+   // #[serde(default)]
     pub sid: i32,
     #[validate(custom = "custom_validate")]
     pub asset_id: String,
@@ -22,8 +23,29 @@ pub struct Asset {
     pub serial_num: String,
     pub model: Option<String>,
     pub brand: Option<String>,
-    #[serde(default)]
+    #[serde(deserialize_with = "default_utc_deserialize")]
     pub date_added: DateTime<Utc>,
+}
+
+impl Default for Asset {
+    fn default() -> Self {
+        Asset {
+            sid: 0,
+            asset_id: " ".to_string(),
+            name: " ".to_string(),
+            serial_num: " ". to_string(), 
+            model: None,
+            brand: None,
+            date_added: Utc::now(),
+        }
+    }
+}
+
+fn default_utc_deserialize<'de, D>(de: D) -> Result<DateTime<Utc>, D::Error>
+where D: serde::Deserializer<'de>
+{
+    use serde::Deserialize;
+    Option::<DateTime<Utc>>::deserialize(de).map(|x| x.unwrap_or_else(|| Utc::now()))
 }
 
 fn custom_validate(s: &str) -> Result<(), ValidationError> {

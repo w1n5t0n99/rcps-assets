@@ -6,7 +6,6 @@ use super::{PartialAsset, Asset};
 #[derive(TemplateOnce, Debug, PartialEq)] 
 #[template(path = "home.stpl")]
 pub struct HomeTemplate {
-    pub messages: Vec<(Level, String)>,
 }
 
 #[derive(TemplateOnce, Debug, PartialEq)] 
@@ -15,18 +14,18 @@ pub struct AssetsTemplate {
     pub next_uri: String,
     pub prev_uri: String,
     pub assets: Vec<PartialAsset>,
+    pub err_messages: Vec<String>,
 }
 
 #[derive(TemplateOnce, Debug, PartialEq)] 
 #[template(path = "add_asset.stpl")]
 pub struct AddAssetTemplate {
-    pub messages: Vec<(Level, String)>,
 }
 
 #[derive(TemplateOnce, Debug, PartialEq)] 
 #[template(path = "asset.stpl")]
 pub struct AssetTemplate {
-    pub messages: Vec<(Level, String)>,
+    pub messages: Vec<String>,
     pub asset: Asset,
 }
 
@@ -39,12 +38,11 @@ pub struct EditAssetTemplate {
 #[derive(TemplateOnce, Debug, PartialEq)] 
 #[template(path = "uploads.stpl")]
 pub struct UploadsTemplate {
-    pub messages: Vec<(Level, String)>,
+    pub messages: Vec<String>,
 }
 
 #[derive(TemplateOnce, Debug, PartialEq)] 
 #[template(path = "new_upload.stpl")]
 pub struct NewUploadTemplate {
-    pub messages: Vec<(Level, String)>,
 }
 

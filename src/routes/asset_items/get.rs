@@ -1,10 +1,13 @@
 use actix_web::http::header::{ContentType, CacheControl, CacheDirective};
 use actix_web::{HttpResponse, web, HttpRequest};
+use actix_web_flash_messages::IncomingFlashMessages;
 use sailfish::TemplateOnce;
 use sqlx::PgPool;
 use serde_aux::prelude::*;
-use crate::utils::e500;
+use anyhow::Context;
+use crate::utils::get_error_messages;
 use crate::domain::{PartialAsset, AssetsTemplate};
+use crate::errors::AssetsError;
 
 
 #[derive(serde::Deserialize, serde::Serialize, Debug, Clone)]
@@ -38,31 +41,35 @@ pub struct QueryParams {
 
 #[tracing::instrument( 
     name = "View asset items",
-    skip(req, pool, query),
+    skip(req, pool, query, flash_messages),
     fields(query=req.query_string())
 )]
-pub async fn asset_items_form(req: HttpRequest, pool: web::Data<PgPool>, query: web::Query<QueryParams>) -> Result<HttpResponse, actix_web::Error> {
+pub async fn asset_items_form(
+    req: HttpRequest,
+    pool: web::Data<PgPool>,
+    query: web::Query<QueryParams>,
+    flash_messages: IncomingFlashMessages,
+) -> Result<HttpResponse, AssetsError> {
+    let err_messages = get_error_messages(flash_messages);
+
     let mut assets = retrieve_assets(&pool, query.0.search.clone(), query.0.pag.clone())
-        .await
-        .map_err(e500)?;
+        .await?;
 
     //if no assets were found try wrapping around to the first page
     if assets.len() == 0 {
         assets = retrieve_assets(&pool, query.0.search.clone(), Some(QueryPag::Next(0)))
-            .await
-            .map_err(e500)?;
+            .await?;
     }
 
     let next = assets.last().map_or(QueryPag::Next(0), |a| QueryPag::Next(a.sid));
     let prev = assets.first().map_or(QueryPag::Next(0), |a| QueryPag::Prev(a.sid));
 
     let next_uri = get_pag_uri(req.uri().path(), query.0.clone(), next);
-    let prev_uri = get_pag_uri(req.uri().path(), query.0.clone(), prev);
+    let prev_uri = get_pag_uri(req.uri().path(), query.0.clone(), prev); 
 
-    //println!("########{}#######", next_uri);
-   
-
-    let body = AssetsTemplate{next_uri, prev_uri, assets }.render_once().map_err(e500)?;
+    let body = AssetsTemplate{next_uri, prev_uri, assets, err_messages }
+        .render_once()
+        .context("Failed to parse template")?;
 
     Ok(HttpResponse::Ok()
         .content_type(ContentType::html())

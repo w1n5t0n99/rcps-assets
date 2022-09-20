@@ -1,51 +1,13 @@
-use actix_web::http::StatusCode;
-use actix_web::http::header::ContentType;
-use actix_web::{web, HttpResponse, ResponseError};
+use actix_web::{web, HttpResponse};
 use anyhow::Context;
 use sqlx::{PgPool, Postgres, Transaction};
 use validator::Validate;
-use chrono::Utc;
 use actix_web_flash_messages::FlashMessage;
 
-use crate::utils::{error_chain_fmt, see_other};
+use crate::utils::see_other;
 use crate::domain::Asset;
+use crate::errors::AssetsError;
 
-
-#[derive(thiserror::Error)]
-pub enum AddAssetError {
-    #[error("Failed to validate asset data")]
-    ValidationError(#[source] anyhow::Error),
-    #[error("Failed to insert asset data")]
-    InsertError(#[source] anyhow::Error),
-    #[error("Unexpected Error")]
-    UnexpectedError(#[source] anyhow::Error),
-}
-
-impl std::fmt::Debug for AddAssetError {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        error_chain_fmt(self, f)
-    }
-}
-
-impl ResponseError for AddAssetError {
-    fn error_response(&self) -> HttpResponse<actix_web::body::BoxBody> {
-        match self {
-            AddAssetError::ValidationError(_) => {
-                FlashMessage::error("Invalid user input.".to_string()).send();
-                see_other("/asset_items/new")
-            },
-            AddAssetError::InsertError(_) => {
-                FlashMessage::error("Could not add asset".to_string()).send();
-                see_other("/asset_items/new")
-            },
-            AddAssetError::UnexpectedError(_) => {
-                HttpResponse::build(StatusCode::INTERNAL_SERVER_ERROR)
-                .insert_header(ContentType::html())
-                .body(self.to_string())
-            },
-        }
-    }
-}
 
 #[tracing::instrument(
     name = "Add a new asset",
@@ -59,29 +21,22 @@ impl ResponseError for AddAssetError {
 pub async fn new_asset(
     form: web::Form<Asset>,
     pool: web::Data<PgPool>,
-) -> Result<HttpResponse, AddAssetError> {
+) -> Result<HttpResponse, AssetsError> {
 
     let asset = form.0;
-    asset.validate()
-        .context("Failed to convert form to asset.")
-        .map_err(AddAssetError::ValidationError)?;
+    asset.validate()?;
 
     let mut transaction = pool.begin()
         .await
-        .context("Failed to acquire a Postgres connection from the pool")
-        .map_err(AddAssetError::UnexpectedError)?;
+        .context("Failed to acquire a Postgres connection from the pool")?;
 
     insert_asset(&mut transaction, &asset)
-        .await
-        .context("Failed to insert asset into database")
-        .map_err(AddAssetError::InsertError)?;
+        .await?;
 
     transaction
         .commit()
-        .await
-        .context("Failed to commit SQL transaction to store a new subscriber.")
-        .map_err(AddAssetError::UnexpectedError)?;
-    
+        .await?;
+
     FlashMessage::success("Asset successfully added.".to_string()).send();
     Ok(see_other("/"))
 }
@@ -101,7 +56,7 @@ async fn insert_asset(
         asset.serial_num,
         asset.model,
         asset.brand,
-        Utc::now()
+        asset.date_added,
     )
     .execute(transaction)
     .await?;

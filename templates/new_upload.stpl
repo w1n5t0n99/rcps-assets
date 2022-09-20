@@ -14,17 +14,6 @@
             <a href="/" class="ListItem">Associations</a>
             <a href="/" class="LastItem">Logout</a>
         </div>
-        <div>
-            <% for msg in &messages { %>
-                <% if msg.0 == Level::Success { %>
-                    <p style="color:green;"><i><%= msg.1 %></i></p>
-                <% } else if msg.0 == Level::Error { %>
-                    <p style="color:red;"><i><%= msg.1 %></i></p>
-                <% } else { %>
-                    <p><i>       </i></p>
-                <% } %>
-            <% } %>
-        </div>
         <div style="padding:75px;margin-top:30px;background-color:#ffffff;">
             <form action="/asset_items/uploads/new" method="post" enctype="multipart/form-data">
                 <div>

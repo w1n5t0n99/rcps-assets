@@ -1,19 +1,16 @@
-use actix_web::http::StatusCode;
-use actix_web::http::header::ContentType;
-use actix_web::{web, HttpResponse, ResponseError};
-use anyhow::Context;
+use actix_web::{web, HttpResponse};
+use anyhow::{Context, anyhow};
 use sqlx::{PgPool, Postgres, Transaction};
 use validator::Validate;
-use chrono::Utc;
 use actix_web_flash_messages::FlashMessage;
-use actix_multipart::{Multipart, Field};
-use futures::{StreamExt, TryStreamExt, TryFutureExt};
-use std::fs::File;
+use actix_multipart::{Multipart};
+use futures::{StreamExt, TryStreamExt};
 use std::io::Write;
 
 use crate::telemetry::spawn_blocking_with_tracing;
-use crate::utils::{RedirectError, see_other, e500};
+use crate::utils::see_other;
 use crate::domain::Asset;
+use crate::errors::AssetsError;
 
 
 #[tracing::instrument(
@@ -23,56 +20,52 @@ use crate::domain::Asset;
 pub async fn upload_assets(
     mut payload: Multipart,
     pool: web::Data<PgPool>,
-) -> Result<HttpResponse, actix_web::Error> {
+) -> Result<HttpResponse, AssetsError> {
 
     while let Ok(Some(mut field)) = payload.try_next().await {
         //let content_type = field.content_disposition();
-
         //let filename = content_type.get_filename().unwrap();
         let filepath = format!("./temp_files/{}.csv", uuid::Uuid::new_v4());
 
         // File::create is blocking operation
         let fp = filepath.clone();
         let mut f = spawn_blocking_with_tracing(move || std::fs::File::create(fp))
-            .await
-            .map_err(e500)??;
+            .await??;
 
         // Field in turn is stream of *Bytes* object
         while let Some(chunk) = field.next().await {
-            let data = chunk?;
+            let data = chunk.context("Could not read multipart chunk")?;
 
             // filesystem operations are blocking
             f = spawn_blocking_with_tracing(move|| f.write_all(&data).map(|_| f))
-                .await
-                .map_err(e500)??;            
+                .await??;       
         }
 
         let fp = filepath.clone();
-        let assets = spawn_blocking_with_tracing(move|| load_assets_from_csv(fp))
-            .await
-            .map_err(e500)?
-            .context("Could not parse CSV file")
-            .map_err(|e| RedirectError::new(e, "/asset_items/uploads".to_string()))?;
+        let (assets_res, assets_err): (Vec<_>, Vec<_>) = spawn_blocking_with_tracing(move|| load_assets_from_csv(fp))
+            .await??
+            .into_iter()
+            .partition(Result::is_ok);
 
-        let total = assets.len();
-        let (assets_res, assets_err): (Vec<_>, Vec<_>) = assets.into_iter().partition(Result::is_ok);
-
+        let total = assets_res.len() + assets_err.len();
         let mut inserted = 0;
         let mut skipped = assets_err.len();
 
         for asset in assets_res {
             // Assets should be guaranteed to be OK
             let a = asset.unwrap();
+            
             match insert_asset(&pool, &a).await {
                 Ok(_) => {inserted = inserted + 1 },
                 Err(_) => {skipped = skipped + 1 },
             }
         }
 
+
+        // After parsing the data we can remove the temp file
         let fp = filepath.clone();
         spawn_blocking_with_tracing(move || std::fs::remove_file(fp))
-            .await
-            .map_err(e500)??;
+            .await??;
 
        FlashMessage::success(format!("Assets total: {} uploaded: {} skipped: {}", total, inserted, skipped)).send();
     }
@@ -81,13 +74,19 @@ pub async fn upload_assets(
 }
 
 #[tracing::instrument(name = "Load assets from csv", skip(filepath))]
-fn load_assets_from_csv(filepath: String) -> Result<Vec<Result<Asset, csv::Error>>, anyhow::Error> {  
+fn load_assets_from_csv(filepath: String) -> Result<Vec<Result<Asset, anyhow::Error>>, csv::Error> {  
     let mut rdr = csv::Reader::from_path(filepath)?;
     
-    let assets: Vec<Result<Asset, csv::Error>> = rdr.deserialize().map(|row| {
+    let assets: Vec<Result<Asset, anyhow::Error>> = rdr.deserialize().map(|row| {
         match row {
-            Ok(r) => { let a: Asset = r; Ok(a) },
-            Err(e) => Err(e),
+            Ok(r) => { 
+                let a: Asset = r;
+                match a.validate() {
+                    Ok(_) => Ok(a),
+                    Err(e) => Err(anyhow!(e)),
+                }
+            },
+            Err(e) => Err(anyhow!(e)),
         }
     })
     .collect();

@@ -6,6 +6,7 @@ use actix_web_flash_messages::FlashMessage;
 
 use crate::utils::{see_other, RedirectError, e500};
 use crate::domain::Asset;
+use crate::errors::AssetsError;
 
 
 #[tracing::instrument(
@@ -16,7 +17,7 @@ pub async fn edit_asset(
     path: web::Path<i32>,
     form: web::Form<Asset>,
     pool: web::Data<PgPool>,
-) -> Result<HttpResponse, actix_web::Error> {
+) -> Result<HttpResponse, AssetsError> {
     let asset = { 
         let mut a = form.0;
         a.sid = path.into_inner();
@@ -24,30 +25,24 @@ pub async fn edit_asset(
     };
 
     asset.validate()
-        .context("Failed to convert form to asset.")
         .map_err(|e| {
             FlashMessage::error("Invalid user input.".to_string()).send();
-            RedirectError::new(e, format!("/asset_items/{}", asset.sid))
+            e
         })?;
 
     let mut transaction = pool.begin()
-        .await
-        .context("Failed to acquire a Postgres connection from the pool")
-        .map_err(e500)?;
+        .await?;
 
     update_asset(&mut transaction, &asset)
         .await
-        .context("Failed to update asset in database")
         .map_err(|e| {
             FlashMessage::error("Could not update asset".to_string()).send();
-            RedirectError::new(e, format!("/asset_items/{}", asset.sid))
+            e
         })?;
 
     transaction
         .commit()
-        .await
-        .context("Failed to commit SQL transaction to store a new subscriber.")
-        .map_err(e500)?;
+        .await?;
 
     FlashMessage::success("Asset successfully added.".to_string()).send();
     // Asset was updated redirect to new ID

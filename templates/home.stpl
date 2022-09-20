@@ -15,11 +15,6 @@
             <a href="/" class="LastItem">Logout</a>
         </div>
         <div style="padding:75px;margin-top:30px;background-color:#ffffff;">
-            <% for msg in &messages { %>
-                <% if msg.0 == Level::Success { %>
-                    <p style="color:green;"><i><%= msg.1 %></i></p>
-                <% } %>
-            <% } %>
             <p>Welcome to RCPS-ASSETS</p>
         </div>
     </body>

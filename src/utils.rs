@@ -1,6 +1,7 @@
 
 use actix_web::http::header::LOCATION;
 use actix_web::{HttpResponse, ResponseError};
+use actix_web_flash_messages::{IncomingFlashMessages, Level};
 
 
 pub fn error_chain_fmt(
@@ -65,4 +66,32 @@ pub fn see_other(location: &str) -> HttpResponse {
     HttpResponse::SeeOther()
         .insert_header((LOCATION, location))
         .finish()
+}
+
+pub fn get_success_messages(flash_messages: IncomingFlashMessages) -> Vec<String> {
+    let messages: Vec<String> = flash_messages
+        .iter()
+        .filter_map(|m| {
+            match m.level() {
+                Level::Success => Some(m.content().to_string()),
+                _ => None,
+            }
+        })
+        .collect();
+
+    messages
+}
+
+pub fn get_error_messages(flash_messages: IncomingFlashMessages) -> Vec<String> {
+    let messages: Vec<String> = flash_messages
+        .iter()
+        .filter_map(|m| {
+            match m.level() {
+                Level::Error => Some(m.content().to_string()),
+                _ => None,
+            }
+        })
+        .collect();
+
+    messages
 }

@@ -16,14 +16,9 @@
         </div>
         <div style="padding:75px;margin-top:30px;background-color:#ffffff;">
             <% for msg in &messages { %>
-                <% if msg.0 == Level::Success { %>
-                    <p style="color:green;"><i><%= msg.1 %></i></p>
-                <% } else if msg.0 == Level::Error { %>
-                    <p style="color:red;"><i><%= msg.1 %></i></p>
-                <% } else { %>
-                    <p><i>       </i></p>
-                <% } %>
+                    <p style="color:green;"><i><%= msg %></i></p>
             <% } %>
+            
             <div class="info">
                 <!-- FIRST ROW -->
                 <div class="colA">Asset ID:  <%= asset.asset_id %></div>

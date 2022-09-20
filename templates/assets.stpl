@@ -110,6 +110,11 @@
                 <a href="/asset_items/uploads">Upload Assets</a>
             </div>
         </div>
+        
+        <% for msg in &err_messages { %>
+            <p style="color:red;"><i><%= msg %></i></p>
+        <% } %>
+
         <div class="InfoWrap">
             <div class="InfoPad"></div>
             <div class="InfoItem"><strong>Asset ID</strong></div>
