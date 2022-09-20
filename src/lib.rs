@@ -4,3 +4,4 @@ pub mod utils;
 pub mod startup;
 pub mod routes;
 pub mod domain;
+pub mod errors;
