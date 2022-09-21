@@ -42,7 +42,7 @@ impl std::fmt::Debug for AssetsError {
 impl ResponseError for AssetsError {
     fn error_response(&self) -> HttpResponse<actix_web::body::BoxBody> {
         match self {
-            Self::Sqlx(_) | Self::Unexpected(_) | Self::IO(_) | Self::Task(_)=> {
+            Self::Sqlx(_) | Self::Unexpected(_) | Self::IO(_) | Self::Task(_) => {
                 HttpResponse::new(StatusCode::INTERNAL_SERVER_ERROR)
             }
             Self::Invalid(_) | Self::Csv(_) | Self::Conflict(_) => {

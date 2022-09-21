@@ -3,7 +3,7 @@ use anyhow::{Context, anyhow};
 use sqlx::{PgPool, Postgres, Transaction};
 use validator::Validate;
 use actix_web_flash_messages::FlashMessage;
-use actix_multipart::{Multipart};
+use actix_multipart::{Multipart, Field};
 use futures::{StreamExt, TryStreamExt};
 use std::io::Write;
 
@@ -23,8 +23,20 @@ pub async fn upload_assets(
 ) -> Result<HttpResponse, AssetsError> {
 
     while let Ok(Some(mut field)) = payload.try_next().await {
-        //let content_type = field.content_disposition();
-        //let filename = content_type.get_filename().unwrap();
+        /*
+        let content_type = field.content_disposition();
+        println!("{}", field.name());
+        println!("CONTENT TYPE: {}", content_type);
+        println!("FILE NAME: {}", content_type.get_filename().unwrap());
+        println!("UPLOAD NAME FIELD: {}", content_type.get_name().unwrap());
+        println!("MIME TYPE: {}", field.content_type());
+        println!("FIELD: {:?}", field);
+        */
+        
+        check_form_content_type(&field)?;
+
+        //FlashMessage::error(format!("Invalid uploaded file type: {}", field.content_type().to_string())).send();
+
         let filepath = format!("./temp_files/{}.csv", uuid::Uuid::new_v4());
 
         // File::create is blocking operation
@@ -73,7 +85,16 @@ pub async fn upload_assets(
     Ok(see_other("/asset_items/uploads"))
 }
 
-#[tracing::instrument(name = "Load assets from csv", skip(filepath))]
+fn check_form_content_type(field: &Field) -> Result<(), AssetsError> {
+    match field.content_type().to_string().eq_ignore_ascii_case("text/csv")  {
+        true => Ok(()),
+        false => {
+            Err(AssetsError::Conflict("Invalid uploaded file type".to_string()))
+        }
+    }
+}
+
+
 fn load_assets_from_csv(filepath: String) -> Result<Vec<Result<Asset, anyhow::Error>>, csv::Error> {  
     let mut rdr = csv::Reader::from_path(filepath)?;
     

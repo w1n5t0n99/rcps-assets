@@ -38,7 +38,7 @@ pub async fn new_asset(
         .await?;
 
     FlashMessage::success("Asset successfully added.".to_string()).send();
-    Ok(see_other("/"))
+    Ok(see_other("/asset_items"))
 }
 
 #[tracing::instrument(name = "Saving new asset details into database", skip(transaction, asset))]
