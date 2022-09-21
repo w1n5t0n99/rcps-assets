@@ -21,6 +21,10 @@ pub struct Application {
 
 impl Application {
     pub async fn build(configuration: Settings) -> Result<Self, anyhow::Error> {
+        tokio::fs::create_dir_all("./temp_files/")
+            .await
+            .context("Could not create temp directory")?;
+
         let connection_pool = get_connection_pool(&configuration.database);
 
         let address = format!(
