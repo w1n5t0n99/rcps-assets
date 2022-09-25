@@ -24,7 +24,11 @@ pub async fn new_asset(
 ) -> Result<HttpResponse, AssetsError> {
 
     let asset = form.0;
-    asset.validate()?;
+    asset.validate()
+        .map_err(|e| {
+            FlashMessage::error("Invalid data for asset.".to_string()).send();
+            e
+        })?;
 
     let mut transaction = pool.begin()
         .await

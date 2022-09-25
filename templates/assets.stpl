@@ -1,143 +1,96 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta http-equiv="content-type" content="text/html; charset=utf-8">
-        <title>Assets</title>
-        <% include!("./nav_style.stpl"); %>
-        <% include!("./search_style.stpl"); %>
-        <style>
-            .InfoWrap {
-                min-height: 1rem;
-                display: flex;
-                flex: 1;
-            }
 
-            .InfoItem {
-                font-size: 1rem;
-                padding: 3rem 3rem 0.5rem 0.5rem;
-                flex: 1;
-            }
+<head>
+  <title>Asset-Items</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/js/bootstrap.bundle.min.js"></script>
+</head>
 
-            .InfoPad {
-                flex: 0 0 20vw;
-            }
+<body style="background-color:grey">
 
-            .AssetsWrap {
-                display: flex;
-                height: 84%;
-                min-height: 84%;
-                flex: 1;
-                flex-direction: column;
-                margin: 0;
-                overflow: auto;
-            }
+  <nav class="navbar navbar-expand-sm navbar-dark bg-dark fixed-top">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="javascript:void(0)">
+        <img src="/static/r-logo.png" alt="Avatar Logo" style="width:40px;" class="rounded-pill">
+      </a>
+      <div class="collapse navbar-collapse" id="mynavbar">
+        <ul class="navbar-nav" me-auto>
+          <li class="nav-item">
+            <a class="nav-link active" href="javascript:void(0)">Asset-Items</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="javascript:void(0)">User-Items</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="javascript:void(0)">Associations</a>
+          </li>
+        </ul>
+        <form class="d-flex border">
+          <select class="form-select m-2" id="sel1" name="search-group">
+            <option>Name</option>
+            <option>Asset-ID</option>
+            <option>Serial Num</option>
+          </select>
+          <input class="form-control m-2" type="text" placeholder="Search" name="search-field">
+          <button class="btn btn-primary m-2" type="button">Search</button>
+        </form>
+        <a href="/asset_items/new" class="btn btn-primary m-2">Add</a>
+        <a href="/asset_items/uploads" class="btn btn-primary m-2">Upload</a>
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">Reed Elam</a>
+            <ul class="dropdown-menu">
+              <li><a class="dropdown-item" href="#">Settings</a></li>
+              <li><a class="dropdown-item" href="#">Logout</a></li>
+            </ul>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
 
-            .AssetRow {
-                display: flex;
-                max-height: 10vh;
-            }
+  <div class="container-fluid">
+    <div class="container" style="margin-top:80px"></div>
 
-            .AssetItem {
-                font-size: 1rem;
-                padding: 3rem 3rem 0.5rem 0.5rem;
-                flex: 1;
-            }
+    <% for msg in &err_messages { %>
+        <div class="alert alert-warning alert-dismissible mx-3">
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            <strong>Warning!</strong> <%= msg %>
+          </div>
+    <% } %>
 
-            .AssetPad {
-                flex: 0 0 20vw;
-            }
-
-            .ColumnPad {
-                flex: 1 1;
-            }
-
-            .PagWrap {
-                background-color: rgb(100, 100, 100);
-                display: flex;
-                font-family: 'Oswald', sans-serif;
-                font-size: 1.25rem;
-                min-height: 1.50rem;
-                margin-bottom: auto;
-                max-height: 10vh;
-            }
-
-            .PagPrev,
-            .PagNext {
-                padding: 1rem 1rem 1rem 1rem;
-                border-radius: 5px;
-            }
-
-            .PagPrev > a:hover,
-            .PagNext > a:hover {
-                background-color: rgb(75, 75, 75);
-                box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
-            }
-
-            .PagPrev > a,
-            .PagNext > a {
-                color: #ebebeb;
-                text-decoration: none;
-                padding: 0.5rem 0.5rem;
-            }
-
-            .PagPrev {
-                margin-right: 1rem;
-            }
-
-            .PagNext {
-                margin-left: auto;
-            }
-        </style>
-    </head>
-    <body>
-        <div class="NavWrap">
-            <img src="/r-logo.png" alt="logo" class="LogoItem">
-            <a href="/" class="ListItem">Home</a>
-            <a href="/asset_items" class="ListItem Active">Asset Items</a>
-            <a href="/" class="ListItem">User Items</a>
-            <a href="/" class="ListItem">Associations</a>
-            <a href="/" class="LastItem">Logout</a>
-        </div>
-        <div class ="SearchWrap">
-            <div class="SearchItem">
-                <form action="/asset_items" method="get">
-                    <input id="search" name="name" type="search" placeholder="asset name">
-                    <button type="submit">Search</button>
-                </form>
-            </div>
-            <div class="SearchLast">
-                <a href="/asset_items/new">Add Asset</a>
-                <a href="/asset_items/uploads">Upload Assets</a>
-            </div>
-        </div>
-        
-        <% for msg in &err_messages { %>
-            <p style="color:red;"><i><%= msg %></i></p>
+    <table class="table table-dark table-striped table-hover">
+      <thead>
+        <tr>
+          <th>Asset ID</th>
+          <th>Name</th>
+          <th>Serial Number</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% for asset in assets.iter() { %>
+            <tr>
+                <td><a href="/asset_items/<%= asset.sid.to_string() %>" class="btn btn-outline-light text-light" role="button"><%= asset.asset_id %></a></td>
+                <td><%= asset.name %></td>
+                <td><%= asset.serial_num %></td>
+              </tr>
         <% } %>
+      </tbody>
+    </table>
+  </div>
 
-        <div class="InfoWrap">
-            <div class="InfoPad"></div>
-            <div class="InfoItem"><strong>Asset ID</strong></div>
-            <div class="InfoItem"><strong>Name</strong></div>
-            <div class="InfoItem"><strong>Serial Number</strong></div>      
-            <div class="InfoPad"></div>     
-        </div>
-        <div class="AssetsWrap">
-            <% for asset in assets.iter() { %>
-                <div class="AssetRow">
-                    <div class="AssetPad"></div>
-                    <div class="AssetItem"><a href="/asset_items/<%= asset.sid.to_string() %>"><%= asset.asset_id %></a></div>
-                    <div class="AssetItem"><%= asset.name %></div>
-                    <div class="AssetItem"><%= asset.serial_num %></div>
-                    <div class="AssetPad"></div>
-                </div>
-            <% } %>
-            <div class="ColumnPad">
-            </div>
-            <div class="PagWrap">
-                <div class="PagPrev"><a href="<%= prev_uri %>">Prev</a></div>
-                <div class="PagNext"><a href="<%= next_uri %>">Next</a></div>
-            </div>
-        </div>
-    </body>
+  <div class="d-flex">
+    <div class="d-flex p-2">
+      <a href="<%= prev_uri %>" class="btn btn-dark" role="button">Previous</a>
+    </div>
+    <div class="d-flex ms-auto p-2">
+      <a href="<%= next_uri %>" class="btn btn-dark" role="button">Next</a>
+    </div>
+  </div>
+
+</body>
+
 </html>

@@ -11,6 +11,8 @@ use actix_web::{web, App, HttpServer};
 use actix_web_flash_messages::storage::CookieMessageStore;
 use actix_web_flash_messages::FlashMessagesFramework;
 use actix_web_lab::middleware::from_fn;
+use actix_files as fs;
+
 use crate::configuration::{DatabaseSettings, Settings};
 use crate::routes::*;
 
@@ -87,9 +89,9 @@ async fn run (
         App::new()
             .wrap(TracingLogger::default())
             .wrap(message_framework.clone())
+            .service(fs::Files::new("/static", "./static"))
             .route("/", web::get().to(home))
             .route("/health_check", web::get().to(health_check))
-            .route("/{name}.png", web::get().to(get_image))
             .route("/asset_items/new", web::get().to(new_asset_form))
             .route("/asset_items/new", web::post().to(new_asset))
             .route("/asset_items/uploads", web::get().to(uploads_form))

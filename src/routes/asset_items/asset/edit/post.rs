@@ -26,7 +26,7 @@ pub async fn edit_asset(
 
     asset.validate()
         .map_err(|e| {
-            FlashMessage::error("Invalid user input.".to_string()).send();
+            FlashMessage::error("Invalid data for asset.".to_string()).send();
             e
         })?;
 
@@ -44,7 +44,7 @@ pub async fn edit_asset(
         .commit()
         .await?;
 
-    FlashMessage::success("Asset successfully added.".to_string()).send();
+    FlashMessage::success("Asset successfully changed.".to_string()).send();
     // Asset was updated redirect to new ID
     Ok(see_other(format!("/asset_items/{}", asset.sid).as_str()))
 }

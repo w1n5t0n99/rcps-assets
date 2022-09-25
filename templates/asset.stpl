@@ -1,38 +1,92 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta http-equiv="content-type" content="text/html; charset=utf-8">
-        <title>Home</title>
-        <% include!("./nav_style.stpl"); %>
-    </head>
-    <body>
-        <div class="NavWrap">
-            <img src="/r-logo.png" alt="logo" class="LogoItem">
-            <a href="/" class="ListItem">Home</a>
-            <a href="/asset_items" class="ListItem Active">Asset Items</a>
-            <a href="/" class="ListItem">User Items</a>
-            <a href="/" class="ListItem">Associations</a>
-            <a href="/" class="LastItem">Logout</a>
-        </div>
-        <div style="padding:75px;margin-top:30px;background-color:#ffffff;">
-            <% for msg in &messages { %>
-                    <p style="color:green;"><i><%= msg %></i></p>
-            <% } %>
-            
-            <div class="info">
-                <!-- FIRST ROW -->
-                <div class="colA">Asset ID:  <%= asset.asset_id %></div>
-                <div class="colB">Name:  <%= asset.name %></div>
-               
-                <!-- SECOND ROW -->
-                <div class="colA">Brand:  <%= asset.brand.unwrap_or(" ".to_string()) %></div>
-                <div class="colB">Model:  <%= asset.model.unwrap_or(" ".to_string()) %></div>
 
-                <!-- THIRD ROW -->
-                <div class="colA">Serial Number:  <%= asset.serial_num %></div>
-                <div class="colB">Added:  <%= asset.date_added.to_string() %></div>
-              </div>
-              <p><a href="/asset_items/<%= asset.sid.to_string() %>/edit">Edit</a></p>
+<head>
+  <title>Asset</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/js/bootstrap.bundle.min.js"></script>
+</head>
+
+<body style="background-color:grey">
+
+  <nav class="navbar navbar-expand-sm navbar-dark bg-dark fixed-top">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="javascript:void(0)">
+        <img src="/static/r-logo.png" alt="Avatar Logo" style="width:40px;" class="rounded-pill">
+      </a>
+      <div class="collapse navbar-collapse" id="mynavbar">
+        <ul class="navbar-nav" me-auto>
+          <li class="nav-item">
+            <a class="nav-link active" href="/asset_items">Asset-Items</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="javascript:void(0)">User-Items</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="javascript:void(0)">Associations</a>
+          </li>
+        </ul>
+        <a href="/asset_items/<%= asset.sid.to_string() %>/edit" class="btn btn-primary m-2">Edit</a>
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">Reed Elam</a>
+            <ul class="dropdown-menu">
+              <li><a class="dropdown-item" href="#">Settings</a></li>
+              <li><a class="dropdown-item" href="#">Logout</a></li>
+            </ul>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <div class="container=fluid">
+	<div class="container" style="margin-top:80px"></div>
+
+    <% for msg in &messages { %>
+        <div class="alert alert-success alert-dismissible mx-3">
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            <strong>Success!</strong> <%= msg %>
         </div>
-    </body>
+    <% } %>
+
+    <div class="container-fluid">
+      <div class="row p-1 gx-3 d-flex">
+        <div class="col d-flex">
+          <div class="p-3 me-2 border bg-dark text-light rounded flex-fill">Asset-ID</div>
+          <div class="p-3 w-75 border bg-dark text-light rounded flex-fill"><%= asset.asset_id %></div>
+        </div>
+        <div class="col d-flex">
+          <div class="p-3  me-2 border bg-dark text-light rounded flex-fill">Name</div>
+          <div class="p-3 border w-75  bg-dark text-light rounded flex-fill"><%= asset.name %></div>
+        </div>
+      </div>
+      <div class="row p-1 gx-3 d-flex">
+        <div class="col d-flex">
+          <div class="p-3 me-2 border bg-dark text-light rounded flex-fill">Serial Number</div>
+          <div class="p-3 w-75 border bg-dark text-light rounded flex-fill"><%= asset.serial_num %></div>
+        </div>
+        <div class="col d-flex">
+          <div class="p-3  me-2 border bg-dark text-light rounded flex-fill">Model</div>
+          <div class="p-3 border w-75  bg-dark text-light rounded flex-fill"><%= asset.model.unwrap_or(" ".to_string()) %></div>
+        </div>
+      </div>
+      <div class="row p-1 gx-3 d-flex">
+        <div class="col d-flex">
+          <div class="p-3 me-2 border bg-dark text-light rounded flex-fill">Brand</div>
+          <div class="p-3 w-75 border bg-dark text-light rounded flex-fill"><%= asset.brand.unwrap_or(" ".to_string()) %></div>
+        </div>
+        <div class="col d-flex">
+            <div class="p-3 me-2 border bg-dark text-light rounded flex-fill">Date Added</div>
+            <div class="p-3 w-75 border bg-dark text-light rounded flex-fill"><%= asset.date_added.to_string() %></div>
+        </div>
+      </div>
+    </div>
+	
+  </div>
+
+</body>
+
 </html>

@@ -1,7 +1,6 @@
 use actix_web::{web, HttpResponse};
 use anyhow::{Context, anyhow};
 use sqlx::{PgPool, Postgres, Transaction};
-use tracing::field;
 use validator::Validate;
 use actix_web_flash_messages::FlashMessage;
 use actix_multipart::{Multipart, Field};
@@ -87,7 +86,6 @@ pub async fn upload_assets(
         .await??;
 
    FlashMessage::success(format!("Assets total: {} uploaded: {} skipped: {}", total, inserted, skipped)).send();
-
     Ok(see_other("/asset_items/uploads"))
 }
 
