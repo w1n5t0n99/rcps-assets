@@ -10,7 +10,7 @@ use mime::Mime;
 
 use crate::telemetry::spawn_blocking_with_tracing;
 use crate::utils::see_other;
-use crate::domain::Asset;
+use crate::domain::{Asset, UploadStatus};
 use crate::errors::AssetsError;
 
 
@@ -85,7 +85,10 @@ pub async fn upload_assets(
     spawn_blocking_with_tracing(move || std::fs::remove_file(fp))
         .await??;
 
-   FlashMessage::success(format!("Assets total: {} uploaded: {} skipped: {}", total, inserted, skipped)).send();
+
+    insert_upload_status(&pool, upload_payload.filename, total as i32, skipped as i32, inserted).await?;
+
+    //FlashMessage::success(format!("Assets total: {} uploaded: {} skipped: {}", total, inserted, skipped)).send();
     Ok(see_other("/asset_items/uploads"))
 }
 
@@ -181,4 +184,23 @@ async fn save_field_to_temp_file(field: &mut Field) -> Result<Option<UploadPaylo
             }
         )
     )
+}
+
+#[tracing::instrument(name = "Saving upload details into database", skip_all)]
+async fn insert_upload_status( pool: &PgPool, uploaded_file: String, total: i32, skipped: i32, added: i32) -> Result<(), sqlx::Error> {
+    sqlx::query!(
+        r#"
+        INSERT INTO uploads (uploaded_file, upload_date, total, skipped, added)
+        VALUES ($1, $2, $3, $4, $5)
+        "#,
+        uploaded_file,
+        chrono::Utc::now(),
+        total,
+        skipped,
+        added,
+    )
+    .execute(pool)
+    .await?;
+    
+    Ok(())
 }

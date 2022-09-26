@@ -28,14 +28,9 @@
             <a class="nav-link" href="javascript:void(0)">Associations</a>
           </li>
         </ul>
-        <form class="d-flex border">
-          <select class="form-select m-2" id="sel1" name="search-group">
-            <option>Name</option>
-            <option>Asset-ID</option>
-            <option>Serial Num</option>
-          </select>
-          <input class="form-control m-2" type="text" placeholder="Search" name="search-field">
-          <button class="btn btn-primary m-2" type="button">Search</button>
+        <form class="d-flex border" action="/asset_items" method="get">
+          <input class="form-control m-2" type="text" placeholder="Search" name="search">
+          <button class="btn btn-primary m-2" type="submit">Search</button>
         </form>
         <a href="/asset_items/new" class="btn btn-primary m-2">Add</a>
         <a href="/asset_items/uploads" class="btn btn-primary m-2">Upload</a>
