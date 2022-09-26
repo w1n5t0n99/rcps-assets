@@ -5,7 +5,7 @@ use actix_web_flash_messages::IncomingFlashMessages;
 use sailfish::TemplateOnce;
 use sqlx::PgPool;
 use anyhow::Context;
-use crate::utils::get_error_messages;
+use crate::utils::{get_error_messages, get_success_messages, get_success_and_error_messages};
 use crate::domain::{PartialAsset, AssetsTemplate};
 use crate::errors::AssetsError;
 use crate::paginate::Paginate;
@@ -29,7 +29,7 @@ pub async fn asset_items_form(
     query: web::Query<QueryParams>,
     flash_messages: IncomingFlashMessages,
 ) -> Result<HttpResponse, AssetsError> {
-    let err_messages = get_error_messages(flash_messages);
+    let (suc_messages, err_messages) = get_success_and_error_messages(flash_messages);
 
     let mut assets = retrieve_assets(&pool, query.0.pag.clone(), query.0.search.clone())
         .await?;
@@ -46,7 +46,7 @@ pub async fn asset_items_form(
     let next_uri = get_pag_uri(uri.path(), next, query.0.search.clone());
     let prev_uri = get_pag_uri(uri.path(), prev, query.0.search.clone()); 
 
-    let body = AssetsTemplate{next_uri, prev_uri, assets, err_messages }
+    let body = AssetsTemplate{next_uri, prev_uri, assets, err_messages, suc_messages }
         .render_once()
         .context("Failed to parse template")?;
 
@@ -96,7 +96,7 @@ async fn retrieve_fwd_assets_search(pool: &PgPool, id: i32, search: String) -> R
             WHERE (asset_id ILIKE $1 OR name ILIKE $1 OR serial_num ILIKE $1)
             AND sid > $2
             ORDER BY sid ASC
-            LIMIT 5"#,
+            LIMIT 50"#,
             format!("%{}%", search),
             id
         )
@@ -112,7 +112,7 @@ async fn retrieve_fwd_assets(pool: &PgPool, id: i32) -> Result<Vec<PartialAsset>
             r#"SELECT sid, asset_id, name, serial_num FROM assets
             WHERE sid > $1
             ORDER BY sid ASC
-            LIMIT 5"#,
+            LIMIT 50"#,
             id
         )
         .fetch_all(pool)
@@ -130,7 +130,7 @@ async fn retrieve_rev_assets_search(pool: &PgPool, id: i32, search: String) -> R
                 WHERE (asset_id ILIKE $1 OR name ILIKE $1 OR serial_num ILIKE $1)
                 AND sid < $2
                 ORDER BY sid DESC
-                LIMIT 5
+                LIMIT 50
             ) as t
             ORDER BY sid ASC"#,
             format!("%{}%", search),
@@ -150,7 +150,7 @@ async fn retrieve_rev_assets(pool: &PgPool, id: i32) -> Result<Vec<PartialAsset>
                 SELECT sid, asset_id, name, serial_num FROM assets
                 WHERE sid < $1
                 ORDER BY sid DESC
-                LIMIT 5
+                LIMIT 50
             ) as t
             ORDER BY sid ASC"#,
             id

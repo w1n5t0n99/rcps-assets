@@ -100,6 +100,7 @@ async fn run (
             .route("/asset_items/{id}", web::get().to(get_asset))
             .route("/asset_items/{id}/edit", web::get().to(edit_asset_form))
             .route("/asset_items/{id}/edit", web::post().to(edit_asset))
+            .route("/asset_items/{id}/delete", web::post().to(delete_asset))
             .route("/asset_items", web::get().to(asset_items_form))
             .app_data(base_url.clone())
             .app_data(Data::new(HmacSecret(hmac_secret.clone())))

@@ -1,10 +1,9 @@
 use actix_web::{web, HttpResponse,};
-use anyhow::Context;
 use sqlx::{PgPool, Postgres, Transaction};
 use validator::Validate;
 use actix_web_flash_messages::FlashMessage;
 
-use crate::utils::{see_other, RedirectError, e500};
+use crate::utils::see_other;
 use crate::domain::Asset;
 use crate::errors::AssetsError;
 
@@ -45,7 +44,6 @@ pub async fn edit_asset(
         .await?;
 
     FlashMessage::success("Asset successfully changed.".to_string()).send();
-    // Asset was updated redirect to new ID
     Ok(see_other(format!("/asset_items/{}", asset.sid).as_str()))
 }
 

@@ -1,6 +1,5 @@
 use sailfish::TemplateOnce;
-use actix_web_flash_messages::Level;
-use super::{PartialAsset, Asset};
+use super::{PartialAsset, Asset, UploadStatus};
 
 
 #[derive(TemplateOnce, Debug, PartialEq)] 
@@ -15,6 +14,7 @@ pub struct AssetsTemplate {
     pub prev_uri: String,
     pub assets: Vec<PartialAsset>,
     pub err_messages: Vec<String>,
+    pub suc_messages: Vec<String>,
 }
 
 #[derive(TemplateOnce, Debug, PartialEq)] 
@@ -39,6 +39,9 @@ pub struct EditAssetTemplate {
 #[template(path = "uploads.stpl")]
 pub struct UploadsTemplate {
     pub messages: Vec<String>,
+    pub next_uri: String,
+    pub prev_uri: String,
+    pub uploads: Vec<UploadStatus>,
 }
 
 #[derive(TemplateOnce, Debug, PartialEq)] 

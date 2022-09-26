@@ -1,6 +1,6 @@
 {
   "db": "PostgreSQL",
-  "39f670e7cea5b495feb9f0a6ca7d6e9b713c2bf54ba2fbbeb46b127d4ae832e5": {
+  "05cc06ec3c0dc371ee515607134b31706079deb8e3c5b97e2db0b0e80e63e8d6": {
     "describe": {
       "columns": [
         {
@@ -36,7 +36,84 @@
         ]
       }
     },
-    "query": "SELECT sid, asset_id, name, serial_num FROM assets\n            WHERE sid > $1\n            ORDER BY sid ASC\n            LIMIT 5"
+    "query": "SELECT sid, asset_id, name, serial_num FROM assets\n            WHERE sid > $1\n            ORDER BY sid ASC\n            LIMIT 50"
+  },
+  "25758ee8d2bcbc902170a1367ef495bd60d3cd91f1428cbc1a39d356174c4d39": {
+    "describe": {
+      "columns": [
+        {
+          "name": "sid",
+          "ordinal": 0,
+          "type_info": "Int4"
+        },
+        {
+          "name": "asset_id",
+          "ordinal": 1,
+          "type_info": "Text"
+        },
+        {
+          "name": "name",
+          "ordinal": 2,
+          "type_info": "Text"
+        },
+        {
+          "name": "serial_num",
+          "ordinal": 3,
+          "type_info": "Text"
+        }
+      ],
+      "nullable": [
+        false,
+        false,
+        false,
+        false
+      ],
+      "parameters": {
+        "Left": [
+          "Text",
+          "Int4"
+        ]
+      }
+    },
+    "query": "SELECT sid, asset_id, name, serial_num\n            FROM (\n                SELECT sid, asset_id, name, serial_num FROM assets\n                WHERE (asset_id ILIKE $1 OR name ILIKE $1 OR serial_num ILIKE $1)\n                AND sid < $2\n                ORDER BY sid DESC\n                LIMIT 50\n            ) as t\n            ORDER BY sid ASC"
+  },
+  "375aeab33d521eda1b0080c5a3063c936e46bc52dbae6d23cf6592c194085df1": {
+    "describe": {
+      "columns": [
+        {
+          "name": "sid",
+          "ordinal": 0,
+          "type_info": "Int4"
+        },
+        {
+          "name": "asset_id",
+          "ordinal": 1,
+          "type_info": "Text"
+        },
+        {
+          "name": "name",
+          "ordinal": 2,
+          "type_info": "Text"
+        },
+        {
+          "name": "serial_num",
+          "ordinal": 3,
+          "type_info": "Text"
+        }
+      ],
+      "nullable": [
+        false,
+        false,
+        false,
+        false
+      ],
+      "parameters": {
+        "Left": [
+          "Int4"
+        ]
+      }
+    },
+    "query": "SELECT sid, asset_id, name, serial_num\n            FROM (\n                SELECT sid, asset_id, name, serial_num FROM assets\n                WHERE sid < $1\n                ORDER BY sid DESC\n                LIMIT 50\n            ) as t\n            ORDER BY sid ASC"
   },
   "3b93693ed0acb2774b4388625d8f6542d4083f3b0ad781de4a3d98c978abb711": {
     "describe": {
@@ -54,6 +131,56 @@
       }
     },
     "query": "\n        INSERT INTO assets (asset_id, name, serial_num, model, brand, date_added)\n        VALUES ($1, $2, $3, $4, $5, $6)\n        "
+  },
+  "42395517f460b97c99e45fbc1bcc513e935ade6af813e72417b6cbbd75de693f": {
+    "describe": {
+      "columns": [
+        {
+          "name": "sid",
+          "ordinal": 0,
+          "type_info": "Int4"
+        },
+        {
+          "name": "uploaded_file",
+          "ordinal": 1,
+          "type_info": "Text"
+        },
+        {
+          "name": "upload_date",
+          "ordinal": 2,
+          "type_info": "Timestamptz"
+        },
+        {
+          "name": "total",
+          "ordinal": 3,
+          "type_info": "Int4"
+        },
+        {
+          "name": "skipped",
+          "ordinal": 4,
+          "type_info": "Int4"
+        },
+        {
+          "name": "added",
+          "ordinal": 5,
+          "type_info": "Int4"
+        }
+      ],
+      "nullable": [
+        false,
+        false,
+        false,
+        false,
+        false,
+        false
+      ],
+      "parameters": {
+        "Left": [
+          "Int4"
+        ]
+      }
+    },
+    "query": "SELECT sid, uploaded_file, upload_date, total, skipped, added\n            FROM (\n                SELECT sid, uploaded_file, upload_date, total, skipped, added FROM uploads\n                WHERE sid < $1\n                ORDER BY sid DESC\n                LIMIT 50\n            ) as t\n            ORDER BY sid ASC"
   },
   "4d70a7d74ad7b8be8c8d78b582517cf743eb4518fe13755c7999cc961bfdc7d7": {
     "describe": {
@@ -127,7 +254,7 @@
     },
     "query": "SELECT sid, asset_id, name, serial_num, model, brand, date_added FROM assets WHERE sid = $1"
   },
-  "a7edc82f0870447bbe6787cf9eb728ee8d96a9d205c22d799053ef8dc6824e14": {
+  "68483543e2c51c48a3257c617dbe2a3bec397996f01d1d6f867d2e1396784a83": {
     "describe": {
       "columns": [
         {
@@ -164,9 +291,21 @@
         ]
       }
     },
-    "query": "SELECT sid, asset_id, name, serial_num FROM assets\n            WHERE (asset_id ILIKE $1 OR name ILIKE $1 OR serial_num ILIKE $1)\n            AND sid > $2\n            ORDER BY sid ASC\n            LIMIT 5"
+    "query": "SELECT sid, asset_id, name, serial_num FROM assets\n            WHERE (asset_id ILIKE $1 OR name ILIKE $1 OR serial_num ILIKE $1)\n            AND sid > $2\n            ORDER BY sid ASC\n            LIMIT 50"
   },
-  "aa6334b1df51740e19cd90a63a15e46a77f19c58e7da909d40764c72dfbfef85": {
+  "76d1581ac3ee80272d668516b7876b8ec453ea4ae7688bf52f3fac1d0e68495e": {
+    "describe": {
+      "columns": [],
+      "nullable": [],
+      "parameters": {
+        "Left": [
+          "Int4"
+        ]
+      }
+    },
+    "query": "\n        DELETE FROM assets WHERE sid = $1\n        "
+  },
+  "806267be7d6fff128d99b30bc623aecb942095ea99cb73e75959601bbe664e9c": {
     "describe": {
       "columns": [
         {
@@ -175,22 +314,34 @@
           "type_info": "Int4"
         },
         {
-          "name": "asset_id",
+          "name": "uploaded_file",
           "ordinal": 1,
           "type_info": "Text"
         },
         {
-          "name": "name",
+          "name": "upload_date",
           "ordinal": 2,
-          "type_info": "Text"
+          "type_info": "Timestamptz"
         },
         {
-          "name": "serial_num",
+          "name": "total",
           "ordinal": 3,
-          "type_info": "Text"
+          "type_info": "Int4"
+        },
+        {
+          "name": "skipped",
+          "ordinal": 4,
+          "type_info": "Int4"
+        },
+        {
+          "name": "added",
+          "ordinal": 5,
+          "type_info": "Int4"
         }
       ],
       "nullable": [
+        false,
+        false,
         false,
         false,
         false,
@@ -202,46 +353,7 @@
         ]
       }
     },
-    "query": "SELECT sid, asset_id, name, serial_num\n            FROM (\n                SELECT sid, asset_id, name, serial_num FROM assets\n                WHERE sid < $1\n                ORDER BY sid DESC\n                LIMIT 5\n            ) as t\n            ORDER BY sid ASC"
-  },
-  "e517862c5d55aa50221206b97a38bc3507c51e7ea7fb557d26a3e9fb81629f81": {
-    "describe": {
-      "columns": [
-        {
-          "name": "sid",
-          "ordinal": 0,
-          "type_info": "Int4"
-        },
-        {
-          "name": "asset_id",
-          "ordinal": 1,
-          "type_info": "Text"
-        },
-        {
-          "name": "name",
-          "ordinal": 2,
-          "type_info": "Text"
-        },
-        {
-          "name": "serial_num",
-          "ordinal": 3,
-          "type_info": "Text"
-        }
-      ],
-      "nullable": [
-        false,
-        false,
-        false,
-        false
-      ],
-      "parameters": {
-        "Left": [
-          "Text",
-          "Int4"
-        ]
-      }
-    },
-    "query": "SELECT sid, asset_id, name, serial_num\n            FROM (\n                SELECT sid, asset_id, name, serial_num FROM assets\n                WHERE (asset_id ILIKE $1 OR name ILIKE $1 OR serial_num ILIKE $1)\n                AND sid < $2\n                ORDER BY sid DESC\n                LIMIT 5\n            ) as t\n            ORDER BY sid ASC"
+    "query": "SELECT sid, uploaded_file, upload_date, total, skipped, added FROM uploads\n            WHERE sid > $1\n            ORDER BY sid ASC\n            LIMIT 50"
   },
   "e9b180b0148caf97c87f9251016738d74cbcf2f4b4a5b1b7aba15399e0c9da40": {
     "describe": {

@@ -10,7 +10,7 @@ use mime::Mime;
 
 use crate::telemetry::spawn_blocking_with_tracing;
 use crate::utils::see_other;
-use crate::domain::{Asset, UploadStatus};
+use crate::domain::Asset;
 use crate::errors::AssetsError;
 
 
@@ -88,7 +88,7 @@ pub async fn upload_assets(
 
     insert_upload_status(&pool, upload_payload.filename, total as i32, skipped as i32, inserted).await?;
 
-    //FlashMessage::success(format!("Assets total: {} uploaded: {} skipped: {}", total, inserted, skipped)).send();
+    FlashMessage::success("Asset file uploaded successfully.").send();
     Ok(see_other("/asset_items/uploads"))
 }
 

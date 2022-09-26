@@ -56,8 +56,14 @@
             <strong>Warning!</strong> <%= msg %>
           </div>
     <% } %>
+    <% for msg in &suc_messages { %>
+      <div class="alert alert-success alert-dismissible mx-3">
+          <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+          <strong>Success!</strong> <%= msg %>
+        </div>
+  <% } %>
 
-    <table class="table table-dark table-striped table-hover">
+    <table class="table table-dark table-striped table-hover table-sm">
       <thead>
         <tr>
           <th>Asset ID</th>

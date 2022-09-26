@@ -68,6 +68,30 @@ pub fn see_other(location: &str) -> HttpResponse {
         .finish()
 }
 
+pub fn get_success_and_error_messages(flash_messages: IncomingFlashMessages) -> (Vec<String>, Vec<String>) {
+    let suc_messages: Vec<String> = flash_messages
+        .iter()
+        .filter_map(|m| {
+            match m.level() {
+                Level::Success => Some(m.content().to_string()),
+                _ => None,
+            }
+        })
+        .collect();
+
+    let err_messages: Vec<String> = flash_messages
+        .iter()
+        .filter_map(|m| {
+            match m.level() {
+                Level::Error => Some(m.content().to_string()),
+                _ => None,
+            }
+        })
+        .collect();
+
+    (suc_messages, err_messages)
+}
+
 pub fn get_success_messages(flash_messages: IncomingFlashMessages) -> Vec<String> {
     let messages: Vec<String> = flash_messages
         .iter()
