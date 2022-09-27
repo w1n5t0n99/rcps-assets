@@ -1,3 +1,4 @@
+use actix_web::middleware::ErrorHandlers;
 use anyhow::Context;
 use secrecy::{ExposeSecret, Secret};
 use sqlx::postgres::PgPoolOptions;
@@ -12,6 +13,7 @@ use actix_web_flash_messages::storage::CookieMessageStore;
 use actix_web_flash_messages::FlashMessagesFramework;
 use actix_web_lab::middleware::from_fn;
 use actix_files as fs;
+use actix_web::http::{header, StatusCode};
 
 use crate::configuration::{DatabaseSettings, Settings};
 use crate::routes::*;
@@ -89,6 +91,12 @@ async fn run (
         App::new()
             .wrap(TracingLogger::default())
             .wrap(message_framework.clone())
+            .wrap(
+                ErrorHandlers::new()
+                    .handler(StatusCode::BAD_REQUEST, handle_bad_request)
+                    .handler(StatusCode::NOT_FOUND, handle_not_found_request)
+                    .handler(StatusCode::INTERNAL_SERVER_ERROR, handle_internal_server_error,),
+            )
             .service(fs::Files::new("/static", "./static"))
             .route("/", web::get().to(home))
             .route("/health_check", web::get().to(health_check))

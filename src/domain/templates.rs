@@ -49,3 +49,8 @@ pub struct UploadsTemplate {
 pub struct NewUploadTemplate {
 }
 
+#[derive(TemplateOnce, Debug, PartialEq)] 
+#[template(path = "error.stpl")]
+pub struct ErrorTemplate {
+    pub error_msg: String,
+}
