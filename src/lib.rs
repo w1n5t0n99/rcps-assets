@@ -6,3 +6,4 @@ pub mod routes;
 pub mod domain;
 pub mod errors;
 pub mod paginate;
+pub mod authentication;
