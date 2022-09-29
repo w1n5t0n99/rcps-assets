@@ -30,8 +30,6 @@ fn base_error_request<B>(error_msg: String, res: dev::ServiceResponse<B>) -> Res
     Ok(ErrorHandlerResponse::Response(res))
 }
 
-
-
 pub fn handle_bad_request<B>(res: dev::ServiceResponse<B>) -> Result<ErrorHandlerResponse<B>> {
 
     base_error_request::<B>("Error Bad Request".to_string(), res)
