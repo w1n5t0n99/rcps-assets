@@ -1,3 +1,5 @@
+use std::borrow::Cow;
+
 use actix_web::{web, HttpResponse};
 use anyhow::Context;
 use sqlx::{PgPool, Postgres, Transaction};
@@ -6,7 +8,7 @@ use actix_web_flash_messages::FlashMessage;
 
 use crate::utils::see_other;
 use crate::domain::Asset;
-use crate::errors::AssetsError;
+use crate::errors::{Error, ResultExt};
 
 
 #[tracing::instrument(
@@ -21,21 +23,27 @@ use crate::errors::AssetsError;
 pub async fn new_asset(
     form: web::Form<Asset>,
     pool: web::Data<PgPool>,
-) -> Result<HttpResponse, AssetsError> {
+) -> Result<HttpResponse, Error> {
 
     let asset = form.0;
     asset.validate()
-        .map_err(|e| {
-            FlashMessage::error("Invalid data for asset.".to_string()).send();
-            e
-        })?;
+        .map_err(|e| {FlashMessage::error("Could not add invalid data.".to_string()).send(); e})
+        .on_error_redirect("/asset_items".to_string())?;
 
     let mut transaction = pool.begin()
-        .await
-        .context("Failed to acquire a Postgres connection from the pool")?;
+        .await?;
 
     insert_asset(&mut transaction, &asset)
-        .await?;
+        .await
+        .on_constraint("assets_asset_id_key", |_| {
+            FlashMessage::error("Could not add 'Asset ID' already used.".to_string()).send();
+            Error::UnprocessableEntity(Cow::from("asset_id key conflict"))
+        })
+        .on_constraint("assets_serial_num_key", |_| {
+            FlashMessage::error("Could not add 'Serial Number' already used.".to_string()).send();
+            Error::UnprocessableEntity(Cow::from("serial_num key conflict"))
+        })
+        .on_error_redirect("/asset_items".to_string())?;
 
     transaction
         .commit()

@@ -7,7 +7,7 @@ use sqlx::PgPool;
 use anyhow::Context;
 use crate::utils::{get_error_messages, get_success_messages, get_success_and_error_messages};
 use crate::domain::{PartialAsset, AssetsTemplate};
-use crate::errors::AssetsError;
+use crate::errors::Error;
 use crate::paginate::Paginate;
 
 
@@ -28,7 +28,7 @@ pub async fn asset_items_form(
     pool: web::Data<PgPool>,
     query: web::Query<QueryParams>,
     flash_messages: IncomingFlashMessages,
-) -> Result<HttpResponse, AssetsError> {
+) -> Result<HttpResponse, Error> {
     let (suc_messages, err_messages) = get_success_and_error_messages(flash_messages);
 
     let mut assets = retrieve_assets(&pool, query.0.pag.clone(), query.0.search.clone())
