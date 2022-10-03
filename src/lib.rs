@@ -7,3 +7,4 @@ pub mod domain;
 pub mod errors;
 pub mod paginate;
 pub mod authentication;
+pub mod session_state;

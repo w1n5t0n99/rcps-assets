@@ -5,12 +5,13 @@ use sqlx::postgres::PgPoolOptions;
 use sqlx::PgPool;
 use std::net::TcpListener;
 use tracing_actix_web::TracingLogger;
-use actix_web::cookie::Key;
 use actix_web::dev::Server;
 use actix_web::web::Data;
 use actix_web::{web, App, HttpServer};
 use actix_web_flash_messages::storage::CookieMessageStore;
+use actix_session::{config::PersistentSession, storage::CookieSessionStore, Session, SessionMiddleware,};
 use actix_web_flash_messages::FlashMessagesFramework;
+use actix_web::cookie::{self, Key};
 use actix_web_lab::middleware::from_fn;
 use actix_files as fs;
 use actix_web::http::{header, StatusCode};
@@ -96,6 +97,15 @@ async fn run (
                     .handler(StatusCode::BAD_REQUEST, handle_bad_request)
                     .handler(StatusCode::NOT_FOUND, handle_not_found_request)
                     .handler(StatusCode::INTERNAL_SERVER_ERROR, handle_internal_server_error,),
+            )
+            .wrap(
+                SessionMiddleware::builder(CookieSessionStore::default(), Key::from(&[0; 64]))
+                    .cookie_secure(false)
+                    // customize session and cookie expiration
+                    .session_lifecycle(
+                        PersistentSession::default().session_ttl(cookie::time::Duration::hours(2)),
+                    )
+                    .build(),
             )
             .service(fs::Files::new("/static", "./static"))
             .route("/", web::get().to(home))
