@@ -27,8 +27,12 @@ pub async fn new_asset(
 
     let asset = form.0;
     asset.validate()
-        .map_err(|e| {FlashMessage::error("Could not add invalid data.".to_string()).send(); e})
-        .on_error_redirect("/asset_items".to_string())?;
+        .context("Could not add invalid data.")
+        .map_err(|e| {
+            FlashMessage::error("Could not add invalid data.".to_string()).send();
+            Error::from_redirect(e, "/asset_items")
+        })?;
+        
 
     let mut transaction = pool.begin()
         .await?;
@@ -37,14 +41,13 @@ pub async fn new_asset(
         .await
         .on_constraint("assets_asset_id_key", |_| {
             FlashMessage::error("Could not add 'Asset ID' already used.".to_string()).send();
-            Error::UnprocessableEntity(Cow::from("asset_id key conflict"))
+            Error::from_redirect(anyhow::anyhow!("asset_id key conflict"), "/asset_items")
         })
         .on_constraint("assets_serial_num_key", |_| {
             FlashMessage::error("Could not add 'Serial Number' already used.".to_string()).send();
-            Error::UnprocessableEntity(Cow::from("serial_num key conflict"))
-        })
-        .on_error_redirect("/asset_items".to_string())?;
-
+            Error::from_redirect(anyhow::anyhow!("serial_num key conflict"), "/asset_items")
+        })?;
+        
     transaction
         .commit()
         .await?;

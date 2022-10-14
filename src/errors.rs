@@ -26,14 +26,6 @@ pub enum Error {
     #[error("request path not found")]
     NotFound,
 
-    /// Return `422 Unprocessable Entity`
-    ///
-    /// TODO - This also serializes the `errors` map to JSON to satisfy the requirement for
-    /// `422 Unprocessable Entity` errors in the Realworld spec:
-    /// https://realworld-docs.netlify.app/docs/specs/backend-specs/error-handling
-    #[error("error in the request body - {0}")]
-    UnprocessableEntity(Cow<'static, str>),
-
     /// Automatically return `500 Internal Server Error` on a `sqlx::Error`.
     ///
     /// Note that this could also contain database constraint errors, which should usually
@@ -95,7 +87,6 @@ impl std::fmt::Debug for Error {
     }
 }
 
-
 impl ResponseError for Error {
     fn error_response(&self) -> HttpResponse<actix_web::body::BoxBody> {
         let body = ErrorTemplate{ error_msg: format!("{}",*self) }
@@ -124,7 +115,7 @@ impl ResponseError for Error {
                 .insert_header(headers)
                 .body(body)
              },
-            Self::UnprocessableEntity(_) | Self::Validation(_) => { HttpResponse::UnprocessableEntity()
+            Self::Validation(_) => { HttpResponse::BadRequest()
                 .content_type(ContentType::html())
                 .insert_header(headers)
                 .body(body)

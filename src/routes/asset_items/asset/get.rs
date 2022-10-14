@@ -7,7 +7,7 @@ use sqlx::PgPool;
 use anyhow::Context;
 use crate::domain::{Asset, AssetTemplate};
 use crate::utils::get_success_messages;
-use crate::errors::AssetsError;
+use crate::errors::Error;
 
 
 #[tracing::instrument( 
@@ -19,7 +19,7 @@ pub async fn get_asset(
     flash_messages: IncomingFlashMessages,
     path: web::Path<i32>,
     pool: web::Data<PgPool>,
-) -> Result<HttpResponse, AssetsError> {
+) -> Result<HttpResponse, Error> {
     let messages = get_success_messages(flash_messages);
 
     let id = path.into_inner();

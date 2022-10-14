@@ -5,7 +5,7 @@ use actix_web_flash_messages::FlashMessage;
 
 use crate::utils::see_other;
 use crate::domain::Asset;
-use crate::errors::AssetsError;
+use crate::errors::Error;
 
 
 #[tracing::instrument(
@@ -16,7 +16,7 @@ pub async fn edit_asset(
     path: web::Path<i32>,
     form: web::Form<Asset>,
     pool: web::Data<PgPool>,
-) -> Result<HttpResponse, AssetsError> {
+) -> Result<HttpResponse, Error> {
     let asset = { 
         let mut a = form.0;
         a.sid = path.into_inner();

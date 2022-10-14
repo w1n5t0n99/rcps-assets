@@ -3,7 +3,7 @@ use sqlx::{PgPool, Postgres, Transaction};
 use actix_web_flash_messages::FlashMessage;
 
 use crate::utils::see_other;
-use crate::errors::AssetsError;
+use crate::errors::Error;
 
 
 #[tracing::instrument(
@@ -13,7 +13,7 @@ use crate::errors::AssetsError;
 pub async fn delete_asset(
     path: web::Path<i32>,
     pool: web::Data<PgPool>,
-) -> Result<HttpResponse, AssetsError> {
+) -> Result<HttpResponse, Error> {
 
     let mut transaction = pool.begin()
         .await?;
