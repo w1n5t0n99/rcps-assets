@@ -1,63 +1,14 @@
 use std::borrow::Cow;
-
 use actix_web::http::header::{CacheDirective, ContentType, CacheControl, LOCATION};
-use anyhow::anyhow;
 use validator::ValidationErrors;
 use actix_web::{HttpResponse, ResponseError};
+use actix_web::error::InternalError;
 use actix_web::http::StatusCode;
 use sqlx::error::DatabaseError;
 use sailfish::TemplateOnce;
-
 use super::utils::{error_chain_fmt, see_other};
 use crate::domain::ErrorTemplate;
 
-
-#[derive(thiserror::Error)]
-pub enum AssetsError {
-    /// The exact error contents are not reported to the user in order to avoid leaking
-    /// information about databse internals.
-    #[error("an internal database error occurred")]
-    Sqlx(#[from] sqlx::Error),
-
-    /// Similarly, we don't want to report random `anyhow` errors to the user.
-    #[error("an internal server error occurred")]
-    Unexpected(#[from] anyhow::Error),
-
-    #[error("validation error occurred")]
-    Invalid(#[from] ValidationErrors),
-
-    #[error("an error occurred processing csv file")]
-    Csv(#[from] csv::Error),
-
-    #[error("an internal server error occurred")]
-    IO(#[from] std::io::Error),
-
-    #[error("an internal server error occurred")]
-    Task(#[from] actix_web::rt::task::JoinError),
-
-    /// Database conflicts e.g. column unqiue constriant
-    #[error("{0}")]
-    Conflict(String),
-}
-
-impl std::fmt::Debug for AssetsError {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        error_chain_fmt(self, f)
-    }
-}
-
-impl ResponseError for AssetsError {
-    fn error_response(&self) -> HttpResponse<actix_web::body::BoxBody> {
-        match self {
-            Self::Sqlx(_) | Self::Unexpected(_) | Self::IO(_) | Self::Task(_) => {
-                HttpResponse::new(StatusCode::INTERNAL_SERVER_ERROR)
-            }
-            Self::Invalid(_) | Self::Csv(_) | Self::Conflict(_) => {
-                see_other("/asset_items")
-            }
-        }
-    }
-}
 
 // ==========================================================================================
 
@@ -116,12 +67,26 @@ pub enum Error {
     #[error("an internal server error occurred")]
     Task(#[from] actix_web::rt::task::JoinError),
 
-    /// Return `303 See Other`
-    /// 
-    /// Used when you do not want to return an error page to the user.
-    /// Should be called from ResultExt
-    #[error("error - redirect to {1}\n  {0}")]
-    Redirect(anyhow::Error, String),
+    #[error("an error occured")]
+    Response(InternalError<anyhow::Error>),
+}
+
+impl Error {
+    pub fn from_redirect(cause: anyhow::Error, location: &str) -> Self {
+        let response = HttpResponse::SeeOther()
+            .insert_header((LOCATION, location))
+            .finish();
+
+        Error::Response(
+            InternalError::from_response(cause, response),
+        )
+    }
+
+    pub fn from_response(cause: anyhow::Error, response: HttpResponse) -> Self {
+          Error::Response(
+            InternalError::from_response(cause, response),
+        )
+    }
 }
 
 impl std::fmt::Debug for Error {
@@ -137,28 +102,40 @@ impl ResponseError for Error {
         .render_once()
         .unwrap_or(format!("{}",*self));
 
-        let mut location_header = "".to_string();
-
-        // Use custom error pages for server-side rendering although
-        // unauthorized and forbidden will probobly be re-routed
-        // to the login page session middleware
-        match *&self {
-            Self::Unauthorized => HttpResponse::Unauthorized(),
-            Self::Forbidden => HttpResponse::Forbidden(),
-            Self::NotFound => HttpResponse::NotFound(),
-            Self::UnprocessableEntity(_) | Self::Validation(_) => HttpResponse::UnprocessableEntity(),
-            Self::Sqlx(_)| Self::Anyhow(_) | Self::Csv(_) | Self::IO(_) | Self::Task(_) => HttpResponse::InternalServerError(),
-            Self::Redirect(_, location) => {  location_header = location.clone(); HttpResponse::SeeOther() },
-        }
-        .content_type(ContentType::html())
-        .insert_header(CacheControl( vec![
+        let headers = CacheControl( vec![
             CacheDirective::NoCache,
             CacheDirective::NoStore,
             CacheDirective::MustRevalidate,
-        ]))
-        // only provides a meaning when served with a 3xx (redirection) or 201 (created)
-        .insert_header((LOCATION, location_header))
-        .body(body)
+        ]);
+
+        match *&self {
+            Self::Unauthorized => { HttpResponse::Unauthorized()
+                .content_type(ContentType::html())
+                .insert_header(headers)
+                .body(body)
+             },
+            Self::Forbidden => { HttpResponse::Forbidden()
+                .content_type(ContentType::html())
+                .insert_header(headers)
+                .body(body)
+             },
+            Self::NotFound => { HttpResponse::NotFound()
+                .content_type(ContentType::html())
+                .insert_header(headers)
+                .body(body)
+             },
+            Self::UnprocessableEntity(_) | Self::Validation(_) => { HttpResponse::UnprocessableEntity()
+                .content_type(ContentType::html())
+                .insert_header(headers)
+                .body(body)
+             },
+            Self::Sqlx(_)| Self::Anyhow(_) | Self::Csv(_) | Self::IO(_) | Self::Task(_) => { HttpResponse::InternalServerError()
+                .content_type(ContentType::html())
+                .insert_header(headers)
+                .body(body)
+             },
+            Self::Response(err) => err.error_response(),
+        }
     }
 }
 
@@ -173,9 +150,6 @@ pub trait ResultExt<T> {
         name: &str,
         f: impl FnOnce(Box<dyn DatabaseError>) -> Error,
     ) -> Result<T, Error>;
-
-    // TODO - use COW type
-    fn on_error_redirect(self, location: String) ->  Result<T, Error>;
 }
 
 impl<T, E> ResultExt<T> for Result<T, E>
@@ -201,13 +175,6 @@ where
                 map_err(dbe)
             }
             e => e,
-        })
-    }
-
-    fn on_error_redirect(self, location: String) ->  Result<T, Error> {
-        self.map_err(|e| {
-            let e: Error = e.into();
-            Error::Redirect(anyhow!(e), location)
         })
     }
 }

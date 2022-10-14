@@ -9,7 +9,7 @@ use sailfish::TemplateOnce;
 
 use crate::domain::{UploadsTemplate, UploadStatus};
 use crate::paginate::Paginate;
-use crate::errors::AssetsError;
+use crate::errors::Error;
 
 
 #[derive(serde::Deserialize, serde::Serialize, Debug, Clone)]
@@ -28,7 +28,7 @@ pub async fn uploads_form(
     uri: Uri,
     pool: web::Data<PgPool>,
     query: web::Query<QueryParams>,
-) -> Result<HttpResponse, AssetsError> {
+) -> Result<HttpResponse, Error> {
     let messages = get_success_messages(flash_messages);
 
     let mut uploads = retrieve_uploads(&pool, query.0.pag.clone())

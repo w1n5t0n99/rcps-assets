@@ -11,7 +11,7 @@ use mime::Mime;
 use crate::telemetry::spawn_blocking_with_tracing;
 use crate::utils::see_other;
 use crate::domain::Asset;
-use crate::errors::AssetsError;
+use crate::errors::Error;
 
 
 pub struct UploadPayload {
@@ -29,7 +29,7 @@ pub struct UploadPayload {
 pub async fn upload_assets(
     mut payload: Multipart,
     pool: web::Data<PgPool>,
-) -> Result<HttpResponse, AssetsError> {
+) -> Result<HttpResponse, Error> {
 
     let mut upload_payload = None;
     while let Ok(Some(mut field)) = payload.try_next().await {
@@ -42,13 +42,14 @@ pub async fn upload_assets(
         println!("MIME TYPE: {}", field.content_type());
         println!("FIELD: {:?}", field);
         */
+
         // should only be one field in upload form
         upload_payload = save_field_to_temp_file(&mut field).await?;
     }
     
     let upload_payload = upload_payload.ok_or_else(|| {
         FlashMessage::error(format!("No file found")).send();
-        AssetsError::Conflict("Failed to upload file".to_string())
+        Error::from_redirect(anyhow!("Failed to upload file"), "/asset_items")
     })?;
 
     if upload_payload.mime.to_string().eq_ignore_ascii_case("text/csv") == false {
@@ -58,7 +59,7 @@ pub async fn upload_assets(
             .await??;
 
         FlashMessage::error(format!("Invalid uploaded file type")).send();
-        return Err(AssetsError::Conflict("Invalid uploaded file type".to_string()));
+        return Err(Error::from_redirect(anyhow!("Invalid uploaded file type: {}", upload_payload.mime.to_string()), "/asset_items"));
     }
 
     let fp = upload_payload.tmp_path.clone();
@@ -111,19 +112,6 @@ fn load_assets_from_csv(filepath: String) -> Result<Vec<Result<Asset, anyhow::Er
 
     Ok(assets)
 }
-
-#[tracing::instrument(name = "Copy assets to database", skip(transaction, filepath))]
-async fn copy_to_db(transaction: &mut Transaction<'_, Postgres>, filepath: String) -> Result<u64, anyhow::Error> {  
-    let mut copy_in = transaction.copy_in_raw("COPY assets(asset_id, name, serial_num, brand, model, date_added) FROM STDIN (FORMAT CSV, HEADER TRUE)").await?;
-
-    let file = tokio::fs::File::open(filepath).await?;
-    copy_in.read_from(file).await?;
-
-    let rows_inserted = copy_in.finish().await?;
-
-    Ok(rows_inserted)
-}
-
 #[tracing::instrument(name = "Saving new asset details into database", skip(pool, asset))]
 async fn insert_asset( pool: &PgPool, asset: &Asset) -> Result<(), sqlx::Error> {
     sqlx::query!(
@@ -145,7 +133,7 @@ async fn insert_asset( pool: &PgPool, asset: &Asset) -> Result<(), sqlx::Error> 
 }
 
 #[tracing::instrument(name = "Save multipart field to temp file", skip_all)]
-async fn save_field_to_temp_file(field: &mut Field) -> Result<Option<UploadPayload>, AssetsError> {
+async fn save_field_to_temp_file(field: &mut Field) -> Result<Option<UploadPayload>, Error> {
     let content_type = field.content_disposition();
     let filename = content_type
         .get_filename()
