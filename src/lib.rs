@@ -8,3 +8,4 @@ pub mod errors;
 pub mod paginate;
 pub mod authentication;
 pub mod session_state;
+pub mod filesystem;
