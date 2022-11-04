@@ -9,7 +9,6 @@ use anyhow::Context;
 use crate::telemetry::spawn_blocking_with_tracing;
 use crate::utils::error_chain_fmt;
 use crate::domain::Asset;
-use crate::errors::Error;
 
 
 pub struct UploadPayload {
@@ -39,6 +38,9 @@ pub struct UploadResponse {
     pub id: i32,
     pub hash: String,
     pub filename: String,
+    pub total: i32,
+    pub inserted: i32,
+    pub skipped: i32,
 }
 
 #[tracing::instrument(
@@ -99,12 +101,39 @@ pub async fn save_field_to_temp_file(field: &mut Field) -> Result<Option<UploadP
     }))
 }
 
+fn parse_payload_as_csv<D>(payload: UploadPayload) -> Result<Vec<Result<D, csv::Error>>, csv::Error> where 
+    D: serde::de::DeserializeOwned + validator::Validate
+{
+    let mut rdr = csv::Reader::from_path(&payload.tmp_path)?;
+
+    let domain_vec: Vec<Result<D, csv::Error>> = rdr.deserialize().map(|row| {
+        match row {
+            Ok(r) => { let d: D = r; Ok(d) },
+            Err(e) => Err(e),
+        }
+    })
+    .collect();
+
+    Ok(domain_vec)
+}
+
+
 #[tracing::instrument(
     name = "insert payload into database as assets",
     skip_all,
 )]
 pub async fn insert_payload_as_assets(payload: UploadPayload) -> Result<Option<UploadResponse>, UploadError> {
-    // TODO - maybe pass database operation as function pointer for flexability
+    let (assets, errors): (Vec<_>, Vec<_>) = parse_payload_as_csv::<Asset>(payload)
+        .context("error parsing payload as csv")?
+        .into_iter()
+        .partition(Result::is_ok);
+
+    let total_count: i32 = assets.len() as i32 + errors.len() as i32;
+    let mut in_count = 0;
+    let mut err_count = errors.len() as i32;
+    
+    
+
     todo!()
 }
 
