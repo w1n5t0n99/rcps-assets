@@ -1,6 +1,8 @@
 use mime::Mime;
 use actix_multipart::{Field, Multipart};
 use futures::{StreamExt, TryStreamExt};
+use sqlx::PgPool;
+use validator::Validate;
 use std::path::Path;
 use std::fs::File;
 use std::io::Write;
@@ -122,8 +124,10 @@ fn parse_payload_as_csv<D>(payload: UploadPayload) -> Result<Vec<Result<D, csv::
     name = "insert payload into database as assets",
     skip_all,
 )]
-pub async fn insert_payload_as_assets(payload: UploadPayload) -> Result<Option<UploadResponse>, UploadError> {
-    let (assets, errors): (Vec<_>, Vec<_>) = parse_payload_as_csv::<Asset>(payload)
+pub async fn insert_payload_as_assets(payload: UploadPayload, pool: &PgPool) -> Result<Option<UploadResponse>, UploadError> {
+    let (assets, errors): (Vec<_>, Vec<_>) = spawn_blocking_with_tracing(move|| parse_payload_as_csv::<Asset>(payload))
+        .await
+        .context("blocking thread error")?
         .context("error parsing payload as csv")?
         .into_iter()
         .partition(Result::is_ok);
@@ -132,7 +136,16 @@ pub async fn insert_payload_as_assets(payload: UploadPayload) -> Result<Option<U
     let mut in_count = 0;
     let mut err_count = errors.len() as i32;
     
-    
+    for asset in assets {
+        let a = asset.unwrap();
+        if a.validate().is_err() {
+            err_count = err_count + 1;
+            continue;
+        }
+
+        
+        
+    }
 
     todo!()
 }
