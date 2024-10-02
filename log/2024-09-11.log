@@ -1,0 +1,36 @@
+2024-09-11-19:14:30 DEBUG htmx_google_auth::http::http: listening on 127.0.0.1:8000
+2024-09-11-19:14:34 DEBUG request{method=GET uri=/ version=HTTP/1.1}: tower_http::trace::on_request: started processing request
+2024-09-11-19:14:34 DEBUG request{method=GET uri=/ version=HTTP/1.1}: tower_http::trace::on_response: finished processing request latency=0 ms status=200
+2024-09-11-19:14:34 DEBUG request{method=GET uri=/static/htmx.min.js version=HTTP/1.1}: tower_http::trace::on_request: started processing request
+2024-09-11-19:14:34 DEBUG request{method=GET uri=/static/htmx.min.js version=HTTP/1.1}: tower_http::trace::on_response: finished processing request latency=1 ms status=200
+2024-09-11-19:14:34 DEBUG request{method=GET uri=/static/response-targets.js version=HTTP/1.1}: tower_http::trace::on_request: started processing request
+2024-09-11-19:14:34 DEBUG request{method=GET uri=/static/response-targets.js version=HTTP/1.1}: tower_http::trace::on_response: finished processing request latency=1 ms status=200
+2024-09-11-19:14:34 DEBUG request{method=GET uri=/static/styles/output.css version=HTTP/1.1}: tower_http::trace::on_request: started processing request
+2024-09-11-19:14:34 DEBUG request{method=GET uri=/static/styles/output.css version=HTTP/1.1}: tower_http::trace::on_response: finished processing request latency=1 ms status=200
+2024-09-11-19:14:34 DEBUG request{method=GET uri=/favicon.ico version=HTTP/1.1}: tower_http::trace::on_request: started processing request
+2024-09-11-19:14:34 DEBUG request{method=GET uri=/favicon.ico version=HTTP/1.1}: tower_http::trace::on_response: finished processing request latency=0 ms status=404
+2024-09-11-19:17:18 DEBUG htmx_google_auth::http::http: listening on 127.0.0.1:8000
+2024-09-11-19:17:28 DEBUG request{method=GET uri=/ version=HTTP/1.1}: tower_http::trace::on_request: started processing request
+2024-09-11-19:17:28 DEBUG request{method=GET uri=/ version=HTTP/1.1}: tower_http::trace::on_response: finished processing request latency=0 ms status=200
+2024-09-11-19:17:28 DEBUG request{method=GET uri=/static/htmx.min.js version=HTTP/1.1}: tower_http::trace::on_request: started processing request
+2024-09-11-19:17:28 DEBUG request{method=GET uri=/static/htmx.min.js version=HTTP/1.1}: tower_http::trace::on_response: finished processing request latency=1 ms status=200
+2024-09-11-19:17:28 DEBUG request{method=GET uri=/static/styles/output.css version=HTTP/1.1}: tower_http::trace::on_request: started processing request
+2024-09-11-19:17:28 DEBUG request{method=GET uri=/static/styles/output.css version=HTTP/1.1}: tower_http::trace::on_response: finished processing request latency=1 ms status=200
+2024-09-11-19:17:28 DEBUG request{method=GET uri=/static/response-targets.js version=HTTP/1.1}: tower_http::trace::on_request: started processing request
+2024-09-11-19:17:28 DEBUG request{method=GET uri=/static/response-targets.js version=HTTP/1.1}: tower_http::trace::on_response: finished processing request latency=1 ms status=200
+2024-09-11-19:17:29 DEBUG request{method=GET uri=/favicon.ico version=HTTP/1.1}: tower_http::trace::on_request: started processing request
+2024-09-11-19:17:29 DEBUG request{method=GET uri=/favicon.ico version=HTTP/1.1}: tower_http::trace::on_response: finished processing request latency=0 ms status=404
+2024-09-11-19:18:42 DEBUG request{method=GET uri=/ version=HTTP/1.1}: tower_http::trace::on_request: started processing request
+2024-09-11-19:18:42 DEBUG request{method=GET uri=/ version=HTTP/1.1}: tower_http::trace::on_response: finished processing request latency=0 ms status=200
+2024-09-11-19:18:47 DEBUG request{method=GET uri=/ version=HTTP/1.1}: tower_http::trace::on_request: started processing request
+2024-09-11-19:18:47 DEBUG request{method=GET uri=/ version=HTTP/1.1}: tower_http::trace::on_response: finished processing request latency=0 ms status=200
+2024-09-11-19:19:15 DEBUG request{method=GET uri=/ version=HTTP/1.1}: tower_http::trace::on_request: started processing request
+2024-09-11-19:19:15 DEBUG request{method=GET uri=/ version=HTTP/1.1}: tower_http::trace::on_response: finished processing request latency=0 ms status=200
+2024-09-11-19:19:16 DEBUG request{method=GET uri=/static/htmx.min.js version=HTTP/1.1}: tower_http::trace::on_request: started processing request
+2024-09-11-19:19:16 DEBUG request{method=GET uri=/static/response-targets.js version=HTTP/1.1}: tower_http::trace::on_request: started processing request
+2024-09-11-19:19:16 DEBUG request{method=GET uri=/static/styles/output.css version=HTTP/1.1}: tower_http::trace::on_request: started processing request
+2024-09-11-19:19:16 DEBUG request{method=GET uri=/static/htmx.min.js version=HTTP/1.1}: tower_http::trace::on_response: finished processing request latency=1 ms status=200
+2024-09-11-19:19:16 DEBUG request{method=GET uri=/static/response-targets.js version=HTTP/1.1}: tower_http::trace::on_response: finished processing request latency=1 ms status=200
+2024-09-11-19:19:16 DEBUG request{method=GET uri=/static/styles/output.css version=HTTP/1.1}: tower_http::trace::on_response: finished processing request latency=5 ms status=200
+2024-09-11-19:20:43 DEBUG request{method=GET uri=/ version=HTTP/1.1}: tower_http::trace::on_request: started processing request
+2024-09-11-19:20:43 DEBUG request{method=GET uri=/ version=HTTP/1.1}: tower_http::trace::on_response: finished processing request latency=0 ms status=200

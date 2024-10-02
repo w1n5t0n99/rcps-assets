@@ -1,6 +1,0 @@
-application:
-  host: 0.0.0.0
-  # server base url - should be replaced by env set by cloud provider
-  base_url: "http://127.0.0.1" 
-database:
-  require_ssl: true

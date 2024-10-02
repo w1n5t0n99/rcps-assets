@@ -1,0 +1,18 @@
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login</title>
+    <script src="/static/htmx.min.js"></script>
+    <script src="/static/response-targets.js"></script>
+    <link rel="stylesheet" href="/static/styles/output.css" />
+    {% include "partials/favicon.html" %}
+</head>
+
+<body hx-ext="response-targets" class="bg-gray-100 flex items-center justify-center min-h-screen">
+    <div class="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
+        {{ login_page }}
+    </div>
+</body>
+
+</html>

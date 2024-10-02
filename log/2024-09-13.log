@@ -1,0 +1,5 @@
+2024-09-13-13:09:45 DEBUG htmx_google_auth::http::http: listening on 127.0.0.1:8000
+2024-09-13-13:09:49 DEBUG request{method=GET uri=/ version=HTTP/1.1}: tower_http::trace::on_request: started processing request
+2024-09-13-13:09:49 DEBUG request{method=GET uri=/ version=HTTP/1.1}: tower_http::trace::on_response: finished processing request latency=2 ms status=200
+2024-09-13-13:09:49 DEBUG request{method=GET uri=/static/styles/output.css version=HTTP/1.1}: tower_http::trace::on_request: started processing request
+2024-09-13-13:09:49 DEBUG request{method=GET uri=/static/styles/output.css version=HTTP/1.1}: tower_http::trace::on_response: finished processing request latency=2 ms status=304

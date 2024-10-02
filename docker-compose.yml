@@ -1,0 +1,18 @@
+version: '3'
+services:
+  postgres:
+    image: postgres:latest
+    ports:
+      - '6500:5432'
+    env_file:
+      - ./.env
+  worker:
+    image: redis:latest
+    restart: always
+    ports:
+      - '6379:6379'
+    command: redis-server --save 60 1 --loglevel warning
+    volumes: 
+      - cache:/data
+volumes:
+  cache:

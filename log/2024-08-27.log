@@ -1,0 +1,508 @@
+2024-08-27-11:54:56 DEBUG htmx_google_auth::http::http: listening on 127.0.0.1:8000
+2024-08-27-11:55:00 DEBUG request{method=GET uri=/ version=HTTP/1.1}: tower_http::trace::on_request: started processing request
+2024-08-27-11:55:00  INFO request{method=GET uri=/ version=HTTP/1.1}:index: htmx_google_auth::http::routes::index: index handler
+2024-08-27-11:55:00 DEBUG request{method=GET uri=/ version=HTTP/1.1}: tower_http::trace::on_response: finished processing request latency=0 ms status=200
+2024-08-27-11:55:00 DEBUG request{method=GET uri=/static/styles/output.css version=HTTP/1.1}: tower_http::trace::on_request: started processing request
+2024-08-27-11:55:00 DEBUG request{method=GET uri=/static/styles/output.css version=HTTP/1.1}: tower_http::trace::on_response: finished processing request latency=1 ms status=200
+2024-08-27-11:56:14 DEBUG request{method=GET uri=/ version=HTTP/1.1}: tower_http::trace::on_request: started processing request
+2024-08-27-11:56:14  INFO request{method=GET uri=/ version=HTTP/1.1}:index: htmx_google_auth::http::routes::index: index handler
+2024-08-27-11:56:14 DEBUG request{method=GET uri=/ version=HTTP/1.1}: tower_http::trace::on_response: finished processing request latency=0 ms status=200
+2024-08-27-11:56:14 DEBUG request{method=GET uri=/static/styles/output.css version=HTTP/1.1}: tower_http::trace::on_request: started processing request
+2024-08-27-11:56:14 DEBUG request{method=GET uri=/static/styles/output.css version=HTTP/1.1}: tower_http::trace::on_response: finished processing request latency=1 ms status=304
+2024-08-27-11:56:17 DEBUG request{method=GET uri=/ version=HTTP/1.1}: tower_http::trace::on_request: started processing request
+2024-08-27-11:56:17  INFO request{method=GET uri=/ version=HTTP/1.1}:index: htmx_google_auth::http::routes::index: index handler
+2024-08-27-11:56:17 DEBUG request{method=GET uri=/ version=HTTP/1.1}: tower_http::trace::on_response: finished processing request latency=0 ms status=200
+2024-08-27-11:56:18 DEBUG request{method=GET uri=/ version=HTTP/1.1}: tower_http::trace::on_request: started processing request
+2024-08-27-11:56:18  INFO request{method=GET uri=/ version=HTTP/1.1}:index: htmx_google_auth::http::routes::index: index handler
+2024-08-27-11:56:18 DEBUG request{method=GET uri=/ version=HTTP/1.1}: tower_http::trace::on_response: finished processing request latency=0 ms status=200
+2024-08-27-11:56:18 DEBUG request{method=GET uri=/ version=HTTP/1.1}: tower_http::trace::on_request: started processing request
+2024-08-27-11:56:18  INFO request{method=GET uri=/ version=HTTP/1.1}:index: htmx_google_auth::http::routes::index: index handler
+2024-08-27-11:56:18 DEBUG request{method=GET uri=/ version=HTTP/1.1}: tower_http::trace::on_response: finished processing request latency=0 ms status=200
+2024-08-27-11:57:26 DEBUG htmx_google_auth::http::http: listening on 127.0.0.1:8000
+2024-08-27-11:57:30 DEBUG request{method=GET uri=/ version=HTTP/1.1}: tower_http::trace::on_request: started processing request
+2024-08-27-11:57:30  INFO request{method=GET uri=/ version=HTTP/1.1}:index: htmx_google_auth::http::routes::index: index handler
+2024-08-27-11:57:30 DEBUG request{method=GET uri=/ version=HTTP/1.1}: tower_http::trace::on_response: finished processing request latency=3 ms status=200
+2024-08-27-11:57:30 DEBUG request{method=GET uri=/static/styles/output.css version=HTTP/1.1}: tower_http::trace::on_request: started processing request
+2024-08-27-11:57:30 DEBUG request{method=GET uri=/static/styles/output.css version=HTTP/1.1}: tower_http::trace::on_response: finished processing request latency=1 ms status=304
+2024-08-27-11:59:13 DEBUG request{method=GET uri=/static/styles/output.css version=HTTP/1.1}: tower_http::trace::on_request: started processing request
+2024-08-27-11:59:13 DEBUG request{method=GET uri=/static/styles/output.css version=HTTP/1.1}: tower_http::trace::on_response: finished processing request latency=1 ms status=304
+2024-08-27-12:01:45 DEBUG htmx_google_auth::http::http: listening on 127.0.0.1:8000
+2024-08-27-12:01:50 DEBUG request{method=GET uri=/ version=HTTP/1.1}: tower_http::trace::on_request: started processing request
+2024-08-27-12:01:50  INFO request{method=GET uri=/ version=HTTP/1.1}:index: htmx_google_auth::http::routes::index: index handler
+2024-08-27-12:01:50 DEBUG request{method=GET uri=/ version=HTTP/1.1}: tower_http::trace::on_response: finished processing request latency=0 ms status=200
+2024-08-27-12:01:50 DEBUG request{method=GET uri=/static/styles/output.css version=HTTP/1.1}: tower_http::trace::on_request: started processing request
+2024-08-27-12:01:50 DEBUG request{method=GET uri=/static/styles/output.css version=HTTP/1.1}: tower_http::trace::on_response: finished processing request latency=1 ms status=200
+2024-08-27-12:12:04 DEBUG htmx_google_auth::http::http: listening on 127.0.0.1:8000
+2024-08-27-12:12:08 DEBUG request{method=GET uri=/ version=HTTP/1.1}: tower_http::trace::on_request: started processing request
+2024-08-27-12:12:08  INFO request{method=GET uri=/ version=HTTP/1.1}:index: htmx_google_auth::http::routes::index: index handler
+2024-08-27-12:12:08 DEBUG request{method=GET uri=/ version=HTTP/1.1}: tower_http::trace::on_response: finished processing request latency=0 ms status=200
+2024-08-27-12:12:08 DEBUG request{method=GET uri=/static/styles/output.css version=HTTP/1.1}: tower_http::trace::on_request: started processing request
+2024-08-27-12:12:08 DEBUG request{method=GET uri=/static/styles/output.css version=HTTP/1.1}: tower_http::trace::on_response: finished processing request latency=1 ms status=200
+2024-08-27-12:13:28 DEBUG htmx_google_auth::http::http: listening on 127.0.0.1:8000
+2024-08-27-12:13:32 DEBUG request{method=GET uri=/ version=HTTP/1.1}: tower_http::trace::on_request: started processing request
+2024-08-27-12:13:32  INFO request{method=GET uri=/ version=HTTP/1.1}:index: htmx_google_auth::http::routes::index: index handler
+2024-08-27-12:13:32 DEBUG request{method=GET uri=/ version=HTTP/1.1}: tower_http::trace::on_response: finished processing request latency=0 ms status=200
+2024-08-27-12:13:32 DEBUG request{method=GET uri=/static/styles/output.css version=HTTP/1.1}: tower_http::trace::on_request: started processing request
+2024-08-27-12:13:32 DEBUG request{method=GET uri=/static/styles/output.css version=HTTP/1.1}: tower_http::trace::on_response: finished processing request latency=2 ms status=200
+2024-08-27-12:18:19 DEBUG request{method=GET uri=/static/styles/output.css version=HTTP/1.1}: tower_http::trace::on_request: started processing request
+2024-08-27-12:18:19 DEBUG request{method=GET uri=/static/styles/output.css version=HTTP/1.1}: tower_http::trace::on_response: finished processing request latency=1 ms status=304
+2024-08-27-12:23:59 DEBUG htmx_google_auth::http::http: listening on 127.0.0.1:8000
+2024-08-27-12:24:03 DEBUG request{method=GET uri=/ version=HTTP/1.1}: tower_http::trace::on_request: started processing request
+2024-08-27-12:24:03  INFO request{method=GET uri=/ version=HTTP/1.1}:index: htmx_google_auth::http::routes::index: index handler
+2024-08-27-12:24:03 DEBUG request{method=GET uri=/ version=HTTP/1.1}: tower_http::trace::on_response: finished processing request latency=0 ms status=200
+2024-08-27-12:24:03 DEBUG request{method=GET uri=/static/styles/output.css version=HTTP/1.1}: tower_http::trace::on_request: started processing request
+2024-08-27-12:24:03 DEBUG request{method=GET uri=/static/styles/output.css version=HTTP/1.1}: tower_http::trace::on_response: finished processing request latency=1 ms status=200
+2024-08-27-12:24:11 DEBUG request{method=GET uri=/static/styles/output.css version=HTTP/1.1}: tower_http::trace::on_request: started processing request
+2024-08-27-12:24:11 DEBUG request{method=GET uri=/static/styles/output.css version=HTTP/1.1}: tower_http::trace::on_response: finished processing request latency=1 ms status=304
+2024-08-27-13:01:11 DEBUG htmx_google_auth::http::http: listening on 127.0.0.1:8000
+2024-08-27-13:01:20 DEBUG request{method=GET uri=/ version=HTTP/1.1}: tower_http::trace::on_request: started processing request
+2024-08-27-13:01:20  INFO request{method=GET uri=/ version=HTTP/1.1}:index: htmx_google_auth::http::routes::index: index handler
+2024-08-27-13:01:20 DEBUG request{method=GET uri=/ version=HTTP/1.1}: tower_http::trace::on_response: finished processing request latency=1 ms status=200
+2024-08-27-13:01:20 DEBUG request{method=GET uri=/static/styles/output.css version=HTTP/1.1}: tower_http::trace::on_request: started processing request
+2024-08-27-13:01:20 DEBUG request{method=GET uri=/static/styles/output.css version=HTTP/1.1}: tower_http::trace::on_response: finished processing request latency=2 ms status=304
+2024-08-27-13:16:34 DEBUG htmx_google_auth::http::http: listening on 127.0.0.1:8000
+2024-08-27-13:16:39 DEBUG request{method=GET uri=/ version=HTTP/1.1}: tower_http::trace::on_request: started processing request
+2024-08-27-13:16:39  INFO request{method=GET uri=/ version=HTTP/1.1}:index: htmx_google_auth::http::routes::index: index handler
+2024-08-27-13:16:39 DEBUG request{method=GET uri=/ version=HTTP/1.1}: tower_http::trace::on_response: finished processing request latency=0 ms status=200
+2024-08-27-13:16:39 DEBUG request{method=GET uri=/static/styles/output.css version=HTTP/1.1}: tower_http::trace::on_request: started processing request
+2024-08-27-13:16:39 DEBUG request{method=GET uri=/static/styles/output.css version=HTTP/1.1}: tower_http::trace::on_response: finished processing request latency=1 ms status=304
+2024-08-27-13:16:45 DEBUG request{method=GET uri=/ version=HTTP/1.1}: tower_http::trace::on_request: started processing request
+2024-08-27-13:16:45  INFO request{method=GET uri=/ version=HTTP/1.1}:index: htmx_google_auth::http::routes::index: index handler
+2024-08-27-13:16:45 DEBUG request{method=GET uri=/ version=HTTP/1.1}: tower_http::trace::on_response: finished processing request latency=0 ms status=200
+2024-08-27-13:16:45 DEBUG request{method=GET uri=/static/htmx.min.js version=HTTP/1.1}: tower_http::trace::on_request: started processing request
+2024-08-27-13:16:45 DEBUG request{method=GET uri=/static/htmx.min.js version=HTTP/1.1}: tower_http::trace::on_response: finished processing request latency=0 ms status=200
+2024-08-27-13:16:45 DEBUG request{method=GET uri=/static/styles/output.css version=HTTP/1.1}: tower_http::trace::on_request: started processing request
+2024-08-27-13:16:45 DEBUG request{method=GET uri=/static/response-targets.js version=HTTP/1.1}: tower_http::trace::on_request: started processing request
+2024-08-27-13:16:45 DEBUG request{method=GET uri=/static/response-targets.js version=HTTP/1.1}: tower_http::trace::on_response: finished processing request latency=0 ms status=200
+2024-08-27-13:16:45 DEBUG request{method=GET uri=/static/styles/output.css version=HTTP/1.1}: tower_http::trace::on_response: finished processing request latency=3 ms status=200
+2024-08-27-13:19:35 DEBUG request{method=GET uri=/ version=HTTP/1.1}: tower_http::trace::on_request: started processing request
+2024-08-27-13:19:35  INFO request{method=GET uri=/ version=HTTP/1.1}:index: htmx_google_auth::http::routes::index: index handler
+2024-08-27-13:19:35 DEBUG request{method=GET uri=/ version=HTTP/1.1}: tower_http::trace::on_response: finished processing request latency=0 ms status=200
+2024-08-27-13:19:35 DEBUG request{method=GET uri=/static/htmx.min.js version=HTTP/1.1}: tower_http::trace::on_request: started processing request
+2024-08-27-13:19:35 DEBUG request{method=GET uri=/static/htmx.min.js version=HTTP/1.1}: tower_http::trace::on_response: finished processing request latency=6 ms status=200
+2024-08-27-13:19:35 DEBUG request{method=GET uri=/static/response-targets.js version=HTTP/1.1}: tower_http::trace::on_request: started processing request
+2024-08-27-13:19:35 DEBUG request{method=GET uri=/static/response-targets.js version=HTTP/1.1}: tower_http::trace::on_response: finished processing request latency=1 ms status=200
+2024-08-27-13:19:35 DEBUG request{method=GET uri=/static/styles/output.css version=HTTP/1.1}: tower_http::trace::on_request: started processing request
+2024-08-27-13:19:35 DEBUG request{method=GET uri=/static/styles/output.css version=HTTP/1.1}: tower_http::trace::on_response: finished processing request latency=4 ms status=200
+2024-08-27-13:19:35 DEBUG request{method=GET uri=/favicon.ico version=HTTP/1.1}: tower_http::trace::on_request: started processing request
+2024-08-27-13:19:35 DEBUG request{method=GET uri=/favicon.ico version=HTTP/1.1}: tower_http::trace::on_response: finished processing request latency=0 ms status=404
+2024-08-27-13:22:54 DEBUG htmx_google_auth::http::http: listening on 127.0.0.1:8000
+2024-08-27-13:22:58 DEBUG request{method=GET uri=/ version=HTTP/1.1}: tower_http::trace::on_request: started processing request
+2024-08-27-13:22:58  INFO request{method=GET uri=/ version=HTTP/1.1}:index: htmx_google_auth::http::routes::index: index handler
+2024-08-27-13:22:58 DEBUG request{method=GET uri=/ version=HTTP/1.1}: tower_http::trace::on_response: finished processing request latency=0 ms status=200
+2024-08-27-13:22:58 DEBUG request{method=GET uri=/static/styles/output.css version=HTTP/1.1}: tower_http::trace::on_request: started processing request
+2024-08-27-13:22:58 DEBUG request{method=GET uri=/static/styles/output.css version=HTTP/1.1}: tower_http::trace::on_response: finished processing request latency=1 ms status=304
+2024-08-27-13:27:34 DEBUG htmx_google_auth::http::http: listening on 127.0.0.1:8000
+2024-08-27-13:27:38 DEBUG request{method=GET uri=/ version=HTTP/1.1}: tower_http::trace::on_request: started processing request
+2024-08-27-13:27:38  INFO request{method=GET uri=/ version=HTTP/1.1}:index: htmx_google_auth::http::routes::index: index handler
+2024-08-27-13:27:38 DEBUG request{method=GET uri=/ version=HTTP/1.1}: tower_http::trace::on_response: finished processing request latency=0 ms status=200
+2024-08-27-13:37:25 DEBUG htmx_google_auth::http::http: listening on 127.0.0.1:8000
+2024-08-27-13:37:30 DEBUG request{method=GET uri=/ version=HTTP/1.1}: tower_http::trace::on_request: started processing request
+2024-08-27-13:37:30  INFO request{method=GET uri=/ version=HTTP/1.1}:index: htmx_google_auth::http::routes::index: index handler
+2024-08-27-13:37:30 DEBUG request{method=GET uri=/ version=HTTP/1.1}: tower_http::trace::on_response: finished processing request latency=0 ms status=200
+2024-08-27-13:37:30 DEBUG request{method=GET uri=/static/styles/output.css version=HTTP/1.1}: tower_http::trace::on_request: started processing request
+2024-08-27-13:37:30 DEBUG request{method=GET uri=/static/styles/output.css version=HTTP/1.1}: tower_http::trace::on_response: finished processing request latency=1 ms status=304
+2024-08-27-13:40:46 DEBUG htmx_google_auth::http::http: listening on 127.0.0.1:8000
+2024-08-27-13:40:49 DEBUG request{method=GET uri=/ version=HTTP/1.1}: tower_http::trace::on_request: started processing request
+2024-08-27-13:40:49  INFO request{method=GET uri=/ version=HTTP/1.1}:index: htmx_google_auth::http::routes::index: index handler
+2024-08-27-13:40:49 DEBUG request{method=GET uri=/ version=HTTP/1.1}: tower_http::trace::on_response: finished processing request latency=0 ms status=200
+2024-08-27-13:44:08 DEBUG htmx_google_auth::http::http: listening on 127.0.0.1:8000
+2024-08-27-13:44:15 DEBUG request{method=GET uri=/ version=HTTP/1.1}: tower_http::trace::on_request: started processing request
+2024-08-27-13:44:15  INFO request{method=GET uri=/ version=HTTP/1.1}:index: htmx_google_auth::http::routes::index: index handler
+2024-08-27-13:44:15 DEBUG request{method=GET uri=/ version=HTTP/1.1}: tower_http::trace::on_response: finished processing request latency=1 ms status=200
+2024-08-27-13:46:05 DEBUG htmx_google_auth::http::http: listening on 127.0.0.1:8000
+2024-08-27-13:46:09 DEBUG request{method=GET uri=/ version=HTTP/1.1}: tower_http::trace::on_request: started processing request
+2024-08-27-13:46:09  INFO request{method=GET uri=/ version=HTTP/1.1}:index: htmx_google_auth::http::routes::index: index handler
+2024-08-27-13:46:09 DEBUG request{method=GET uri=/ version=HTTP/1.1}: tower_http::trace::on_response: finished processing request latency=0 ms status=200
+2024-08-27-13:46:09 DEBUG request{method=GET uri=/static/styles/output.css version=HTTP/1.1}: tower_http::trace::on_request: started processing request
+2024-08-27-13:46:09 DEBUG request{method=GET uri=/static/styles/output.css version=HTTP/1.1}: tower_http::trace::on_response: finished processing request latency=1 ms status=304
+2024-08-27-13:46:10 DEBUG request{method=GET uri=/ version=HTTP/1.1}: tower_http::trace::on_request: started processing request
+2024-08-27-13:46:10  INFO request{method=GET uri=/ version=HTTP/1.1}:index: htmx_google_auth::http::routes::index: index handler
+2024-08-27-13:46:10 DEBUG request{method=GET uri=/ version=HTTP/1.1}: tower_http::trace::on_response: finished processing request latency=0 ms status=200
+2024-08-27-13:46:11 DEBUG request{method=GET uri=/ version=HTTP/1.1}: tower_http::trace::on_request: started processing request
+2024-08-27-13:46:11  INFO request{method=GET uri=/ version=HTTP/1.1}:index: htmx_google_auth::http::routes::index: index handler
+2024-08-27-13:46:11 DEBUG request{method=GET uri=/ version=HTTP/1.1}: tower_http::trace::on_response: finished processing request latency=0 ms status=200
+2024-08-27-13:46:12 DEBUG request{method=GET uri=/ version=HTTP/1.1}: tower_http::trace::on_request: started processing request
+2024-08-27-13:46:12  INFO request{method=GET uri=/ version=HTTP/1.1}:index: htmx_google_auth::http::routes::index: index handler
+2024-08-27-13:46:12 DEBUG request{method=GET uri=/ version=HTTP/1.1}: tower_http::trace::on_response: finished processing request latency=0 ms status=200
+2024-08-27-13:47:16 DEBUG htmx_google_auth::http::http: listening on 127.0.0.1:8000
+2024-08-27-13:47:20 DEBUG request{method=GET uri=/ version=HTTP/1.1}: tower_http::trace::on_request: started processing request
+2024-08-27-13:47:20  INFO request{method=GET uri=/ version=HTTP/1.1}:index: htmx_google_auth::http::routes::index: index handler
+2024-08-27-13:47:20 DEBUG request{method=GET uri=/ version=HTTP/1.1}: tower_http::trace::on_response: finished processing request latency=0 ms status=200
+2024-08-27-13:47:21 DEBUG request{method=GET uri=/ version=HTTP/1.1}: tower_http::trace::on_request: started processing request
+2024-08-27-13:47:21  INFO request{method=GET uri=/ version=HTTP/1.1}:index: htmx_google_auth::http::routes::index: index handler
+2024-08-27-13:47:21 DEBUG request{method=GET uri=/ version=HTTP/1.1}: tower_http::trace::on_response: finished processing request latency=0 ms status=200
+2024-08-27-13:47:35 DEBUG htmx_google_auth::http::http: listening on 127.0.0.1:8000
+2024-08-27-13:47:38 DEBUG request{method=GET uri=/ version=HTTP/1.1}: tower_http::trace::on_request: started processing request
+2024-08-27-13:47:38  INFO request{method=GET uri=/ version=HTTP/1.1}:index: htmx_google_auth::http::routes::index: index handler
+2024-08-27-13:47:38 DEBUG request{method=GET uri=/ version=HTTP/1.1}: tower_http::trace::on_response: finished processing request latency=0 ms status=200
+2024-08-27-13:48:39 DEBUG htmx_google_auth::http::http: listening on 127.0.0.1:8000
+2024-08-27-13:48:42 DEBUG request{method=GET uri=/ version=HTTP/1.1}: tower_http::trace::on_request: started processing request
+2024-08-27-13:48:42  INFO request{method=GET uri=/ version=HTTP/1.1}:index: htmx_google_auth::http::routes::index: index handler
+2024-08-27-13:48:42 DEBUG request{method=GET uri=/ version=HTTP/1.1}: tower_http::trace::on_response: finished processing request latency=0 ms status=200
+2024-08-27-13:54:01 DEBUG htmx_google_auth::http::http: listening on 127.0.0.1:8000
+2024-08-27-13:54:08 DEBUG request{method=GET uri=/ version=HTTP/1.1}: tower_http::trace::on_request: started processing request
+2024-08-27-13:54:08  INFO request{method=GET uri=/ version=HTTP/1.1}:index: htmx_google_auth::http::routes::index: index handler
+2024-08-27-13:54:08 DEBUG request{method=GET uri=/ version=HTTP/1.1}: tower_http::trace::on_response: finished processing request latency=0 ms status=200
+2024-08-27-13:55:18 DEBUG htmx_google_auth::http::http: listening on 127.0.0.1:8000
+2024-08-27-13:55:23 DEBUG request{method=GET uri=/ version=HTTP/1.1}: tower_http::trace::on_request: started processing request
+2024-08-27-13:55:23  INFO request{method=GET uri=/ version=HTTP/1.1}:index: htmx_google_auth::http::routes::index: index handler
+2024-08-27-13:55:23 DEBUG request{method=GET uri=/ version=HTTP/1.1}: tower_http::trace::on_response: finished processing request latency=0 ms status=200
+2024-08-27-13:55:23 DEBUG request{method=GET uri=/static/htmx.min.js version=HTTP/1.1}: tower_http::trace::on_request: started processing request
+2024-08-27-13:55:23 DEBUG request{method=GET uri=/static/htmx.min.js version=HTTP/1.1}: tower_http::trace::on_response: finished processing request latency=1 ms status=200
+2024-08-27-13:55:23 DEBUG request{method=GET uri=/static/styles/output.css version=HTTP/1.1}: tower_http::trace::on_request: started processing request
+2024-08-27-13:55:23 DEBUG request{method=GET uri=/static/response-targets.js version=HTTP/1.1}: tower_http::trace::on_request: started processing request
+2024-08-27-13:55:23 DEBUG request{method=GET uri=/static/styles/output.css version=HTTP/1.1}: tower_http::trace::on_response: finished processing request latency=0 ms status=200
+2024-08-27-13:55:23 DEBUG request{method=GET uri=/static/response-targets.js version=HTTP/1.1}: tower_http::trace::on_response: finished processing request latency=0 ms status=200
+2024-08-27-14:13:30 DEBUG htmx_google_auth::http::http: listening on 127.0.0.1:8000
+2024-08-27-14:13:37 DEBUG request{method=GET uri=/ version=HTTP/1.1}: tower_http::trace::on_request: started processing request
+2024-08-27-14:13:37  INFO request{method=GET uri=/ version=HTTP/1.1}:index: htmx_google_auth::http::routes::index: index handler
+2024-08-27-14:13:37 DEBUG request{method=GET uri=/ version=HTTP/1.1}: tower_http::trace::on_response: finished processing request latency=0 ms status=200
+2024-08-27-14:13:37 DEBUG request{method=GET uri=/static/htmx.min.js version=HTTP/1.1}: tower_http::trace::on_request: started processing request
+2024-08-27-14:13:37 DEBUG request{method=GET uri=/static/htmx.min.js version=HTTP/1.1}: tower_http::trace::on_response: finished processing request latency=3 ms status=200
+2024-08-27-14:13:37 DEBUG request{method=GET uri=/static/styles/output.css version=HTTP/1.1}: tower_http::trace::on_request: started processing request
+2024-08-27-14:13:37 DEBUG request{method=GET uri=/static/response-targets.js version=HTTP/1.1}: tower_http::trace::on_request: started processing request
+2024-08-27-14:13:37 DEBUG request{method=GET uri=/static/styles/output.css version=HTTP/1.1}: tower_http::trace::on_response: finished processing request latency=1 ms status=200
+2024-08-27-14:13:37 DEBUG request{method=GET uri=/static/response-targets.js version=HTTP/1.1}: tower_http::trace::on_response: finished processing request latency=1 ms status=200
+2024-08-27-14:15:41 DEBUG htmx_google_auth::http::http: listening on 127.0.0.1:8000
+2024-08-27-14:15:47 DEBUG request{method=GET uri=/ version=HTTP/1.1}: tower_http::trace::on_request: started processing request
+2024-08-27-14:15:47  INFO request{method=GET uri=/ version=HTTP/1.1}:index: htmx_google_auth::http::routes::index: index handler
+2024-08-27-14:15:47 DEBUG request{method=GET uri=/ version=HTTP/1.1}: tower_http::trace::on_response: finished processing request latency=0 ms status=200
+2024-08-27-14:15:47 DEBUG request{method=GET uri=/static/htmx.min.js version=HTTP/1.1}: tower_http::trace::on_request: started processing request
+2024-08-27-14:15:47 DEBUG request{method=GET uri=/static/response-targets.js version=HTTP/1.1}: tower_http::trace::on_request: started processing request
+2024-08-27-14:15:47 DEBUG request{method=GET uri=/static/htmx.min.js version=HTTP/1.1}: tower_http::trace::on_response: finished processing request latency=1 ms status=200
+2024-08-27-14:15:47 DEBUG request{method=GET uri=/static/response-targets.js version=HTTP/1.1}: tower_http::trace::on_response: finished processing request latency=0 ms status=200
+2024-08-27-14:15:47 DEBUG request{method=GET uri=/static/styles/output.css version=HTTP/1.1}: tower_http::trace::on_request: started processing request
+2024-08-27-14:15:47 DEBUG request{method=GET uri=/static/styles/output.css version=HTTP/1.1}: tower_http::trace::on_response: finished processing request latency=1 ms status=200
+2024-08-27-14:18:05 DEBUG request{method=GET uri=/ version=HTTP/1.1}: tower_http::trace::on_request: started processing request
+2024-08-27-14:18:05  INFO request{method=GET uri=/ version=HTTP/1.1}:index: htmx_google_auth::http::routes::index: index handler
+2024-08-27-14:18:05 DEBUG request{method=GET uri=/ version=HTTP/1.1}: tower_http::trace::on_response: finished processing request latency=0 ms status=200
+2024-08-27-14:21:24 DEBUG htmx_google_auth::http::http: listening on 127.0.0.1:8000
+2024-08-27-14:21:29 DEBUG request{method=GET uri=/ version=HTTP/1.1}: tower_http::trace::on_request: started processing request
+2024-08-27-14:21:29  INFO request{method=GET uri=/ version=HTTP/1.1}:index: htmx_google_auth::http::routes::index: index handler
+2024-08-27-14:21:29 DEBUG request{method=GET uri=/ version=HTTP/1.1}: tower_http::trace::on_response: finished processing request latency=1 ms status=200
+2024-08-27-14:21:29 DEBUG request{method=GET uri=/static/htmx.min.js version=HTTP/1.1}: tower_http::trace::on_request: started processing request
+2024-08-27-14:21:29 DEBUG request{method=GET uri=/static/htmx.min.js version=HTTP/1.1}: tower_http::trace::on_response: finished processing request latency=1 ms status=200
+2024-08-27-14:21:29 DEBUG request{method=GET uri=/static/styles/output.css version=HTTP/1.1}: tower_http::trace::on_request: started processing request
+2024-08-27-14:21:29 DEBUG request{method=GET uri=/static/styles/output.css version=HTTP/1.1}: tower_http::trace::on_response: finished processing request latency=1 ms status=200
+2024-08-27-14:21:29 DEBUG request{method=GET uri=/static/response-targets.js version=HTTP/1.1}: tower_http::trace::on_request: started processing request
+2024-08-27-14:21:29 DEBUG request{method=GET uri=/static/response-targets.js version=HTTP/1.1}: tower_http::trace::on_response: finished processing request latency=1 ms status=200
+2024-08-27-14:23:24 DEBUG htmx_google_auth::http::http: listening on 127.0.0.1:8000
+2024-08-27-14:23:28 DEBUG request{method=GET uri=/ version=HTTP/1.1}: tower_http::trace::on_request: started processing request
+2024-08-27-14:23:28  INFO request{method=GET uri=/ version=HTTP/1.1}:index: htmx_google_auth::http::routes::index: index handler
+2024-08-27-14:23:28 DEBUG request{method=GET uri=/ version=HTTP/1.1}: tower_http::trace::on_response: finished processing request latency=1 ms status=200
+2024-08-27-14:23:28 DEBUG request{method=GET uri=/static/htmx.min.js version=HTTP/1.1}: tower_http::trace::on_request: started processing request
+2024-08-27-14:23:28 DEBUG request{method=GET uri=/static/htmx.min.js version=HTTP/1.1}: tower_http::trace::on_response: finished processing request latency=1 ms status=200
+2024-08-27-14:23:28 DEBUG request{method=GET uri=/static/styles/output.css version=HTTP/1.1}: tower_http::trace::on_request: started processing request
+2024-08-27-14:23:28 DEBUG request{method=GET uri=/static/styles/output.css version=HTTP/1.1}: tower_http::trace::on_response: finished processing request latency=1 ms status=200
+2024-08-27-14:23:28 DEBUG request{method=GET uri=/static/response-targets.js version=HTTP/1.1}: tower_http::trace::on_request: started processing request
+2024-08-27-14:23:28 DEBUG request{method=GET uri=/static/response-targets.js version=HTTP/1.1}: tower_http::trace::on_response: finished processing request latency=1 ms status=200
+2024-08-27-14:23:45 DEBUG request{method=GET uri=/ version=HTTP/1.1}: tower_http::trace::on_request: started processing request
+2024-08-27-14:23:45  INFO request{method=GET uri=/ version=HTTP/1.1}:index: htmx_google_auth::http::routes::index: index handler
+2024-08-27-14:23:45 DEBUG request{method=GET uri=/ version=HTTP/1.1}: tower_http::trace::on_response: finished processing request latency=0 ms status=200
+2024-08-27-14:23:45 DEBUG request{method=GET uri=/static/styles/output.css version=HTTP/1.1}: tower_http::trace::on_request: started processing request
+2024-08-27-14:23:45 DEBUG request{method=GET uri=/static/styles/output.css version=HTTP/1.1}: tower_http::trace::on_response: finished processing request latency=1 ms status=304
+2024-08-27-14:28:27 DEBUG htmx_google_auth::http::http: listening on 127.0.0.1:8000
+2024-08-27-14:28:28 DEBUG request{method=GET uri=/ version=HTTP/1.1}: tower_http::trace::on_request: started processing request
+2024-08-27-14:28:28  INFO request{method=GET uri=/ version=HTTP/1.1}:index: htmx_google_auth::http::routes::index: index handler
+2024-08-27-14:28:28 DEBUG request{method=GET uri=/ version=HTTP/1.1}: tower_http::trace::on_response: finished processing request latency=0 ms status=200
+2024-08-27-14:28:51 DEBUG htmx_google_auth::http::http: listening on 127.0.0.1:8000
+2024-08-27-14:28:57 DEBUG request{method=GET uri=/ version=HTTP/1.1}: tower_http::trace::on_request: started processing request
+2024-08-27-14:28:57  INFO request{method=GET uri=/ version=HTTP/1.1}:index: htmx_google_auth::http::routes::index: index handler
+2024-08-27-14:28:57 DEBUG request{method=GET uri=/ version=HTTP/1.1}: tower_http::trace::on_response: finished processing request latency=0 ms status=200
+2024-08-27-14:38:46 DEBUG htmx_google_auth::http::http: listening on 127.0.0.1:8000
+2024-08-27-14:38:48 DEBUG request{method=GET uri=/ version=HTTP/1.1}: tower_http::trace::on_request: started processing request
+2024-08-27-14:38:48  INFO request{method=GET uri=/ version=HTTP/1.1}:index: htmx_google_auth::http::routes::index: index handler
+2024-08-27-14:38:48 DEBUG request{method=GET uri=/ version=HTTP/1.1}: tower_http::trace::on_response: finished processing request latency=0 ms status=200
+2024-08-27-14:38:48 DEBUG request{method=GET uri=/static/styles/output.css version=HTTP/1.1}: tower_http::trace::on_request: started processing request
+2024-08-27-14:38:48 DEBUG request{method=GET uri=/static/styles/output.css version=HTTP/1.1}: tower_http::trace::on_response: finished processing request latency=1 ms status=304
+2024-08-27-14:47:56 DEBUG htmx_google_auth::http::http: listening on 127.0.0.1:8000
+2024-08-27-14:47:59 DEBUG request{method=GET uri=/ version=HTTP/1.1}: tower_http::trace::on_request: started processing request
+2024-08-27-14:47:59  INFO request{method=GET uri=/ version=HTTP/1.1}:index: htmx_google_auth::http::routes::index: index handler
+2024-08-27-14:47:59 DEBUG request{method=GET uri=/ version=HTTP/1.1}: tower_http::trace::on_response: finished processing request latency=1 ms status=200
+2024-08-27-14:50:57 DEBUG htmx_google_auth::http::http: listening on 127.0.0.1:8000
+2024-08-27-14:50:58 DEBUG request{method=GET uri=/ version=HTTP/1.1}: tower_http::trace::on_request: started processing request
+2024-08-27-14:50:58  INFO request{method=GET uri=/ version=HTTP/1.1}:index: htmx_google_auth::http::routes::index: index handler
+2024-08-27-14:50:58 DEBUG request{method=GET uri=/ version=HTTP/1.1}: tower_http::trace::on_response: finished processing request latency=0 ms status=200
+2024-08-27-15:02:49 DEBUG htmx_google_auth::http::http: listening on 127.0.0.1:8000
+2024-08-27-15:02:52 DEBUG request{method=GET uri=/ version=HTTP/1.1}: tower_http::trace::on_request: started processing request
+2024-08-27-15:02:52  INFO request{method=GET uri=/ version=HTTP/1.1}:index: htmx_google_auth::http::routes::index: index handler
+2024-08-27-15:02:52 DEBUG request{method=GET uri=/ version=HTTP/1.1}: tower_http::trace::on_response: finished processing request latency=0 ms status=200
+2024-08-27-15:02:52 DEBUG request{method=GET uri=/static/styles/output.css version=HTTP/1.1}: tower_http::trace::on_request: started processing request
+2024-08-27-15:02:52 DEBUG request{method=GET uri=/static/styles/output.css version=HTTP/1.1}: tower_http::trace::on_response: finished processing request latency=1 ms status=304
+2024-08-27-15:03:23 DEBUG request{method=GET uri=/ version=HTTP/1.1}: tower_http::trace::on_request: started processing request
+2024-08-27-15:03:23  INFO request{method=GET uri=/ version=HTTP/1.1}:index: htmx_google_auth::http::routes::index: index handler
+2024-08-27-15:03:23 DEBUG request{method=GET uri=/ version=HTTP/1.1}: tower_http::trace::on_response: finished processing request latency=0 ms status=200
+2024-08-27-15:03:23 DEBUG request{method=GET uri=/static/styles/output.css version=HTTP/1.1}: tower_http::trace::on_request: started processing request
+2024-08-27-15:03:23 DEBUG request{method=GET uri=/static/styles/output.css version=HTTP/1.1}: tower_http::trace::on_response: finished processing request latency=1 ms status=304
+2024-08-27-15:06:56 DEBUG htmx_google_auth::http::http: listening on 127.0.0.1:8000
+2024-08-27-15:06:59 DEBUG request{method=GET uri=/ version=HTTP/1.1}: tower_http::trace::on_request: started processing request
+2024-08-27-15:06:59  INFO request{method=GET uri=/ version=HTTP/1.1}:index: htmx_google_auth::http::routes::index: index handler
+2024-08-27-15:06:59 DEBUG request{method=GET uri=/ version=HTTP/1.1}: tower_http::trace::on_response: finished processing request latency=0 ms status=200
+2024-08-27-15:13:18 DEBUG request{method=GET uri=/ version=HTTP/1.1}: tower_http::trace::on_request: started processing request
+2024-08-27-15:13:18  INFO request{method=GET uri=/ version=HTTP/1.1}:index: htmx_google_auth::http::routes::index: index handler
+2024-08-27-15:13:18 DEBUG request{method=GET uri=/ version=HTTP/1.1}: tower_http::trace::on_response: finished processing request latency=0 ms status=200
+2024-08-27-15:14:14 DEBUG htmx_google_auth::http::http: listening on 127.0.0.1:8000
+2024-08-27-15:14:18 DEBUG request{method=GET uri=/healthchecker version=HTTP/1.1}: tower_http::trace::on_request: started processing request
+2024-08-27-15:14:18 DEBUG request{method=GET uri=/healthchecker version=HTTP/1.1}: tower_http::trace::on_response: finished processing request latency=1 ms status=200
+2024-08-27-15:14:22 DEBUG request{method=GET uri=/ version=HTTP/1.1}: tower_http::trace::on_request: started processing request
+2024-08-27-15:14:22  INFO request{method=GET uri=/ version=HTTP/1.1}:index: htmx_google_auth::http::routes::index: index handler
+2024-08-27-15:14:22 DEBUG request{method=GET uri=/ version=HTTP/1.1}: tower_http::trace::on_response: finished processing request latency=0 ms status=200
+2024-08-27-15:17:45 DEBUG htmx_google_auth::http::http: listening on 127.0.0.1:8000
+2024-08-27-15:17:48 DEBUG request{method=GET uri=/ version=HTTP/1.1}: tower_http::trace::on_request: started processing request
+2024-08-27-15:17:48  INFO request{method=GET uri=/ version=HTTP/1.1}:index: htmx_google_auth::http::routes::index: index handler
+2024-08-27-15:17:48 DEBUG request{method=GET uri=/ version=HTTP/1.1}: tower_http::trace::on_response: finished processing request latency=0 ms status=200
+2024-08-27-15:19:34 DEBUG htmx_google_auth::http::http: listening on 127.0.0.1:8000
+2024-08-27-15:19:36 DEBUG request{method=GET uri=/ version=HTTP/1.1}: tower_http::trace::on_request: started processing request
+2024-08-27-15:19:36  INFO request{method=GET uri=/ version=HTTP/1.1}:index: htmx_google_auth::http::routes::index: index handler
+2024-08-27-15:19:36 DEBUG request{method=GET uri=/ version=HTTP/1.1}: tower_http::trace::on_response: finished processing request latency=1 ms status=200
+2024-08-27-15:19:36 DEBUG request{method=GET uri=/static/styles/output.css version=HTTP/1.1}: tower_http::trace::on_request: started processing request
+2024-08-27-15:19:36 DEBUG request{method=GET uri=/static/styles/output.css version=HTTP/1.1}: tower_http::trace::on_response: finished processing request latency=1 ms status=200
+2024-08-27-15:19:51 DEBUG htmx_google_auth::http::http: listening on 127.0.0.1:8000
+2024-08-27-15:19:57 DEBUG request{method=GET uri=/ version=HTTP/1.1}: tower_http::trace::on_request: started processing request
+2024-08-27-15:19:57  INFO request{method=GET uri=/ version=HTTP/1.1}:index: htmx_google_auth::http::routes::index: index handler
+2024-08-27-15:19:57 DEBUG request{method=GET uri=/ version=HTTP/1.1}: tower_http::trace::on_response: finished processing request latency=0 ms status=200
+2024-08-27-15:19:57 DEBUG request{method=GET uri=/static/styles/output.css version=HTTP/1.1}: tower_http::trace::on_request: started processing request
+2024-08-27-15:19:57 DEBUG request{method=GET uri=/static/styles/output.css version=HTTP/1.1}: tower_http::trace::on_response: finished processing request latency=1 ms status=200
+2024-08-27-15:20:09 DEBUG request{method=GET uri=/static/styles/output.css version=HTTP/1.1}: tower_http::trace::on_request: started processing request
+2024-08-27-15:20:09 DEBUG request{method=GET uri=/static/styles/output.css version=HTTP/1.1}: tower_http::trace::on_response: finished processing request latency=1 ms status=304
+2024-08-27-15:23:48 DEBUG htmx_google_auth::http::http: listening on 127.0.0.1:8000
+2024-08-27-15:23:52 DEBUG request{method=GET uri=/ version=HTTP/1.1}: tower_http::trace::on_request: started processing request
+2024-08-27-15:23:52  INFO request{method=GET uri=/ version=HTTP/1.1}:index: htmx_google_auth::http::routes::index: index handler
+2024-08-27-15:23:52 DEBUG request{method=GET uri=/ version=HTTP/1.1}: tower_http::trace::on_response: finished processing request latency=0 ms status=200
+2024-08-27-15:23:52 DEBUG request{method=GET uri=/static/styles/output.css version=HTTP/1.1}: tower_http::trace::on_request: started processing request
+2024-08-27-15:23:52 DEBUG request{method=GET uri=/static/styles/output.css version=HTTP/1.1}: tower_http::trace::on_response: finished processing request latency=2 ms status=304
+2024-08-27-15:24:11 DEBUG request{method=GET uri=/ version=HTTP/1.1}: tower_http::trace::on_request: started processing request
+2024-08-27-15:24:11  INFO request{method=GET uri=/ version=HTTP/1.1}:index: htmx_google_auth::http::routes::index: index handler
+2024-08-27-15:24:11 DEBUG request{method=GET uri=/ version=HTTP/1.1}: tower_http::trace::on_response: finished processing request latency=0 ms status=200
+2024-08-27-15:24:11 DEBUG request{method=GET uri=/static/htmx.min.js version=HTTP/1.1}: tower_http::trace::on_request: started processing request
+2024-08-27-15:24:11 DEBUG request{method=GET uri=/static/htmx.min.js version=HTTP/1.1}: tower_http::trace::on_response: finished processing request latency=1 ms status=200
+2024-08-27-15:24:11 DEBUG request{method=GET uri=/static/styles/output.css version=HTTP/1.1}: tower_http::trace::on_request: started processing request
+2024-08-27-15:24:11 DEBUG request{method=GET uri=/static/styles/output.css version=HTTP/1.1}: tower_http::trace::on_response: finished processing request latency=0 ms status=200
+2024-08-27-15:24:11 DEBUG request{method=GET uri=/static/response-targets.js version=HTTP/1.1}: tower_http::trace::on_request: started processing request
+2024-08-27-15:24:11 DEBUG request{method=GET uri=/static/response-targets.js version=HTTP/1.1}: tower_http::trace::on_response: finished processing request latency=1 ms status=200
+2024-08-27-15:25:09 DEBUG htmx_google_auth::http::http: listening on 127.0.0.1:8000
+2024-08-27-15:25:22 DEBUG request{method=GET uri=/ version=HTTP/1.1}: tower_http::trace::on_request: started processing request
+2024-08-27-15:25:22  INFO request{method=GET uri=/ version=HTTP/1.1}:index: htmx_google_auth::http::routes::index: index handler
+2024-08-27-15:25:22 DEBUG request{method=GET uri=/ version=HTTP/1.1}: tower_http::trace::on_response: finished processing request latency=0 ms status=200
+2024-08-27-15:25:22 DEBUG request{method=GET uri=/static/htmx.min.js version=HTTP/1.1}: tower_http::trace::on_request: started processing request
+2024-08-27-15:25:22 DEBUG request{method=GET uri=/static/htmx.min.js version=HTTP/1.1}: tower_http::trace::on_response: finished processing request latency=2 ms status=200
+2024-08-27-15:25:22 DEBUG request{method=GET uri=/static/styles/output.css version=HTTP/1.1}: tower_http::trace::on_request: started processing request
+2024-08-27-15:25:22 DEBUG request{method=GET uri=/static/styles/output.css version=HTTP/1.1}: tower_http::trace::on_response: finished processing request latency=1 ms status=200
+2024-08-27-15:25:22 DEBUG request{method=GET uri=/static/response-targets.js version=HTTP/1.1}: tower_http::trace::on_request: started processing request
+2024-08-27-15:25:22 DEBUG request{method=GET uri=/static/response-targets.js version=HTTP/1.1}: tower_http::trace::on_response: finished processing request latency=1 ms status=200
+2024-08-27-15:30:57 DEBUG request{method=GET uri=/ version=HTTP/1.1}: tower_http::trace::on_request: started processing request
+2024-08-27-15:30:57  INFO request{method=GET uri=/ version=HTTP/1.1}:index: htmx_google_auth::http::routes::index: index handler
+2024-08-27-15:30:57 DEBUG request{method=GET uri=/ version=HTTP/1.1}: tower_http::trace::on_response: finished processing request latency=0 ms status=200
+2024-08-27-15:30:57 DEBUG request{method=GET uri=/static/htmx.min.js version=HTTP/1.1}: tower_http::trace::on_request: started processing request
+2024-08-27-15:30:57 DEBUG request{method=GET uri=/static/htmx.min.js version=HTTP/1.1}: tower_http::trace::on_response: finished processing request latency=1 ms status=200
+2024-08-27-15:30:57 DEBUG request{method=GET uri=/static/styles/output.css version=HTTP/1.1}: tower_http::trace::on_request: started processing request
+2024-08-27-15:30:57 DEBUG request{method=GET uri=/static/response-targets.js version=HTTP/1.1}: tower_http::trace::on_request: started processing request
+2024-08-27-15:30:57 DEBUG request{method=GET uri=/static/styles/output.css version=HTTP/1.1}: tower_http::trace::on_response: finished processing request latency=1 ms status=200
+2024-08-27-15:30:57 DEBUG request{method=GET uri=/static/response-targets.js version=HTTP/1.1}: tower_http::trace::on_response: finished processing request latency=0 ms status=200
+2024-08-27-15:40:42 DEBUG request{method=GET uri=/healthchecker version=HTTP/1.1}: tower_http::trace::on_request: started processing request
+2024-08-27-15:40:42 DEBUG request{method=GET uri=/healthchecker version=HTTP/1.1}: tower_http::trace::on_response: finished processing request latency=0 ms status=200
+2024-08-27-15:40:44 DEBUG request{method=GET uri=/ version=HTTP/1.1}: tower_http::trace::on_request: started processing request
+2024-08-27-15:40:44  INFO request{method=GET uri=/ version=HTTP/1.1}:index: htmx_google_auth::http::routes::index: index handler
+2024-08-27-15:40:44 DEBUG request{method=GET uri=/ version=HTTP/1.1}: tower_http::trace::on_response: finished processing request latency=0 ms status=200
+2024-08-27-15:40:44 DEBUG request{method=GET uri=/static/htmx.min.js version=HTTP/1.1}: tower_http::trace::on_request: started processing request
+2024-08-27-15:40:44 DEBUG request{method=GET uri=/static/htmx.min.js version=HTTP/1.1}: tower_http::trace::on_response: finished processing request latency=1 ms status=200
+2024-08-27-15:40:44 DEBUG request{method=GET uri=/static/response-targets.js version=HTTP/1.1}: tower_http::trace::on_request: started processing request
+2024-08-27-15:40:44 DEBUG request{method=GET uri=/static/response-targets.js version=HTTP/1.1}: tower_http::trace::on_response: finished processing request latency=1 ms status=200
+2024-08-27-15:40:44 DEBUG request{method=GET uri=/static/styles/output.css version=HTTP/1.1}: tower_http::trace::on_request: started processing request
+2024-08-27-15:40:44 DEBUG request{method=GET uri=/static/styles/output.css version=HTTP/1.1}: tower_http::trace::on_response: finished processing request latency=0 ms status=200
+2024-08-27-18:02:35 DEBUG htmx_google_auth::http::http: listening on 127.0.0.1:8000
+2024-08-27-18:02:40 DEBUG request{method=GET uri=/static/styles/output.css version=HTTP/1.1}: tower_http::trace::on_request: started processing request
+2024-08-27-18:02:40 DEBUG request{method=GET uri=/static/styles/output.css version=HTTP/1.1}: tower_http::trace::on_response: finished processing request latency=4 ms status=304
+2024-08-27-18:02:44 DEBUG request{method=GET uri=/ version=HTTP/1.1}: tower_http::trace::on_request: started processing request
+2024-08-27-18:02:44  INFO request{method=GET uri=/ version=HTTP/1.1}:index: htmx_google_auth::http::routes::index: index handler
+2024-08-27-18:02:44 DEBUG request{method=GET uri=/ version=HTTP/1.1}: tower_http::trace::on_response: finished processing request latency=1 ms status=200
+2024-08-27-18:02:44 DEBUG request{method=GET uri=/static/htmx.min.js version=HTTP/1.1}: tower_http::trace::on_request: started processing request
+2024-08-27-18:02:44 DEBUG request{method=GET uri=/static/htmx.min.js version=HTTP/1.1}: tower_http::trace::on_response: finished processing request latency=1 ms status=200
+2024-08-27-18:02:44 DEBUG request{method=GET uri=/static/styles/output.css version=HTTP/1.1}: tower_http::trace::on_request: started processing request
+2024-08-27-18:02:44 DEBUG request{method=GET uri=/static/styles/output.css version=HTTP/1.1}: tower_http::trace::on_response: finished processing request latency=1 ms status=200
+2024-08-27-18:02:44 DEBUG request{method=GET uri=/static/response-targets.js version=HTTP/1.1}: tower_http::trace::on_request: started processing request
+2024-08-27-18:02:44 DEBUG request{method=GET uri=/static/response-targets.js version=HTTP/1.1}: tower_http::trace::on_response: finished processing request latency=1 ms status=200
+2024-08-27-18:06:29 DEBUG htmx_google_auth::http::http: listening on 127.0.0.1:8000
+2024-08-27-18:06:32 DEBUG request{method=GET uri=/ version=HTTP/1.1}: tower_http::trace::on_request: started processing request
+2024-08-27-18:06:32  INFO request{method=GET uri=/ version=HTTP/1.1}:index: htmx_google_auth::http::routes::index: index handler
+2024-08-27-18:06:32 DEBUG request{method=GET uri=/ version=HTTP/1.1}: tower_http::trace::on_response: finished processing request latency=0 ms status=200
+2024-08-27-18:06:32 DEBUG request{method=GET uri=/static/htmx.min.js version=HTTP/1.1}: tower_http::trace::on_request: started processing request
+2024-08-27-18:06:32 DEBUG request{method=GET uri=/static/htmx.min.js version=HTTP/1.1}: tower_http::trace::on_response: finished processing request latency=1 ms status=200
+2024-08-27-18:06:32 DEBUG request{method=GET uri=/static/styles/output.css version=HTTP/1.1}: tower_http::trace::on_request: started processing request
+2024-08-27-18:06:32 DEBUG request{method=GET uri=/static/response-targets.js version=HTTP/1.1}: tower_http::trace::on_request: started processing request
+2024-08-27-18:06:32 DEBUG request{method=GET uri=/static/response-targets.js version=HTTP/1.1}: tower_http::trace::on_response: finished processing request latency=0 ms status=200
+2024-08-27-18:06:32 DEBUG request{method=GET uri=/static/styles/output.css version=HTTP/1.1}: tower_http::trace::on_response: finished processing request latency=1 ms status=200
+2024-08-27-18:16:57 DEBUG htmx_google_auth::http::http: listening on 127.0.0.1:8000
+2024-08-27-18:17:06 DEBUG request{method=GET uri=/ version=HTTP/1.1}: tower_http::trace::on_request: started processing request
+2024-08-27-18:17:06  INFO request{method=GET uri=/ version=HTTP/1.1}:index: htmx_google_auth::http::routes::index: index handler
+2024-08-27-18:17:06 DEBUG request{method=GET uri=/ version=HTTP/1.1}: tower_http::trace::on_response: finished processing request latency=0 ms status=200
+2024-08-27-18:17:06 DEBUG request{method=GET uri=/static/htmx.min.js version=HTTP/1.1}: tower_http::trace::on_request: started processing request
+2024-08-27-18:17:06 DEBUG request{method=GET uri=/static/htmx.min.js version=HTTP/1.1}: tower_http::trace::on_response: finished processing request latency=1 ms status=200
+2024-08-27-18:17:06 DEBUG request{method=GET uri=/static/styles/output.css version=HTTP/1.1}: tower_http::trace::on_request: started processing request
+2024-08-27-18:17:06 DEBUG request{method=GET uri=/static/styles/output.css version=HTTP/1.1}: tower_http::trace::on_response: finished processing request latency=0 ms status=200
+2024-08-27-18:17:06 DEBUG request{method=GET uri=/static/response-targets.js version=HTTP/1.1}: tower_http::trace::on_request: started processing request
+2024-08-27-18:17:06 DEBUG request{method=GET uri=/static/response-targets.js version=HTTP/1.1}: tower_http::trace::on_response: finished processing request latency=1 ms status=200
+2024-08-27-18:19:22 DEBUG htmx_google_auth::http::http: listening on 127.0.0.1:8000
+2024-08-27-18:19:36 DEBUG request{method=GET uri=/ version=HTTP/1.1}: tower_http::trace::on_request: started processing request
+2024-08-27-18:19:36  INFO request{method=GET uri=/ version=HTTP/1.1}:index: htmx_google_auth::http::routes::index: index handler
+2024-08-27-18:19:36 DEBUG request{method=GET uri=/ version=HTTP/1.1}: tower_http::trace::on_response: finished processing request latency=0 ms status=200
+2024-08-27-18:19:36 DEBUG request{method=GET uri=/static/htmx.min.js version=HTTP/1.1}: tower_http::trace::on_request: started processing request
+2024-08-27-18:19:36 DEBUG request{method=GET uri=/static/htmx.min.js version=HTTP/1.1}: tower_http::trace::on_response: finished processing request latency=1 ms status=200
+2024-08-27-18:19:36 DEBUG request{method=GET uri=/static/styles/output.css version=HTTP/1.1}: tower_http::trace::on_request: started processing request
+2024-08-27-18:19:36 DEBUG request{method=GET uri=/static/styles/output.css version=HTTP/1.1}: tower_http::trace::on_response: finished processing request latency=2 ms status=200
+2024-08-27-18:19:36 DEBUG request{method=GET uri=/static/response-targets.js version=HTTP/1.1}: tower_http::trace::on_request: started processing request
+2024-08-27-18:19:36 DEBUG request{method=GET uri=/static/response-targets.js version=HTTP/1.1}: tower_http::trace::on_response: finished processing request latency=0 ms status=200
+2024-08-27-18:19:37 DEBUG request{method=GET uri=/favicon.ico version=HTTP/1.1}: tower_http::trace::on_request: started processing request
+2024-08-27-18:19:37 DEBUG request{method=GET uri=/favicon.ico version=HTTP/1.1}: tower_http::trace::on_response: finished processing request latency=0 ms status=404
+2024-08-27-18:21:08 DEBUG htmx_google_auth::http::http: listening on 127.0.0.1:8000
+2024-08-27-18:21:11 DEBUG request{method=GET uri=/ version=HTTP/1.1}: tower_http::trace::on_request: started processing request
+2024-08-27-18:21:11  INFO request{method=GET uri=/ version=HTTP/1.1}:index: htmx_google_auth::http::routes::index: index handler
+2024-08-27-18:21:11 DEBUG request{method=GET uri=/ version=HTTP/1.1}: tower_http::trace::on_response: finished processing request latency=0 ms status=200
+2024-08-27-18:21:11 DEBUG request{method=GET uri=/static/htmx.min.js version=HTTP/1.1}: tower_http::trace::on_request: started processing request
+2024-08-27-18:21:11 DEBUG request{method=GET uri=/static/htmx.min.js version=HTTP/1.1}: tower_http::trace::on_response: finished processing request latency=1 ms status=200
+2024-08-27-18:21:11 DEBUG request{method=GET uri=/static/styles/output.css version=HTTP/1.1}: tower_http::trace::on_request: started processing request
+2024-08-27-18:21:11 DEBUG request{method=GET uri=/static/styles/output.css version=HTTP/1.1}: tower_http::trace::on_response: finished processing request latency=0 ms status=200
+2024-08-27-18:21:12 DEBUG request{method=GET uri=/static/response-targets.js version=HTTP/1.1}: tower_http::trace::on_request: started processing request
+2024-08-27-18:21:12 DEBUG request{method=GET uri=/static/response-targets.js version=HTTP/1.1}: tower_http::trace::on_response: finished processing request latency=1 ms status=200
+2024-08-27-18:22:06 DEBUG htmx_google_auth::http::http: listening on 127.0.0.1:8000
+2024-08-27-18:22:10 DEBUG request{method=GET uri=/ version=HTTP/1.1}: tower_http::trace::on_request: started processing request
+2024-08-27-18:22:10  INFO request{method=GET uri=/ version=HTTP/1.1}:index: htmx_google_auth::http::routes::index: index handler
+2024-08-27-18:22:10 DEBUG request{method=GET uri=/ version=HTTP/1.1}: tower_http::trace::on_response: finished processing request latency=0 ms status=200
+2024-08-27-18:22:10 DEBUG request{method=GET uri=/static/htmx.min.js version=HTTP/1.1}: tower_http::trace::on_request: started processing request
+2024-08-27-18:22:10 DEBUG request{method=GET uri=/static/htmx.min.js version=HTTP/1.1}: tower_http::trace::on_response: finished processing request latency=1 ms status=200
+2024-08-27-18:22:10 DEBUG request{method=GET uri=/static/styles/output.css version=HTTP/1.1}: tower_http::trace::on_request: started processing request
+2024-08-27-18:22:10 DEBUG request{method=GET uri=/static/styles/output.css version=HTTP/1.1}: tower_http::trace::on_response: finished processing request latency=1 ms status=200
+2024-08-27-18:22:10 DEBUG request{method=GET uri=/static/response-targets.js version=HTTP/1.1}: tower_http::trace::on_request: started processing request
+2024-08-27-18:22:10 DEBUG request{method=GET uri=/static/response-targets.js version=HTTP/1.1}: tower_http::trace::on_response: finished processing request latency=0 ms status=200
+2024-08-27-18:28:28 DEBUG request{method=GET uri=/ version=HTTP/1.1}: tower_http::trace::on_request: started processing request
+2024-08-27-18:28:28  INFO request{method=GET uri=/ version=HTTP/1.1}:index: htmx_google_auth::http::routes::index: index handler
+2024-08-27-18:28:28 DEBUG request{method=GET uri=/ version=HTTP/1.1}: tower_http::trace::on_response: finished processing request latency=1 ms status=200
+2024-08-27-18:28:28 DEBUG request{method=GET uri=/static/htmx.min.js version=HTTP/1.1}: tower_http::trace::on_request: started processing request
+2024-08-27-18:28:28 DEBUG request{method=GET uri=/static/htmx.min.js version=HTTP/1.1}: tower_http::trace::on_response: finished processing request latency=2 ms status=200
+2024-08-27-18:28:28 DEBUG request{method=GET uri=/static/response-targets.js version=HTTP/1.1}: tower_http::trace::on_request: started processing request
+2024-08-27-18:28:28 DEBUG request{method=GET uri=/static/response-targets.js version=HTTP/1.1}: tower_http::trace::on_response: finished processing request latency=6 ms status=200
+2024-08-27-18:28:28 DEBUG request{method=GET uri=/static/styles/output.css version=HTTP/1.1}: tower_http::trace::on_request: started processing request
+2024-08-27-18:28:29 DEBUG request{method=GET uri=/static/styles/output.css version=HTTP/1.1}: tower_http::trace::on_response: finished processing request latency=9 ms status=200
+2024-08-27-18:28:29 DEBUG request{method=GET uri=/favicon.ico version=HTTP/1.1}: tower_http::trace::on_request: started processing request
+2024-08-27-18:28:29 DEBUG request{method=GET uri=/favicon.ico version=HTTP/1.1}: tower_http::trace::on_response: finished processing request latency=0 ms status=404
+2024-08-27-18:37:36 DEBUG htmx_google_auth::http::http: listening on 127.0.0.1:8000
+2024-08-27-18:37:41 DEBUG request{method=GET uri=/ version=HTTP/1.1}: tower_http::trace::on_request: started processing request
+2024-08-27-18:37:41  INFO request{method=GET uri=/ version=HTTP/1.1}:index: htmx_google_auth::http::routes::index: index handler
+2024-08-27-18:37:41 DEBUG request{method=GET uri=/ version=HTTP/1.1}: tower_http::trace::on_response: finished processing request latency=0 ms status=200
+2024-08-27-18:38:43 DEBUG htmx_google_auth::http::http: listening on 127.0.0.1:8000
+2024-08-27-18:38:45 DEBUG request{method=GET uri=/ version=HTTP/1.1}: tower_http::trace::on_request: started processing request
+2024-08-27-18:38:45  INFO request{method=GET uri=/ version=HTTP/1.1}:index: htmx_google_auth::http::routes::index: index handler
+2024-08-27-18:38:45 DEBUG request{method=GET uri=/ version=HTTP/1.1}: tower_http::trace::on_response: finished processing request latency=0 ms status=200
+2024-08-27-18:45:46 DEBUG htmx_google_auth::http::http: listening on 127.0.0.1:8000
+2024-08-27-18:45:51 DEBUG request{method=GET uri=/ version=HTTP/1.1}: tower_http::trace::on_request: started processing request
+2024-08-27-18:45:51  INFO request{method=GET uri=/ version=HTTP/1.1}:index: htmx_google_auth::http::routes::index: index handler
+2024-08-27-18:45:51 DEBUG request{method=GET uri=/ version=HTTP/1.1}: tower_http::trace::on_response: finished processing request latency=0 ms status=200
+2024-08-27-18:45:51 DEBUG request{method=GET uri=/static/styles/output.css version=HTTP/1.1}: tower_http::trace::on_request: started processing request
+2024-08-27-18:45:51 DEBUG request{method=GET uri=/static/styles/output.css version=HTTP/1.1}: tower_http::trace::on_response: finished processing request latency=1 ms status=200
+2024-08-27-18:47:11 DEBUG htmx_google_auth::http::http: listening on 127.0.0.1:8000
+2024-08-27-18:47:14 DEBUG request{method=GET uri=/ version=HTTP/1.1}: tower_http::trace::on_request: started processing request
+2024-08-27-18:47:14  INFO request{method=GET uri=/ version=HTTP/1.1}:index: htmx_google_auth::http::routes::index: index handler
+2024-08-27-18:47:14 DEBUG request{method=GET uri=/ version=HTTP/1.1}: tower_http::trace::on_response: finished processing request latency=0 ms status=200
+2024-08-27-18:47:14 DEBUG request{method=GET uri=/static/styles/output.css version=HTTP/1.1}: tower_http::trace::on_request: started processing request
+2024-08-27-18:47:14 DEBUG request{method=GET uri=/static/styles/output.css version=HTTP/1.1}: tower_http::trace::on_response: finished processing request latency=1 ms status=304
+2024-08-27-18:47:49 DEBUG htmx_google_auth::http::http: listening on 127.0.0.1:8000
+2024-08-27-18:47:52 DEBUG request{method=GET uri=/ version=HTTP/1.1}: tower_http::trace::on_request: started processing request
+2024-08-27-18:47:52  INFO request{method=GET uri=/ version=HTTP/1.1}:index: htmx_google_auth::http::routes::index: index handler
+2024-08-27-18:47:52 DEBUG request{method=GET uri=/ version=HTTP/1.1}: tower_http::trace::on_response: finished processing request latency=0 ms status=200
+2024-08-27-18:47:52 DEBUG request{method=GET uri=/static/styles/output.css version=HTTP/1.1}: tower_http::trace::on_request: started processing request
+2024-08-27-18:47:52 DEBUG request{method=GET uri=/static/styles/output.css version=HTTP/1.1}: tower_http::trace::on_response: finished processing request latency=1 ms status=304
+2024-08-27-18:48:10 DEBUG request{method=GET uri=/static/styles/output.css version=HTTP/1.1}: tower_http::trace::on_request: started processing request
+2024-08-27-18:48:10 DEBUG request{method=GET uri=/static/styles/output.css version=HTTP/1.1}: tower_http::trace::on_response: finished processing request latency=1 ms status=304
+2024-08-27-18:54:51 DEBUG htmx_google_auth::http::http: listening on 127.0.0.1:8000
+2024-08-27-18:54:56 DEBUG request{method=GET uri=/ version=HTTP/1.1}: tower_http::trace::on_request: started processing request
+2024-08-27-18:54:56  INFO request{method=GET uri=/ version=HTTP/1.1}:index: htmx_google_auth::http::routes::index: index handler
+2024-08-27-18:54:56 DEBUG request{method=GET uri=/ version=HTTP/1.1}: tower_http::trace::on_response: finished processing request latency=0 ms status=200
+2024-08-27-18:54:56 DEBUG request{method=GET uri=/static/styles/output.css version=HTTP/1.1}: tower_http::trace::on_request: started processing request
+2024-08-27-18:54:56 DEBUG request{method=GET uri=/static/styles/output.css version=HTTP/1.1}: tower_http::trace::on_response: finished processing request latency=1 ms status=304
+2024-08-27-18:55:52 DEBUG htmx_google_auth::http::http: listening on 127.0.0.1:8000
+2024-08-27-18:55:55 DEBUG request{method=GET uri=/ version=HTTP/1.1}: tower_http::trace::on_request: started processing request
+2024-08-27-18:55:55  INFO request{method=GET uri=/ version=HTTP/1.1}:index: htmx_google_auth::http::routes::index: index handler
+2024-08-27-18:55:55 DEBUG request{method=GET uri=/ version=HTTP/1.1}: tower_http::trace::on_response: finished processing request latency=0 ms status=200
+2024-08-27-18:55:55 DEBUG request{method=GET uri=/static/styles/output.css version=HTTP/1.1}: tower_http::trace::on_request: started processing request
+2024-08-27-18:55:55 DEBUG request{method=GET uri=/static/styles/output.css version=HTTP/1.1}: tower_http::trace::on_response: finished processing request latency=1 ms status=304
+2024-08-27-18:57:43 DEBUG htmx_google_auth::http::http: listening on 127.0.0.1:8000
+2024-08-27-18:57:47 DEBUG request{method=GET uri=/ version=HTTP/1.1}: tower_http::trace::on_request: started processing request
+2024-08-27-18:57:47  INFO request{method=GET uri=/ version=HTTP/1.1}:index: htmx_google_auth::http::routes::index: index handler
+2024-08-27-18:57:47 DEBUG request{method=GET uri=/ version=HTTP/1.1}: tower_http::trace::on_response: finished processing request latency=0 ms status=200
+2024-08-27-18:57:47 DEBUG request{method=GET uri=/static/styles/output.css version=HTTP/1.1}: tower_http::trace::on_request: started processing request
+2024-08-27-18:57:47 DEBUG request{method=GET uri=/static/styles/output.css version=HTTP/1.1}: tower_http::trace::on_response: finished processing request latency=1 ms status=200
+2024-08-27-18:57:54 DEBUG request{method=GET uri=/static/styles/output.css version=HTTP/1.1}: tower_http::trace::on_request: started processing request
+2024-08-27-18:57:54 DEBUG request{method=GET uri=/static/styles/output.css version=HTTP/1.1}: tower_http::trace::on_response: finished processing request latency=1 ms status=304
+2024-08-27-19:00:32 DEBUG htmx_google_auth::http::http: listening on 127.0.0.1:8000
+2024-08-27-19:00:35 DEBUG request{method=GET uri=/ version=HTTP/1.1}: tower_http::trace::on_request: started processing request
+2024-08-27-19:00:35  INFO request{method=GET uri=/ version=HTTP/1.1}:index: htmx_google_auth::http::routes::index: index handler
+2024-08-27-19:00:35 DEBUG request{method=GET uri=/ version=HTTP/1.1}: tower_http::trace::on_response: finished processing request latency=0 ms status=200
+2024-08-27-19:00:35 DEBUG request{method=GET uri=/static/styles/output.css version=HTTP/1.1}: tower_http::trace::on_request: started processing request
+2024-08-27-19:00:35 DEBUG request{method=GET uri=/static/styles/output.css version=HTTP/1.1}: tower_http::trace::on_response: finished processing request latency=1 ms status=304
+2024-08-27-19:00:38 DEBUG request{method=GET uri=/ version=HTTP/1.1}: tower_http::trace::on_request: started processing request
+2024-08-27-19:00:38  INFO request{method=GET uri=/ version=HTTP/1.1}:index: htmx_google_auth::http::routes::index: index handler
+2024-08-27-19:00:38 DEBUG request{method=GET uri=/ version=HTTP/1.1}: tower_http::trace::on_response: finished processing request latency=0 ms status=200
+2024-08-27-19:00:39 DEBUG request{method=GET uri=/ version=HTTP/1.1}: tower_http::trace::on_request: started processing request
+2024-08-27-19:00:39  INFO request{method=GET uri=/ version=HTTP/1.1}:index: htmx_google_auth::http::routes::index: index handler
+2024-08-27-19:00:39 DEBUG request{method=GET uri=/ version=HTTP/1.1}: tower_http::trace::on_response: finished processing request latency=0 ms status=200
+2024-08-27-19:00:40 DEBUG request{method=GET uri=/ version=HTTP/1.1}: tower_http::trace::on_request: started processing request
+2024-08-27-19:00:40  INFO request{method=GET uri=/ version=HTTP/1.1}:index: htmx_google_auth::http::routes::index: index handler
+2024-08-27-19:00:40 DEBUG request{method=GET uri=/ version=HTTP/1.1}: tower_http::trace::on_response: finished processing request latency=0 ms status=200
+2024-08-27-19:00:43 DEBUG request{method=GET uri=/ version=HTTP/1.1}: tower_http::trace::on_request: started processing request
+2024-08-27-19:00:43  INFO request{method=GET uri=/ version=HTTP/1.1}:index: htmx_google_auth::http::routes::index: index handler
+2024-08-27-19:00:43 DEBUG request{method=GET uri=/ version=HTTP/1.1}: tower_http::trace::on_response: finished processing request latency=0 ms status=200
+2024-08-27-19:00:45 DEBUG request{method=GET uri=/ version=HTTP/1.1}: tower_http::trace::on_request: started processing request
+2024-08-27-19:00:45  INFO request{method=GET uri=/ version=HTTP/1.1}:index: htmx_google_auth::http::routes::index: index handler
+2024-08-27-19:00:45 DEBUG request{method=GET uri=/ version=HTTP/1.1}: tower_http::trace::on_response: finished processing request latency=0 ms status=200
+2024-08-27-19:02:02 DEBUG htmx_google_auth::http::http: listening on 127.0.0.1:8000
+2024-08-27-19:02:04 DEBUG request{method=GET uri=/ version=HTTP/1.1}: tower_http::trace::on_request: started processing request
+2024-08-27-19:02:04  INFO request{method=GET uri=/ version=HTTP/1.1}:index: htmx_google_auth::http::routes::index: index handler
+2024-08-27-19:02:04 DEBUG request{method=GET uri=/ version=HTTP/1.1}: tower_http::trace::on_response: finished processing request latency=0 ms status=200
+2024-08-27-19:02:04 DEBUG request{method=GET uri=/static/styles/output.css version=HTTP/1.1}: tower_http::trace::on_request: started processing request
+2024-08-27-19:02:04 DEBUG request{method=GET uri=/static/styles/output.css version=HTTP/1.1}: tower_http::trace::on_response: finished processing request latency=1 ms status=200
+2024-08-27-19:02:46 DEBUG request{method=GET uri=/static/styles/output.css version=HTTP/1.1}: tower_http::trace::on_request: started processing request
+2024-08-27-19:02:46 DEBUG request{method=GET uri=/static/styles/output.css version=HTTP/1.1}: tower_http::trace::on_response: finished processing request latency=1 ms status=304
+2024-08-27-19:02:58 DEBUG request{method=POST uri=/api/sessions/oauth/google version=HTTP/1.1}: tower_http::trace::on_request: started processing request
+2024-08-27-19:02:58 DEBUG request{method=POST uri=/api/sessions/oauth/google version=HTTP/1.1}: tower_http::trace::on_response: finished processing request latency=0 ms status=405
+2024-08-27-19:10:18 DEBUG request{method=GET uri=/api/sessions/oauth/google version=HTTP/1.1}: tower_http::trace::on_request: started processing request
+2024-08-27-19:10:18 TRACE request{method=GET uri=/api/sessions/oauth/google version=HTTP/1.1}: axum::rejection: rejecting request status=400 body="Failed to deserialize query string: missing field `code`" rejection_type="axum::extract::rejection::FailedToDeserializeQueryString"
+2024-08-27-19:10:18 DEBUG request{method=GET uri=/api/sessions/oauth/google version=HTTP/1.1}: tower_http::trace::on_response: finished processing request latency=0 ms status=400
+2024-08-27-19:11:15 DEBUG request{method=POST uri=/api/sessions/oauth/google version=HTTP/1.1}: tower_http::trace::on_request: started processing request
+2024-08-27-19:11:15 DEBUG request{method=POST uri=/api/sessions/oauth/google version=HTTP/1.1}: tower_http::trace::on_response: finished processing request latency=0 ms status=405
+2024-08-27-19:11:41 DEBUG request{method=POST uri=/api/sessions/oauth/google version=HTTP/1.1}: tower_http::trace::on_request: started processing request
+2024-08-27-19:11:41 DEBUG request{method=POST uri=/api/sessions/oauth/google version=HTTP/1.1}: tower_http::trace::on_response: finished processing request latency=0 ms status=405
+2024-08-27-19:18:05 DEBUG htmx_google_auth::http::http: listening on 127.0.0.1:8000
+2024-08-27-19:18:10 DEBUG request{method=GET uri=/ version=HTTP/1.1}: tower_http::trace::on_request: started processing request
+2024-08-27-19:18:10  INFO request{method=GET uri=/ version=HTTP/1.1}:index: htmx_google_auth::http::routes::index: index handler
+2024-08-27-19:18:10 DEBUG request{method=GET uri=/ version=HTTP/1.1}: tower_http::trace::on_response: finished processing request latency=0 ms status=200
+2024-08-27-19:18:10 DEBUG request{method=GET uri=/static/htmx.min.js version=HTTP/1.1}: tower_http::trace::on_request: started processing request
+2024-08-27-19:18:10 DEBUG request{method=GET uri=/static/htmx.min.js version=HTTP/1.1}: tower_http::trace::on_response: finished processing request latency=2 ms status=200
+2024-08-27-19:18:10 DEBUG request{method=GET uri=/static/styles/output.css version=HTTP/1.1}: tower_http::trace::on_request: started processing request
+2024-08-27-19:18:10 DEBUG request{method=GET uri=/static/styles/output.css version=HTTP/1.1}: tower_http::trace::on_response: finished processing request latency=1 ms status=200
+2024-08-27-19:18:10 DEBUG request{method=GET uri=/static/response-targets.js version=HTTP/1.1}: tower_http::trace::on_request: started processing request
+2024-08-27-19:18:10 DEBUG request{method=GET uri=/static/response-targets.js version=HTTP/1.1}: tower_http::trace::on_response: finished processing request latency=1 ms status=200
+2024-08-27-19:18:13 DEBUG request{method=POST uri=/api/sessions/oauth/google version=HTTP/1.1}: tower_http::trace::on_request: started processing request
+2024-08-27-19:18:13 TRACE request{method=POST uri=/api/sessions/oauth/google version=HTTP/1.1}: axum::rejection: rejecting request status=400 body="Failed to deserialize query string: missing field `code`" rejection_type="axum::extract::rejection::FailedToDeserializeQueryString"
+2024-08-27-19:18:13 DEBUG request{method=POST uri=/api/sessions/oauth/google version=HTTP/1.1}: tower_http::trace::on_response: finished processing request latency=0 ms status=400
+2024-08-27-19:21:31 DEBUG htmx_google_auth::http::http: listening on 127.0.0.1:8000
+2024-08-27-19:21:42 DEBUG request{method=GET uri=/static/styles/output.css version=HTTP/1.1}: tower_http::trace::on_request: started processing request
+2024-08-27-19:21:42 DEBUG request{method=GET uri=/static/styles/output.css version=HTTP/1.1}: tower_http::trace::on_response: finished processing request latency=1 ms status=304
+2024-08-27-19:21:42 DEBUG request{method=GET uri=/ version=HTTP/1.1}: tower_http::trace::on_request: started processing request
+2024-08-27-19:21:42  INFO request{method=GET uri=/ version=HTTP/1.1}:index: htmx_google_auth::http::routes::index: index handler
+2024-08-27-19:21:42 DEBUG request{method=GET uri=/ version=HTTP/1.1}: tower_http::trace::on_response: finished processing request latency=0 ms status=200
+2024-08-27-19:21:42 DEBUG request{method=GET uri=/static/htmx.min.js version=HTTP/1.1}: tower_http::trace::on_request: started processing request
+2024-08-27-19:21:42 DEBUG request{method=GET uri=/static/htmx.min.js version=HTTP/1.1}: tower_http::trace::on_response: finished processing request latency=0 ms status=200
+2024-08-27-19:21:42 DEBUG request{method=GET uri=/static/response-targets.js version=HTTP/1.1}: tower_http::trace::on_request: started processing request
+2024-08-27-19:21:42 DEBUG request{method=GET uri=/static/response-targets.js version=HTTP/1.1}: tower_http::trace::on_response: finished processing request latency=1 ms status=200
+2024-08-27-19:21:42 DEBUG request{method=GET uri=/static/styles/output.css version=HTTP/1.1}: tower_http::trace::on_request: started processing request
+2024-08-27-19:21:42 DEBUG request{method=GET uri=/static/styles/output.css version=HTTP/1.1}: tower_http::trace::on_response: finished processing request latency=1 ms status=200
+2024-08-27-19:21:49 DEBUG request{method=POST uri=/api/sessions/oauth/google version=HTTP/1.1}: tower_http::trace::on_request: started processing request
+2024-08-27-19:21:49 TRACE request{method=POST uri=/api/sessions/oauth/google version=HTTP/1.1}: axum::rejection: rejecting request status=400 body="Failed to deserialize query string: missing field `credential`" rejection_type="axum::extract::rejection::FailedToDeserializeQueryString"
+2024-08-27-19:21:49 DEBUG request{method=POST uri=/api/sessions/oauth/google version=HTTP/1.1}: tower_http::trace::on_response: finished processing request latency=0 ms status=400
+2024-08-27-19:22:04 DEBUG request{method=GET uri=/api/sessions/oauth/google version=HTTP/1.1}: tower_http::trace::on_request: started processing request
+2024-08-27-19:22:04 DEBUG request{method=GET uri=/api/sessions/oauth/google version=HTTP/1.1}: tower_http::trace::on_response: finished processing request latency=0 ms status=405
+2024-08-27-19:23:30 DEBUG htmx_google_auth::http::http: listening on 127.0.0.1:8000
+2024-08-27-19:23:48 DEBUG request{method=POST uri=/api/sessions/oauth/google version=HTTP/1.1}: tower_http::trace::on_request: started processing request
+2024-08-27-19:23:48  INFO request{method=POST uri=/api/sessions/oauth/google version=HTTP/1.1}:google_auth_handler: htmx_google_auth::http::routes::google: google auth handler called
+2024-08-27-19:23:48 DEBUG request{method=POST uri=/api/sessions/oauth/google version=HTTP/1.1}: tower_http::trace::on_response: finished processing request latency=0 ms status=200

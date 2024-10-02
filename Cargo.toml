@@ -1,52 +1,38 @@
 [package]
-name = "rcps-assets"
+name = "htmx-google-auth"
 version = "0.1.0"
 edition = "2021"
 
-[lib]
-path = "src/lib.rs"
-
-[[bin]]
-path = "src/main.rs"
-name = "rcps-assets"
-
-
 [dependencies]
-actix-web = "4"
-thiserror = "1.0.32"
-anyhow = "1.0.62"
-sqlx = { version = "0.6", default-features = false, features = ["runtime-actix-rustls", "macros", "postgres", "uuid", "chrono", "migrate", "offline"] }
-config = { version = "0.13", default-features = false, features = ["yaml"] }
-tokio = { version = "1", features = ["macros", "rt-multi-thread"] }
-uuid = { version = "1", features = ["v4", "serde"] }
-secrecy = { version = "0.8", features = ["serde"] }
-serde = "1.0.144"
-serde-aux = "3.1.0"
-serde_json = "1"
-serde_urlencoded = "0.7"
-reqwest = { version = "0.11", default-features = false, features = ["json", "rustls-tls", "cookies"] }
-tracing = "0.1.19"
-tracing-subscriber = { version = "0.3", features = ["registry", "env-filter"] }
-tracing-bunyan-formatter = "0.3"
-tracing-log = "0.1.1"
-tracing-actix-web = "0.6"
-actix-web-flash-messages = { version = "0.4", features = ["cookies"] }
-actix-session = { version = "0.7", features = ["redis-rs-tls-session", "cookie-session"] }
-actix-web-lab = "0.16"
-actix-files = "0.6"
-actix-multipart = "0.4.0"
-validator = { version = "0.16", features = ["derive"] }
-unicode-segmentation = "1.9.0"
-sailfish = "0.4.0"
-csv = "1.1"
-futures = "0.3.24"
-chrono =  { version = "0.4", features = ["serde"] }
-mime = "0.3.16"
-argon2 = { version = "0.4", features = ["std"] }
-rand = { version = "0.8", features=["std_rng"] }
-blake3 = "1.3.1"
-
-
-[dev-dependencies]
-once_cell = "1.13.1"
-claim = "0.5.0"
+axum = { version = "0.7.5", features = ["macros"] }
+axum-extra = { version = "0.9.3", features = ["cookie"] }
+axum-login = "0.16.0"
+axum-messages = "0.7.0"
+tokio = { version = "1.39", features = ["full"] }
+tower-http = { version = "0.5.2", features = ["trace", "fs", "compression-br"] }
+tower-layer = "0.3.3"
+tower-sessions = { version = "0.13.0", features = ["signed",] }
+time = {version = "0.3", default-features = false, features = ["formatting", "macros", "serde", "parsing", "local-offset"]}
+serde = { version = "1.0.208", features = ["derive"] }
+serde-aux = "4.5.0"
+serde_json = "1.0.125"
+sqlx = { version = "0.8.0", features = ["runtime-async-std-native-tls", "postgres", "sqlite", "chrono", "uuid", "macros"] }
+chrono = { version = "0.4.38", features = ["serde"] }
+askama = { version = "0.12.1", features = ["with-axum"] }
+askama_axum = "0.4.0"
+derive_more = { version = "1", features = ["from", "add", "display", "as_ref"] }
+thiserror = "1.0.63"
+anyhow = "1.0.86"
+futures = "0.3.30"
+dotenv = "0.15.0"
+tracing = "0.1.40"
+tracing-subscriber = { version = "0.3.18", features = ["env-filter", "time", "local-time"] }
+tracing-appender = "0.2.3"
+uuid = { version = "1.10.0", features = ["v4", "v7", "serde"] }
+validator = { version = "0.18", features = ["derive"] }
+config = "0.14.0"
+google-oauth = "1.11.3"
+password-auth = "1.0.0"
+oauth2 = "4.4.2"
+compact_str = { version = "0.8", features = ["serde"] }
+reqwest = { version = "0.12.7", features = ["json"] }

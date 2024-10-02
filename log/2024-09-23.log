@@ -1,0 +1,45 @@
+2024-09-23-15:33:27  WARN sqlx_postgres::options::pgpass: Failed to open `.pgpass` file: Os { code: 2, kind: NotFound, message: "No such file or directory" } path=/home/relam/.pgpass
+2024-09-23-15:33:27 TRACE async_io::block_on: async_io::driver: completed
+2024-09-23-15:33:27 TRACE async_io::block_on: polling::epoll: created eventfd for notifier
+2024-09-23-15:33:27 TRACE async_io::block_on: polling::epoll: new epoll_fd=10 notifier=EventFd(OwnedFd { fd: 11 })
+2024-09-23-15:33:27 TRACE async_io::block_on: async_io::driver: waiting on I/O
+2024-09-23-15:33:27 TRACE async_io::block_on: async_io::driver: sleep until notification
+2024-09-23-15:33:27 TRACE async_io::block_on: async_io::driver: sleep until notification
+2024-09-23-15:33:27 TRACE async_io::block_on: async_io::driver: sleep until notification
+2024-09-23-15:33:27 TRACE async_io::block_on: async_io::driver: sleep until notification
+2024-09-23-15:33:27 TRACE async_io::block_on: async_io::driver: sleep until notification
+2024-09-23-15:33:27 TRACE async_io::block_on: async_io::driver: sleep until notification
+2024-09-23-15:33:27 TRACE async_io::block_on: async_io::driver: sleep until notification
+2024-09-23-15:33:27 TRACE async_io::main_loop: async_io::driver: sleeping for 50 us
+2024-09-23-15:33:27 TRACE async_io::block_on: async_io::driver: sleep until notification
+2024-09-23-15:33:27 TRACE async_io::main_loop: async_io::driver: notified
+2024-09-23-15:33:27 TRACE async_io::block_on:react:process_timers: async_io::reactor: 0 ready wakers
+2024-09-23-15:33:27 DEBUG htmx_google_auth::application::http::server: listening on 127.0.0.1:8000
+2024-09-23-15:33:27 TRACE async_io::main_loop: async_io::driver: sleeping for 50 us
+2024-09-23-15:33:27 TRACE async_io::main_loop: async_io::driver: sleeping for 75 us
+2024-09-23-15:33:27 TRACE async_io::main_loop: async_io::driver: sleeping for 100 us
+2024-09-23-15:33:27 TRACE async_io::main_loop: async_io::driver: sleeping for 250 us
+2024-09-23-15:33:27 TRACE async_io::main_loop: async_io::driver: sleeping for 500 us
+2024-09-23-15:33:27 TRACE async_io::main_loop: async_io::driver: sleeping for 750 us
+2024-09-23-15:33:27 TRACE async_io::main_loop: async_io::driver: sleeping for 1000 us
+2024-09-23-15:33:27 TRACE async_io::main_loop: async_io::driver: sleeping for 2500 us
+2024-09-23-15:33:27 TRACE async_io::main_loop: async_io::driver: sleeping for 5000 us
+2024-09-23-15:33:27 TRACE async_io::main_loop: async_io::driver: sleeping for 10000 us
+2024-09-23-15:34:08 DEBUG request{method=GET uri=/ version=HTTP/1.1}: tower_http::trace::on_request: started processing request
+2024-09-23-15:34:08 DEBUG request{method=GET uri=/ version=HTTP/1.1}: tower_http::trace::on_response: finished processing request latency=0 ms status=404
+2024-09-23-15:34:13 DEBUG request{method=GET uri=/index version=HTTP/1.1}: tower_http::trace::on_request: started processing request
+2024-09-23-15:34:13 DEBUG request{method=GET uri=/index version=HTTP/1.1}: tower_http::trace::on_response: finished processing request latency=1 ms status=200
+2024-09-23-15:34:13 DEBUG request{method=GET uri=/static/htmx.min.js version=HTTP/1.1}: tower_http::trace::on_request: started processing request
+2024-09-23-15:34:13 DEBUG request{method=GET uri=/static/htmx.min.js version=HTTP/1.1}: tower_http::trace::on_response: finished processing request latency=1 ms status=304
+2024-09-23-15:34:13 DEBUG request{method=GET uri=/static/response-targets.js version=HTTP/1.1}: tower_http::trace::on_request: started processing request
+2024-09-23-15:34:13 DEBUG request{method=GET uri=/static/response-targets.js version=HTTP/1.1}: tower_http::trace::on_response: finished processing request latency=1 ms status=304
+2024-09-23-15:34:13 DEBUG request{method=GET uri=/static/styles/output.css version=HTTP/1.1}: tower_http::trace::on_request: started processing request
+2024-09-23-15:34:13 DEBUG request{method=GET uri=/static/styles/output.css version=HTTP/1.1}: tower_http::trace::on_response: finished processing request latency=1 ms status=304
+2024-09-23-15:35:08  WARN sqlx_postgres::options::pgpass: Failed to open `.pgpass` file: Os { code: 2, kind: NotFound, message: "No such file or directory" } path=/home/relam/.pgpass
+2024-09-23-15:35:08 DEBUG htmx_google_auth::application::http::server: listening on 127.0.0.1:8000
+2024-09-23-15:35:12 DEBUG request{method=GET uri=/index version=HTTP/1.1}: tower_http::trace::on_request: started processing request
+2024-09-23-15:35:12 DEBUG request{method=GET uri=/index version=HTTP/1.1}: tower_http::trace::on_response: finished processing request latency=0 ms status=200
+2024-09-23-15:35:19 DEBUG request{method=GET uri=/health_check version=HTTP/1.1}: tower_http::trace::on_request: started processing request
+2024-09-23-15:35:19 DEBUG request{method=GET uri=/health_check version=HTTP/1.1}: tower_http::trace::on_response: finished processing request latency=0 ms status=404
+2024-09-23-15:35:32 DEBUG request{method=GET uri=/healthchecker version=HTTP/1.1}: tower_http::trace::on_request: started processing request
+2024-09-23-15:35:32 DEBUG request{method=GET uri=/healthchecker version=HTTP/1.1}: tower_http::trace::on_response: finished processing request latency=0 ms status=200
