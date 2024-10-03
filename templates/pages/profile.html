@@ -1,8 +1,26 @@
-<div class="mx-2">
-    <h1 class="text-xl text-base-content">User Profile</h1>
-    <img src="{{ user.picture }}" alt="Profile Picture" width="50" height="50" referrerpolicy="no-referrer">
-    <p class="text-base-content">Name: {{ user.name }}</p>
-    <p class="text-base-content">Email: {{ user.email }}</p>
-    <p class="text-base-content">ID: {{ user.id }}</p>
-    <p class="text-base-content">Role: {{ user.role }}</p>    
+<div id="profile_container">
+    <div class="flex justify-end gap-2">
+        <button class="btn btn-md btn-primary btn-disabled mt-4">Update Password</button>
+        <button class="btn btn-md btn-primary btn-disabled mt-4">Save</button>
+    </div>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 px-4">
+        <label class="form-control w-full max-w-xs col-span-1 md:col-span-2">
+            <div class="label">
+              <span class="label-text">Email</span>
+            </div>
+            <label id="email" class="input-md">{{user.email}}</label>
+        </label>
+        <label class="form-control w-full max-w-xs">
+            <div class="label">
+              <span class="label-text">Name</span>
+            </div>
+            <input id="name" type="text" value="{{ user.name }}" class="input input-bordered input-md w-full max-w-xs" />
+        </label>
+        <label class="form-control w-full max-w-xs">
+            <div class="label">
+              <span class="label-text">Role</span>
+            </div>
+            <input id="role" type="text" value="{{ user.role }}" class="input input-bordered input-md w-full max-w-xs" />
+        </label>
+    </div>
 </div>

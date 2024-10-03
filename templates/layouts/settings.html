@@ -11,6 +11,12 @@
 
 <body hx-ext="response-targets">
     {{ navbar }}
+    {% if let Some(alert) = alert %}
+        {{ alert }}
+    {% else -%}
+        <div id="global_alert_message"></div>
+        </div>
+    {%- endif %}
     {{ profile_page }}
 </body>
 

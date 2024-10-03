@@ -1,3 +1,3 @@
-pub mod asset_items;
+pub mod settings;
 pub mod oauth;
 pub mod auth;

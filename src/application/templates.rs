@@ -1,6 +1,7 @@
 use std::collections::{HashMap, HashSet};
 
 use askama::Template;
+use axum_messages::{Message, Level};
 use validator::ValidationError;
 
 use crate::domain::identityaccess::model::users::UserDescriptor;
@@ -23,17 +24,20 @@ impl ProfileTemplate {
 #[derive(Template)]
 #[template(path = "layouts/settings.html", escape = "none")]
 pub struct SettingsTemplate {
-    pub navbar: NavbarTemplate,
+    navbar: NavbarTemplate,
+    alert: Option<AlertTemplate>,
     profile_page: ProfileTemplate,
 }
 
 impl SettingsTemplate {
-    pub fn new(user: UserDescriptor) -> Self {
+    pub fn new(user: UserDescriptor, message: Option<Message>) -> Self {
         let navbar = NavbarTemplate{profile_picture: user.picture.to_string()};
         let profile_page = ProfileTemplate::new(user);
+        let alert = message.map(|m| AlertTemplate::new("global_alert_message", m));
 
         SettingsTemplate {
             navbar,
+            alert,
             profile_page,
         }
     }
@@ -46,51 +50,55 @@ pub struct AuthTemplate {
 }
 
 impl AuthTemplate {
-    pub fn new(message: Option<impl Into<String>>) -> Self {
-        let warning = message.map(
-            |m| WarningTemplate::new("message", m.into()),
-        );
-
-        AuthTemplate {
-            login_page: LoginTemplate { warning }
-        }
+    pub fn new(message: Option<Message>) -> Self {
+        AuthTemplate { login_page: LoginTemplate::new(message) }
     }
 }
 
 #[derive(Template)]
 #[template(path = "pages/login.html", escape = "none")]
 pub struct LoginTemplate {
-    warning: Option<WarningTemplate>,
+    alert: Option<AlertTemplate>,
 }
 
-#[derive(Template)]
-#[template(path = "partials/warning.html", escape = "none")]
-pub struct WarningTemplate {
-    alert_id: String,
-    message: String,
-}
+impl LoginTemplate {
+    pub fn new(message: Option<Message>) -> Self {
+        let alert = message.map(|m| AlertTemplate::new("message", m));
 
-impl WarningTemplate {
-    pub fn new(alert_id: impl Into<String>, message: impl Into<String>) -> Self {
-        WarningTemplate {
-            alert_id: alert_id.into(),
-            message: message.into(),
-        }
+        LoginTemplate { alert }
     }
 }
 
 #[derive(Template)]
-#[template(path = "partials/error.html", escape = "none")]
-pub struct ErrorTemplate {
+#[template(path = "partials/alert.html", escape = "none")]
+pub struct AlertTemplate {
     alert_id: String,
-    message: String,
+    message: Message,
 }
 
-impl ErrorTemplate {
-    pub fn new(alert_id: impl Into<String>, message: impl Into<String>) -> Self {
-        ErrorTemplate {
+impl AlertTemplate {
+    pub fn new(alert_id: impl Into<String>, message: Message) -> Self {
+        AlertTemplate {
             alert_id: alert_id.into(),
-            message: message.into(),
+            message: message,
+        }
+    }
+
+    pub fn warning(alert_id: impl Into<String>, message: impl Into<String>) -> Self {
+        let message =  Message { level: Level::Warning, message: message.into(), metadata: None };
+
+        AlertTemplate {
+            alert_id: alert_id.into(),
+            message: message,
+        }
+    }
+    
+    pub fn error(alert_id: impl Into<String>, message: impl Into<String>) -> Self {
+        let message = Message { level: Level::Error, message: message.into(), metadata: None };
+
+        AlertTemplate {
+            alert_id: alert_id.into(),
+            message: message,
         }
     }
 }

@@ -54,7 +54,7 @@ pub async fn google_oauth_callback<U: UserRepository>(
     let user = match user {
         Ok(Some(u)) => { u }
         Ok(None) => { 
-            messages.error("Failed to sign in with Google");
+            messages.warning("Failed to sign in with Google");
 
             return Err(
                 ApplicationError::redirect(anyhow!("oauth login failure"), "/sessions/login")

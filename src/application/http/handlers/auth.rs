@@ -7,7 +7,7 @@ use oauth2::CsrfToken;
 use serde::Deserialize;
 use tracing::instrument;
 
-use crate::{application::{errors::ApplicationError, http::utils, identityaccess::identity_application_service::IdentityApplicationService, state::AppState, templates::{AuthTemplate, WarningTemplate}}, domain::identityaccess::model::{credentials::{Credentials, PasswordCredentials}, user_repository::UserRepository}};
+use crate::{application::{errors::ApplicationError, http::utils, identityaccess::identity_application_service::IdentityApplicationService, state::AppState, templates::{AlertTemplate, AuthTemplate}}, domain::identityaccess::model::{credentials::{Credentials, PasswordCredentials}, user_repository::UserRepository}};
 
 
 pub fn router<U>() -> Router<AppState<U>>
@@ -50,7 +50,7 @@ pub async fn post_login<U: UserRepository>(
         Ok(None) => { 
             return Err(ApplicationError::bad_request(
                 anyhow!("password login failure"),
-                WarningTemplate::new("message", "Invalid login information")
+                AlertTemplate::warning("message", "Invalid login information")
             ));
         }
         Err(e) => { return Err(ApplicationError::InternalServerError(anyhow!(e))); }
@@ -67,7 +67,7 @@ pub async fn login(messages: Messages) -> AuthTemplate {
         .into_iter()
         .collect::<Vec<_>>()
         .first()
-        .map(|m| m.to_string());
+        .map(|m| m.to_owned());
 
     AuthTemplate::new(message)
 }

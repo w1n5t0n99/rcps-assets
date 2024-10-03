@@ -3,8 +3,8 @@
   </div>
 <h1 class="mt-10 text-2xl font-bold mb-6 text-center">Sign in to your account</h1>
 <div class="form-control">
-    {% if let Some(warning) = warning %}
-        {{ warning }}
+    {% if let Some(alert) = alert %}
+        {{ alert }}
     {% else -%}
         <div id="message"></div>
         </div>

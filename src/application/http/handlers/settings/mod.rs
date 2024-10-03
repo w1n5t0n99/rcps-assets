@@ -1,4 +1,4 @@
-pub mod items;
+pub mod profile;
 
 use axum::{routing::get, Router};
 
@@ -8,5 +8,5 @@ pub fn router<U>() -> Router<AppState<U>>
 where U: UserRepository
 {
     Router::new()
-        .route("/settings", get(self::items::settings::<U>))
+        .route("/settings", get(self::profile::settings::<U>))
 }

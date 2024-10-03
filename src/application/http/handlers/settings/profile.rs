@@ -2,6 +2,7 @@
 use anyhow::anyhow;
 use axum::{extract::State, response::IntoResponse};
 use axum_login::AuthSession;
+use axum_messages::Messages;
 use serde::Deserialize;
 use tracing::instrument;
 use validator::{Validate, ValidationErrors};
@@ -34,9 +35,18 @@ use crate::{application::{errors::ApplicationError, http::handlers::auth, identi
 */
 
 #[instrument(skip_all)]
-pub async fn settings<U: UserRepository>(auth_session: AuthSession<IdentityApplicationService<U>>) -> Result<SettingsTemplate, ApplicationError> {
+pub async fn settings<U: UserRepository>(
+    auth_session: AuthSession<IdentityApplicationService<U>>,
+    messages: Messages,
+) -> Result<SettingsTemplate, ApplicationError> {
+    let message = messages
+        .into_iter()
+        .collect::<Vec<_>>()
+        .first()
+        .map(|m| m.to_owned());
+
     if let Some(user) = auth_session.user {
-        return Ok(SettingsTemplate::new(user));
+        return Ok(SettingsTemplate::new(user, message));
     }
     
     Err(ApplicationError::forbidden(anyhow!("user not logged in"), "User Not Logged In"))

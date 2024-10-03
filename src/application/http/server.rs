@@ -10,7 +10,7 @@ use tracing::instrument;
 use axum_messages::{Messages, MessagesManagerLayer};
 
 use crate::{application::{identityaccess::identity_application_service::IdentityApplicationService, state::AppState}, domain::identityaccess::model::user_repository::UserRepository, infastructure::services::postgres_user_repository::PostgresUserRepository, settings::ApplicationConfig};
-use super::{handlers::{asset_items, auth, oauth}, utils};
+use super::{handlers::{settings, auth, oauth}, utils};
 
 
 #[instrument]
@@ -75,7 +75,7 @@ fn protected_router<U>() -> axum::Router<AppState<U>>
         where U: UserRepository
     {
         let protected_router = axum::Router::new()
-            .merge(asset_items::router())
+            .merge(settings::router())
             .route_layer(middleware::from_fn(utils::login_required::<U>));
 
         protected_router
