@@ -1,26 +1,38 @@
-<div id="profile_container">
-    <div class="flex justify-end gap-2">
-        <button class="btn btn-md btn-primary btn-disabled mt-4">Update Password</button>
-        <button class="btn btn-md btn-primary btn-disabled mt-4">Save</button>
-    </div>
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 px-4">
-        <label class="form-control w-full max-w-xs col-span-1 md:col-span-2">
+<div id="profile_content" class="px-4 pt-2">
+  <h2 class="mb-4 text-2xl font-bold text-base-content">My Settings</h2>
+  <form action="#" class="flex justify-center">
+    <div class="max-w-xl w-full">
+      <div class="grid gap-4 mb-4 sm:grid-cols-2 sm:gap-6 sm:mb-5">
+        <div class="sm:col-span-2">
+          <label class="form-control w-full max-w-xs col-span-1 md:col-span-2">
             <div class="label">
               <span class="label-text">Email</span>
             </div>
-            <label id="email" class="input-md">{{user.email}}</label>
+            <input id="email" type="email" value="{{ user.email }}"
+              class="input input-bordered input-md w-full max-w-xs" disabled />
+          </label>
+        </div>
+        <label class="form-control w-full max-w-xs">
+          <div class="label">
+            <span class="label-text">Name</span>
+          </div>
+          <input id="name" type="text" value="{{ user.name }}" class="input input-bordered input-md w-full max-w-xs" />
         </label>
         <label class="form-control w-full max-w-xs">
-            <div class="label">
-              <span class="label-text">Name</span>
-            </div>
-            <input id="name" type="text" value="{{ user.name }}" class="input input-bordered input-md w-full max-w-xs" />
+          <div class="label">
+            <span class="label-text">Role</span>
+          </div>
+          <input id="role" type="text" value="{{ user.role }}" class="input input-bordered input-md w-full max-w-xs" />
         </label>
-        <label class="form-control w-full max-w-xs">
-            <div class="label">
-              <span class="label-text">Role</span>
-            </div>
-            <input id="role" type="text" value="{{ user.role }}" class="input input-bordered input-md w-full max-w-xs" />
-        </label>
+      </div>
+      <div class="flex items-center space-x-4">
+        <button type="submit" class="btn btn-primary btn-md">
+          Save
+        </button>
+        <button type="button" class="btn btn-primary btn-md">
+          Update Password
+        </button>
+      </div>
     </div>
+  </form>
 </div>
