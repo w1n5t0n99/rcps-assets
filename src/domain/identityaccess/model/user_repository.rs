@@ -2,7 +2,7 @@ use std::future::Future;
 
 use thiserror::Error;
 
-use super::users::{EmailAddress, NewUser, Picture, User, UserDescriptor};
+use super::{roles::Role, users::{EmailAddress, NewUser, Picture, User, UserDescriptor}};
 
 
 #[derive(Error, Debug)]
@@ -41,6 +41,7 @@ pub trait UserRepository: Send + Sync + Clone + 'static {
         updated_picture: Option<Picture>
     ) -> impl Future<Output = Result<Option<UserDescriptor>, UserRepositoryError>> + Send;
 
-    fn get_all_user_descriptors(&self) -> impl Future<Output = Result<Vec<UserDescriptor>, UserRepositoryError>> + Send;
+    fn get_user_descriptors(&self) -> impl Future<Output = Result<Vec<UserDescriptor>, UserRepositoryError>> + Send;
 
+    fn get_roles(&self) -> impl Future<Output = Result<Vec<Role>, UserRepositoryError>> + Send;
 }

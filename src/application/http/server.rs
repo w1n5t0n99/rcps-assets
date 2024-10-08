@@ -44,7 +44,7 @@ impl AppHttpServer {
 
         let router = axum::Router::new()
             .route("/healthchecker", get(health_checker_handler))
-            .merge(protected_router())
+            .merge(settings::router())
             .merge(oauth::router())
             .merge(auth::router())
             .nest_service("/static", ServeDir::new("static").precompressed_gzip())
@@ -70,13 +70,3 @@ impl AppHttpServer {
         Ok(())
     }
 }
-
-fn protected_router<U>() -> axum::Router<AppState<U>>
-        where U: UserRepository
-    {
-        let protected_router = axum::Router::new()
-            .merge(settings::router())
-            .route_layer(middleware::from_fn(utils::login_required::<U>));
-
-        protected_router
-    }

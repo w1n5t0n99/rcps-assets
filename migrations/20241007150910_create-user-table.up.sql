@@ -4,10 +4,9 @@ CREATE TABLE
         email TEXT NOT NULL UNIQUE,
         email_verified BOOLEAN NOT NULL DEFAULT FALSE,
         password_hash TEXT NOT NULL,
-        name TEXT NOT NULL,
         given_name TEXT NOT NULL,
         family_name TEXT NOT NULL,
-        role TEXT NOT NULL,
+        role_id INTEGER NOT NULL,
         picture TEXT NOT NULL,
         created_at TIMESTAMP
             WITH TIME ZONE NOT NULL DEFAULT NOW(),

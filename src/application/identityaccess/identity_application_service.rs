@@ -3,7 +3,7 @@ use axum_login::{AuthUser, AuthnBackend, UserId};
 use oauth2::{url::Url, CsrfToken};
 use thiserror::Error;
 
-use crate::{application::errors::ApplicationError, domain::identityaccess::model::{credentials::Credentials, oauth_service::{OAuthError, OAuthService}, password_service::{PasswordError, PasswordService}, user_repository::{UserRepository, UserRepositoryError}, users::{EmailAddress, Picture, UserDescriptor}}, infastructure::services::google_oauth_service::GoogleOauthService};
+use crate::{application::errors::ApplicationError, domain::identityaccess::model::{credentials::Credentials, oauth_service::{OAuthError, OAuthService}, password_service::{PasswordError, PasswordService}, roles::Role, user_repository::{UserRepository, UserRepositoryError}, users::{EmailAddress, Picture, UserDescriptor}}, infastructure::services::google_oauth_service::GoogleOauthService};
 
 pub const CSRF_STATE_KEY: &str = "oauth.csrf-state";
 
@@ -42,10 +42,17 @@ where
     }
 
     pub async fn get_users(&self) -> Result<Vec<UserDescriptor>, IdentityError> {
-        let users = self.user_repo.get_all_user_descriptors()
+        let users = self.user_repo.get_user_descriptors()
             .await?;
 
         Ok(users)
+    }
+
+    pub async fn get_roles(&self) -> Result<Vec<Role>, IdentityError> {
+        let roles = self.user_repo.get_roles()
+            .await?;
+
+        Ok(roles)
     }
 
     pub fn google_client_id(&self) -> String {

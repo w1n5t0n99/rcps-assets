@@ -1,0 +1,7 @@
+{% for role in roles %}
+    {% if selected_role == role.name %}
+        <option value="{{role.id}}" selected>{{role.name}}</option>
+    {% else %}
+        <option value="{{role.id}}">{{role.name}}</option>
+    {% endif %}
+{% endfor %}

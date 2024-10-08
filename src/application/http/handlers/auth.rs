@@ -7,7 +7,7 @@ use oauth2::CsrfToken;
 use serde::Deserialize;
 use tracing::instrument;
 
-use crate::{application::{errors::ApplicationError, http::utils, identityaccess::identity_application_service::IdentityApplicationService, state::AppState, templates::{AlertTemplate, AuthTemplate}}, domain::identityaccess::model::{credentials::{Credentials, PasswordCredentials}, user_repository::UserRepository}};
+use crate::{application::{errors::ApplicationError, http::utils, identityaccess::identity_application_service::IdentityApplicationService, state::AppState, templates::{layouts::auth::AuthTemplate, partials::alert::AlertTemplate}}, domain::identityaccess::model::{credentials::{Credentials, PasswordCredentials}, user_repository::UserRepository}};
 
 
 pub fn router<U>() -> Router<AppState<U>>

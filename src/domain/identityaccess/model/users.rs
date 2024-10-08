@@ -27,16 +27,6 @@ impl PasswordHash {
 
 #[derive(Clone, Debug, Display, Serialize, Deserialize, AsRef, sqlx::Type)]
 #[as_ref(str, [u8], String)]
-pub struct AccessToken(String);
-
-impl AccessToken {
-    pub fn new(raw_value: impl Into<String>) -> Self {
-        Self(raw_value.into())
-    }
-}
-
-#[derive(Clone, Debug, Display, Serialize, Deserialize, AsRef, sqlx::Type)]
-#[as_ref(str, [u8], String)]
 pub struct Picture(String);
 
 impl Picture {
@@ -45,15 +35,6 @@ impl Picture {
     }
 }
 
-#[derive(Clone, Debug, Display, Serialize, Deserialize, AsRef, sqlx::Type)]
-#[as_ref(str, [u8], String)]
-pub struct Role(String);
-
-impl Role {
-    pub fn new(raw_value: impl Into<String>) -> Self {
-        Self(raw_value.into())
-    }
-}
 
 #[derive(Clone, Copy, Debug, Display, Serialize, Deserialize, sqlx::Type)]
 #[sqlx(type_name = "provider", rename_all = "lowercase")]
@@ -72,7 +53,7 @@ pub struct NewUser {
     pub name: String,
     pub given_name: String,
     pub family_name: String,
-    pub role: Role,
+    pub role_id: i32,
     pub picture: Picture,
 }
 
@@ -83,10 +64,9 @@ pub struct User {
     pub password_hash: PasswordHash, 
     pub email: EmailAddress,
     pub email_verified: bool,
-    pub name: String,
     pub given_name: String,
     pub family_name: String,
-    pub role: Role,
+    pub role: String,
     pub picture: Picture,
     pub created_at: DateTime<Utc>,
     pub updated_at: DateTime<Utc>,
@@ -96,8 +76,9 @@ pub struct User {
 pub struct UserDescriptor {
     pub id: uuid::Uuid,
     pub email: EmailAddress,
-    pub name: String,
-    pub role: Role,
+    pub given_name: String,
+    pub family_name: String,
+    pub role: String,
     pub picture: Picture,
 }
 
@@ -106,7 +87,8 @@ impl From<User> for UserDescriptor {
         UserDescriptor {
             id: value.id,
             email: value.email,
-            name: value.name,
+            family_name: value.family_name,
+            given_name: value.given_name,
             role: value.role,
             picture: value.picture,
         }

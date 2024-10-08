@@ -1,13 +1,10 @@
 
 use anyhow::anyhow;
-use axum::{extract::State, response::IntoResponse};
 use axum_login::AuthSession;
 use axum_messages::Messages;
-use serde::Deserialize;
 use tracing::instrument;
-use validator::{Validate, ValidationErrors};
 
-use crate::{application::{errors::ApplicationError, http::handlers::auth, identityaccess::identity_application_service::IdentityApplicationService, templates::SettingsTemplate}, domain::identityaccess::model::user_repository::UserRepository};
+use crate::{application::{errors::ApplicationError, identityaccess::identity_application_service::IdentityApplicationService, templates::layouts::settings::SettingsTemplate}, domain::identityaccess::model::user_repository::UserRepository};
 
 // form validation
 /*
@@ -35,7 +32,7 @@ use crate::{application::{errors::ApplicationError, http::handlers::auth, identi
 */
 
 #[instrument(skip_all)]
-pub async fn settings<U: UserRepository>(
+pub async fn get_profile<U: UserRepository>(
     auth_session: AuthSession<IdentityApplicationService<U>>,
     messages: Messages,
 ) -> Result<SettingsTemplate, ApplicationError> {

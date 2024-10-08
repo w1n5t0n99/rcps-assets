@@ -1,7 +1,7 @@
 use anyhow::Context;
 use sqlx::{postgres::{PgConnectOptions, PgPoolOptions, PgSslMode}, PgPool};
 
-use crate::{domain::identityaccess::model::{user_repository::{UserRepository, UserRepositoryError}, users::{User, UserDescriptor, AccessToken, EmailAddress, NewUser, PasswordHash, Picture, Provider, Role}}, settings::DatabaseConfig};
+use crate::{domain::identityaccess::model::{roles::Role, user_repository::{UserRepository, UserRepositoryError}, users::{EmailAddress, NewUser, PasswordHash, Picture, User, UserDescriptor}}, settings::DatabaseConfig};
 
 
 #[derive(Debug, Clone)]
@@ -46,17 +46,20 @@ impl UserRepository for PostgresUserRepository {
         let user_descriptor = sqlx::query_as!(
             UserDescriptor,
             r#"
-            INSERT INTO users (password_hash, email, email_verified, name, given_name, family_name, role, picture)
-            VALUES($1, $2, $3, $4, $5, $6, $7, $8)
-            RETURNING id,  email as "email: EmailAddress", name, role as "role: Role", picture as "picture: Picture"
+            WITH inserted AS (
+                INSERT INTO users (password_hash, email, email_verified, given_name, family_name, role_id, picture)
+                VALUES($1, $2, $3, $4, $5, $6, $7)
+                RETURNING id, email, given_name, family_name, role_id, picture
+            )
+            SELECT inserted.id, inserted.email as "email: EmailAddress", inserted.given_name, inserted.family_name, inserted.picture as "picture: Picture", roles.name as role
+            FROM inserted INNER JOIN roles ON inserted.role_id = roles.id
             "#,
             user.password_hash.to_string(),
             user.email.to_string(),
             user.email_verified,
-            user.name.clone(),
             user.given_name.clone(),
             user.family_name.clone(),
-            user.role.to_string(),
+            user.role_id,
             user.picture.to_string(),
         )
         .fetch_one(&self.pool)
@@ -73,9 +76,9 @@ impl UserRepository for PostgresUserRepository {
         let user = sqlx::query_as!(
             User,
             r#"
-            SELECT id, password_hash as "password_hash: PasswordHash",  email as "email: EmailAddress", email_verified, name, given_name, family_name, role as "role: Role", picture as "picture: Picture", created_at, updated_at
-            FROM users
-            WHERE id = $1
+            SELECT users.id, users.password_hash as "password_hash: PasswordHash",  users.email as "email: EmailAddress", users.email_verified, users.given_name, users.family_name, roles.name as role, users.picture as "picture: Picture", users.created_at, users.updated_at
+            FROM users INNER JOIN roles ON users.role_id = roles.id
+            WHERE users.id = $1
             "#, 
             id
         )
@@ -90,8 +93,8 @@ impl UserRepository for PostgresUserRepository {
         let user = sqlx::query_as!(
             User,
             r#"
-            SELECT id, password_hash as "password_hash: PasswordHash",  email as "email: EmailAddress", email_verified, name, given_name, family_name, role as "role: Role", picture as "picture: Picture", created_at, updated_at
-            FROM users
+            SELECT users.id, users.password_hash as "password_hash: PasswordHash",  users.email as "email: EmailAddress", users.email_verified, users.given_name, users.family_name, roles.name as role, users.picture as "picture: Picture", users.created_at, users.updated_at
+            FROM users INNER JOIN roles ON users.role_id = roles.id
             WHERE email = $1
             "#, 
             email.to_string()
@@ -109,10 +112,14 @@ impl UserRepository for PostgresUserRepository {
                 sqlx::query_as!(
                     UserDescriptor,
                     r#"
-                    UPDATE users
-                        SET picture = $1
-                    WHERE email = $2
-                    RETURNING id,  email as "email: EmailAddress", name, role as "role: Role", picture as "picture: Picture"
+                    WITH inserted AS (
+                        UPDATE users
+                            SET picture = $1
+                        WHERE email = $2
+                        RETURNING id, email, given_name, family_name, role_id, picture
+                    )
+                    SELECT inserted.id, inserted.email as "email: EmailAddress", inserted.given_name, inserted.family_name, inserted.picture as "picture: Picture", roles.name as role
+                    FROM inserted INNER JOIN roles ON inserted.role_id = roles.id
                     "#, 
                     picture.to_string(),
                     email.to_string()
@@ -125,9 +132,9 @@ impl UserRepository for PostgresUserRepository {
                 sqlx::query_as!(
                     UserDescriptor,
                     r#"
-                    SELECT id,  email as "email: EmailAddress", name, role as "role: Role", picture as "picture: Picture"
-                    FROM users
-                    WHERE email = $1
+                    SELECT users.id,  users.email as "email: EmailAddress", users.given_name, users.family_name, roles.name as role, users.picture as "picture: Picture"
+                    FROM users INNER JOIN roles ON users.role_id = roles.id
+                    WHERE users.email = $1
                     "#, 
                     email.to_string()
                 )
@@ -144,9 +151,9 @@ impl UserRepository for PostgresUserRepository {
         let user = sqlx::query_as!(
             UserDescriptor,
             r#"
-            SELECT id,  email as "email: EmailAddress", name, role as "role: Role", picture as "picture: Picture"
-            FROM users
-            WHERE id = $1
+            SELECT users.id,  users.email as "email: EmailAddress", users.family_name, users.given_name, roles.name as role, users.picture as "picture: Picture"
+            FROM users INNER JOIN roles ON users.role_id = roles.id
+            WHERE users.id = $1
             "#, 
             id
         )
@@ -157,12 +164,12 @@ impl UserRepository for PostgresUserRepository {
         Ok(user)
     }
 
-    async fn get_all_user_descriptors(&self) -> Result<Vec<UserDescriptor>, UserRepositoryError> {
+    async fn get_user_descriptors(&self) -> Result<Vec<UserDescriptor>, UserRepositoryError> {
         let users = sqlx::query_as!(
             UserDescriptor,
             r#"
-            SELECT id,  email as "email: EmailAddress", name, role as "role: Role", picture as "picture: Picture"
-            FROM users
+            SELECT users.id,  users.email as "email: EmailAddress", users.family_name, users.given_name, roles.name as role, users.picture as "picture: Picture"
+            FROM users INNER JOIN roles ON users.role_id = roles.id
             "#,
         )
         .fetch_all(&self.pool)
@@ -170,5 +177,20 @@ impl UserRepository for PostgresUserRepository {
         .context("database failure retrieving userdescriptors from database")?;
 
         Ok(users)
+    }
+
+    async fn get_roles(&self) -> Result<Vec<Role>, UserRepositoryError> {
+        let roles = sqlx::query_as!(
+            Role,
+            r#"
+            SELECT id, name
+            FROM roles
+            "#,
+        )
+        .fetch_all(&self.pool)
+        .await
+        .context("database failure retrieving userdescriptors from database")?;
+
+        Ok(roles)
     }
 }
