@@ -1,0 +1,43 @@
+{% extends "layouts/main.html" %}
+
+{% block content %}
+<div id="content-header" class="my-4 mx-4 flex justify-between">
+    <h1 class="text-2xl">My Settings</h1>
+    <div class="space-x-2">
+        <button class="btn btn-sm btn-primary" type="submit" form="profile">Save</button>
+        <button class="btn btn-sm btn-disabled">Update Password</button>
+    </div>
+</div>
+<div id="content-profile" class="mx-4 flex">
+    <form id="profile" action="#" class="form-control w-full">
+        <div class="md:grid grid-cols-12 gap-3">
+            <div class="label col-span-5">
+                <span class="label-text">Email</span>
+            </div>
+            <div class="col-span-7">
+                <input id="email" type="email" class="input input-bordered input-sm w-full" />
+            </div>
+            <div class="label col-span-5">
+                <span class="label-text">First Name</span>
+            </div>
+            <div class="col-span-7">
+                <input id="given_name" type="text" class="input input-bordered input-sm w-full" />
+            </div>
+            <div class="label col-span-5">
+                <span class="label-text">Last Name</span>
+            </div>
+            <div class="col-span-7">
+                <input id="family_name" type="text" class="input input-bordered input-sm w-full" />
+            </div>
+            <div class="label col-span-5">
+                <span class="label-text">Role</span>
+            </div>
+            <div class="col-span-7">
+                <select id="role" class="select select-sm select-bordered select-disabled w-full" hx-trigger="load"
+                    hx-get="/settings/roles" hx-swap="innerHTML">
+                </select>
+            </div>
+        </div>
+    </form>
+</div>
+{% endblock %}

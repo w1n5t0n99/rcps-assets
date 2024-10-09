@@ -7,7 +7,7 @@ use oauth2::CsrfToken;
 use serde::Deserialize;
 use tracing::instrument;
 
-use crate::{application::{errors::ApplicationError, http::utils, identityaccess::identity_application_service::IdentityApplicationService, state::AppState, templates::{layouts::auth::AuthTemplate, partials::alert::AlertTemplate}}, domain::identityaccess::model::{credentials::{Credentials, PasswordCredentials}, user_repository::UserRepository}};
+use crate::{application::{errors::ApplicationError, http::utils, identityaccess::identity_application_service::IdentityApplicationService, state::AppState, templates::{pages::login::LoginTemplate, partials::alert::AlertTemplate}}, domain::identityaccess::model::{credentials::{Credentials, PasswordCredentials}, user_repository::UserRepository}};
 
 
 pub fn router<U>() -> Router<AppState<U>>
@@ -62,14 +62,14 @@ pub async fn post_login<U: UserRepository>(
 }
 
 #[instrument(skip_all)]
-pub async fn login(messages: Messages) -> AuthTemplate {
+pub async fn login(messages: Messages) -> LoginTemplate {
     let message = messages
         .into_iter()
         .collect::<Vec<_>>()
         .first()
         .map(|m| m.to_owned());
 
-    AuthTemplate::new(message)
+    LoginTemplate::new(message)
 }
 
 #[instrument(skip_all)]

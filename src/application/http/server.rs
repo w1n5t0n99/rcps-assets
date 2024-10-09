@@ -10,7 +10,7 @@ use tracing::instrument;
 use axum_messages::{Messages, MessagesManagerLayer};
 
 use crate::{application::{identityaccess::identity_application_service::IdentityApplicationService, state::AppState}, domain::identityaccess::model::user_repository::UserRepository, infastructure::services::postgres_user_repository::PostgresUserRepository, settings::ApplicationConfig};
-use super::{handlers::{settings, auth, oauth}, utils};
+use super::{handlers::{account, auth, oauth}, utils};
 
 
 #[instrument]
@@ -44,7 +44,7 @@ impl AppHttpServer {
 
         let router = axum::Router::new()
             .route("/healthchecker", get(health_checker_handler))
-            .merge(settings::router())
+            .merge(account::router())
             .merge(oauth::router())
             .merge(auth::router())
             .nest_service("/static", ServeDir::new("static").precompressed_gzip())

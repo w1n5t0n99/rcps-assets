@@ -1,5 +1,6 @@
-pub mod profile;
-pub mod roles;
+mod settings;
+mod roles;
+mod users;
 
 use axum::{middleware, routing::get, Router};
 
@@ -9,7 +10,8 @@ pub fn router<U>() -> Router<AppState<U>>
 where U: UserRepository
 {
     Router::new()
-        .route("/settings", get(self::profile::get_profile::<U>))
+        .route("/settings", get(self::settings::get_settings::<U>))
         .route("/settings/roles", get(self::roles::get_roles::<U>))
+        .route("/settings/users", get(self::users::get_users::<U>))
         .route_layer(middleware::from_fn(utils::login_required::<U>))
 }

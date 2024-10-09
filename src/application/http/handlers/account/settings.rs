@@ -4,7 +4,7 @@ use axum_login::AuthSession;
 use axum_messages::Messages;
 use tracing::instrument;
 
-use crate::{application::{errors::ApplicationError, identityaccess::identity_application_service::IdentityApplicationService, templates::layouts::settings::SettingsTemplate}, domain::identityaccess::model::user_repository::UserRepository};
+use crate::{application::{errors::ApplicationError, identityaccess::identity_application_service::IdentityApplicationService, templates::pages::settings::SettingsTemplate}, domain::identityaccess::model::user_repository::UserRepository};
 
 // form validation
 /*
@@ -32,7 +32,7 @@ use crate::{application::{errors::ApplicationError, identityaccess::identity_app
 */
 
 #[instrument(skip_all)]
-pub async fn get_profile<U: UserRepository>(
+pub async fn get_settings<U: UserRepository>(
     auth_session: AuthSession<IdentityApplicationService<U>>,
     messages: Messages,
 ) -> Result<SettingsTemplate, ApplicationError> {

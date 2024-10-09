@@ -1,9 +1,8 @@
 use anyhow::anyhow;
 use axum_login::AuthSession;
-use axum_messages::Messages;
 use tracing::instrument;
 
-use crate::{application::{errors::ApplicationError, identityaccess::identity_application_service::IdentityApplicationService, templates::{layouts::settings::SettingsTemplate, partials::users::roles_list::RolesListTemplate}}, domain::identityaccess::model::user_repository::UserRepository};
+use crate::{application::{errors::ApplicationError, identityaccess::identity_application_service::IdentityApplicationService, templates::partials::users::roles_list::RolesListTemplate}, domain::identityaccess::model::user_repository::UserRepository};
 
 
 #[instrument(skip_all)]
