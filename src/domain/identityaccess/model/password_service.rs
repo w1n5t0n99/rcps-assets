@@ -1,8 +1,8 @@
-use password_auth::verify_password;
+use password_auth::{generate_hash, verify_password};
 use thiserror::Error;
 use tokio::task::{self, JoinError};
 
-use super::{credentials::PasswordCredentials, user_repository::UserRepository};
+use super::{credentials::PasswordCredentials};
 
 
 #[derive(Error, Debug)]
@@ -21,6 +21,15 @@ pub struct PasswordService {
 impl PasswordService {
     pub fn new() -> Self {
         PasswordService { }
+    }
+
+    pub async fn generate_password(&self, password: String) -> Result<String, PasswordError> {
+        let password_hash = task::spawn_blocking(move || {
+            generate_hash(password)
+        })
+        .await?;
+
+        Ok(password_hash)
     }
 
     pub async fn authenticate(&self, creds: PasswordCredentials, password_hash: String) -> Result<bool, PasswordError> {

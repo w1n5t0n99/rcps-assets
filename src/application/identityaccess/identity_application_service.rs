@@ -3,7 +3,10 @@ use axum_login::{AuthUser, AuthnBackend, UserId};
 use oauth2::{url::Url, CsrfToken};
 use thiserror::Error;
 
-use crate::{application::errors::ApplicationError, domain::identityaccess::model::{credentials::Credentials, oauth_service::{OAuthError, OAuthService}, password_service::{PasswordError, PasswordService}, roles::Role, user_repository::{UserRepository, UserRepositoryError}, users::{EmailAddress, Picture, UserDescriptor}}, infastructure::services::google_oauth_service::GoogleOauthService};
+use crate::{domain::identityaccess::model::{credentials::Credentials, oauth_service::{OAuthError, OAuthService}, password_service::{PasswordError, PasswordService}, roles::Role, user_repository::{UserRepository, UserRepositoryError}, users::{EmailAddress, Picture, UserDescriptor}}, infastructure::services::google_oauth_service::GoogleOauthService};
+
+use super::schema::NewUserSchema;
+
 
 pub const CSRF_STATE_KEY: &str = "oauth.csrf-state";
 
@@ -53,6 +56,13 @@ where
             .await?;
 
         Ok(roles)
+    }
+
+    pub async fn add_user(&self, user: NewUserSchema) -> Result<UserDescriptor, IdentityError> {
+        // should be validated in handler
+        
+
+        todo!()
     }
 
     pub fn google_client_id(&self) -> String {

@@ -1,7 +1,15 @@
-{% for role in roles %}
-    {% if selected_role == role.name %}
-        <option value="{{role.id}}" selected>{{role.name}}</option>
-    {% else %}
+{% if let Some(selected_role) = selected_role %}
+    {% for role in roles %}
+        {% if selected_role == role.name.as_str() %}
+            <option value="{{role.id}}" selected>{{role.name}}</option>
+        {% else %}
+            <option value="{{role.id}}">{{role.name}}</option>
+        {% endif %}
+    {% endfor %}
+{% else %}
+    <option value="" disabled selected></option>
+    {% for role in roles %}
         <option value="{{role.id}}">{{role.name}}</option>
-    {% endif %}
-{% endfor %}
+    {% endfor %}
+{% endif %}
+

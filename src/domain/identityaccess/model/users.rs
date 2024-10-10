@@ -50,7 +50,6 @@ pub struct NewUser {
     pub password_hash: PasswordHash,  //hashed user password or unique identifier from oauth provider
     pub email: EmailAddress,
     pub email_verified: bool,
-    pub name: String,
     pub given_name: String,
     pub family_name: String,
     pub role_id: i32,

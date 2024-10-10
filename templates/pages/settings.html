@@ -34,7 +34,7 @@
             </div>
             <div class="col-span-7">
                 <select id="role" class="select select-sm select-bordered select-disabled w-full" hx-trigger="load"
-                    hx-get="/settings/roles" hx-swap="innerHTML">
+                    hx-get="/settings/roles?selected={{user.role}}" hx-swap="innerHTML">
                 </select>
             </div>
         </div>

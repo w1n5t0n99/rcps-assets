@@ -5,7 +5,7 @@ edition = "2021"
 
 [dependencies]
 axum = { version = "0.7.5", features = ["macros"] }
-axum-extra = { version = "0.9.3", features = ["cookie"] }
+axum-extra = { version = "0.9.3", features = ["cookie", "query"] }
 axum-login = "0.16.0"
 axum-messages = "0.7.0"
 tokio = { version = "1.39", features = ["full"] }
