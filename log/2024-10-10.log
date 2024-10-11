@@ -803,3 +803,5 @@
 2024-10-10-15:26:49 DEBUG call:call:request{method=GET uri=/settings version=HTTP/1.1}: tower_http::trace::on_response: finished processing request latency=0 ms status=307
 2024-10-10-15:26:49 DEBUG call:call:request{method=GET uri=/sessions/login version=HTTP/1.1}: tower_http::trace::on_request: started processing request
 2024-10-10-15:26:49 DEBUG call:call:request{method=GET uri=/sessions/login version=HTTP/1.1}: tower_http::trace::on_response: finished processing request latency=0 ms status=200
+2024-10-10-19:08:57  WARN sqlx_postgres::options::pgpass: Failed to open `.pgpass` file: Os { code: 2, kind: NotFound, message: "No such file or directory" } path=/home/relam/.pgpass
+2024-10-10-19:08:57 DEBUG htmx_google_auth::application::http::server: listening on 127.0.0.1:8000

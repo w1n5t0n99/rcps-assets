@@ -26,7 +26,8 @@ impl PostgresUserRepository {
     }
 }
 
-const UNIQUE_CONSTRAINT_VIOLATION_CODE: &str = "2067";
+
+const UNIQUE_CONSTRAINT_VIOLATION_CODE: &str = "23505";
 
 fn is_unique_constraint_violation(err: &sqlx::Error) -> bool {
     if let sqlx::Error::Database(db_err) = err {

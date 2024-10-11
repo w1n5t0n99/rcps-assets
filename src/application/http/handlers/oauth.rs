@@ -7,7 +7,7 @@ use oauth2::CsrfToken;
 use serde::Deserialize;
 use tracing::instrument;
 
-use crate::{application::{errors::ApplicationError, http::utils, identityaccess::identity_application_service::{IdentityApplicationService, CSRF_STATE_KEY}, state::AppState}, domain::identityaccess::model::{credentials::{Credentials, OauthCredentials}, user_repository::UserRepository}, infastructure::services::postgres_user_repository::PostgresUserRepository};
+use crate::{application::{errors::ApplicationError, http::utils, identityaccess::{identity_application_service::{IdentityApplicationService, CSRF_STATE_KEY}, schema::OauthSchema}, state::AppState}, domain::identityaccess::model::{credentials::{Credentials, OauthCredentials}, user_repository::UserRepository}, infastructure::services::postgres_user_repository::PostgresUserRepository};
 
 
 pub fn router<U>() -> Router<AppState<U>>
@@ -19,21 +19,15 @@ where U: UserRepository
         .route_layer(middleware::from_fn(utils::public_only::<U>))
 }
 
-#[derive(Debug, Clone, Deserialize)]
-struct AuthzResp {
-    code: String,
-    state: CsrfToken,
-}
-
 #[instrument(skip_all)]
 pub async fn google_oauth_callback<U: UserRepository>(
     mut auth_session: AuthSession<IdentityApplicationService<U>>,
     session: Session,
     messages: Messages,
-    Query(AuthzResp {
+    Query(OauthSchema {
         code,
         state: new_state,
-    }): Query<AuthzResp>,
+    }): Query<OauthSchema>,
 ) -> Result<impl IntoResponse, ApplicationError> {
     let Ok(Some(old_state)) = session.get(CSRF_STATE_KEY).await else {
         messages.error("Failed to sign in with Google");

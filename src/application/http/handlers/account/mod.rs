@@ -3,7 +3,7 @@ mod roles;
 mod users;
 mod user_create;
 
-use axum::{middleware, routing::get, Router};
+use axum::{middleware, routing::{get, post}, Router};
 
 use crate::{application::{http::utils, state::AppState}, domain::identityaccess::model::user_repository::UserRepository};
 
@@ -15,5 +15,6 @@ where U: UserRepository
         .route("/settings/roles", get(self::roles::get_roles::<U>))
         .route("/settings/users", get(self::users::get_users::<U>))
         .route("/settings/users/new", get(self::user_create::get_user_create::<U>))
+        .route("/settings/users/new", post(self::user_create::post_user_create::<U>))
         .route_layer(middleware::from_fn(utils::login_required::<U>))
 }

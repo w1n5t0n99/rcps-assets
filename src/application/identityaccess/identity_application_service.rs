@@ -3,7 +3,7 @@ use axum_login::{AuthUser, AuthnBackend, UserId};
 use oauth2::{url::Url, CsrfToken};
 use thiserror::Error;
 
-use crate::{domain::identityaccess::model::{credentials::Credentials, oauth_service::{OAuthError, OAuthService}, password_service::{PasswordError, PasswordService}, roles::Role, user_repository::{UserRepository, UserRepositoryError}, users::{EmailAddress, Picture, UserDescriptor}}, infastructure::services::google_oauth_service::GoogleOauthService};
+use crate::{domain::identityaccess::model::{credentials::Credentials, oauth_service::{OAuthError, OAuthService}, password_service::{PasswordError, PasswordService}, roles::Role, user_repository::{UserRepository, UserRepositoryError}, users::{EmailAddress, NewUser, PasswordHash, Picture, UserDescriptor}}, infastructure::services::google_oauth_service::GoogleOauthService};
 
 use super::schema::NewUserSchema;
 
@@ -60,9 +60,23 @@ where
 
     pub async fn add_user(&self, user: NewUserSchema) -> Result<UserDescriptor, IdentityError> {
         // should be validated in handler
-        
+        let password_hash = self.password.generate_password(user.password)
+            .await?;
 
-        todo!()
+        let new_user = NewUser {
+            password_hash: PasswordHash::new(password_hash),
+            email: EmailAddress::new(user.email),
+            email_verified: true,
+            given_name: user.given_name,
+            family_name: user.family_name,
+            role_id: user.role_id,
+            picture: Picture::new(user.picture),
+        };
+
+        let user_desc = self.user_repo.add_user(new_user)
+            .await?;
+
+        Ok(user_desc)
     }
 
     pub fn google_client_id(&self) -> String {

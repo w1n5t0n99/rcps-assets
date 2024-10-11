@@ -7,7 +7,7 @@ use oauth2::CsrfToken;
 use serde::Deserialize;
 use tracing::instrument;
 
-use crate::{application::{errors::ApplicationError, http::utils, identityaccess::identity_application_service::IdentityApplicationService, state::AppState, templates::{pages::login::LoginTemplate, partials::alert::AlertTemplate}}, domain::identityaccess::model::{credentials::{Credentials, PasswordCredentials}, user_repository::UserRepository}};
+use crate::{application::{errors::ApplicationError, http::utils, identityaccess::{identity_application_service::IdentityApplicationService, schema::AuthSchema}, state::AppState, templates::{pages::login::LoginTemplate, partials::alert::AlertTemplate}}, domain::identityaccess::model::{credentials::{Credentials, PasswordCredentials}, user_repository::UserRepository}};
 
 
 pub fn router<U>() -> Router<AppState<U>>
@@ -25,16 +25,10 @@ where U: UserRepository
     Router::<AppState<U>>::new().merge(loguout_router).merge(login_router)
 }
 
-#[derive(Debug, Clone, Deserialize)]
-struct AuthzResp {
-    email: String,
-    password: String,
-}
-
 #[instrument(skip_all)]
 pub async fn post_login<U: UserRepository>(
     mut auth_session: AuthSession<IdentityApplicationService<U>>,
-    Form(AuthzResp { email, password, }): Form<AuthzResp>,
+    Form(AuthSchema { email, password, }): Form<AuthSchema>,
 ) ->  Result<impl IntoResponse, ApplicationError> {
     // TODO: validate form
     let creds = Credentials::Password(PasswordCredentials{
