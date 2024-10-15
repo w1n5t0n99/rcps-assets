@@ -21,7 +21,7 @@
             </thead>
             <tbody>
                 {% for user in users %}
-                    <tr class="hover">
+                    <tr class="hover" hx-on:click="window.location.href = '/settings/users/{{user.id}}/edit'">
                         <td>{{user.email}}</td>
                         <td>{{user.given_name}} {{user.family_name}}</td>
                         <td>{{user.role}}</td>
