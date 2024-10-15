@@ -27,6 +27,17 @@ fn default_picture() -> String {
     "/static/images/User.svg".to_string()
 }
 
+#[derive(Clone, Debug, Deserialize)]
+#[derive(Validate)]
+pub struct UpdateUserSchema {
+    #[garde(length(min=1))]
+    pub given_name: String,
+    #[garde(length(min=1))]
+    pub family_name: String,
+    #[garde(skip)]	
+    pub role_id: i32,
+}
+
 #[derive(Debug, Clone, Deserialize)]
 pub struct OauthSchema {
     pub code: String,

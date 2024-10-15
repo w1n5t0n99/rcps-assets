@@ -5,7 +5,7 @@ use thiserror::Error;
 
 use crate::{domain::identityaccess::model::{credentials::Credentials, oauth_service::{OAuthError, OAuthService}, password_service::{PasswordError, PasswordService}, roles::Role, user_repository::{UserRepository, UserRepositoryError}, users::{EmailAddress, NewUser, PasswordHash, Picture, UserDescriptor}}, infastructure::services::google_oauth_service::GoogleOauthService};
 
-use super::schema::NewUserSchema;
+use super::schema::{NewUserSchema, UpdateUserSchema};
 
 
 pub const CSRF_STATE_KEY: &str = "oauth.csrf-state";
@@ -77,6 +77,10 @@ where
             .await?;
 
         Ok(user_desc)
+    }
+
+    pub async fn update_user(&self, user: UpdateUserSchema) -> Result<UserDescriptor, IdentityError> {
+        todo!()
     }
 
     pub fn google_client_id(&self) -> String {

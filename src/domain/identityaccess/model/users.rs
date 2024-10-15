@@ -56,7 +56,6 @@ pub struct NewUser {
     pub picture: Picture,
 }
 
-
 #[derive(Clone, Debug, Serialize, Deserialize, sqlx::FromRow, sqlx::Type)]
 pub struct User {
     pub id: uuid::Uuid,
@@ -91,6 +90,23 @@ impl From<User> for UserDescriptor {
             role: value.role,
             picture: value.picture,
         }
+    }
+}
+
+#[derive(Clone, Debug, Serialize, Deserialize)]
+pub struct SessionUser {
+    pub user: UserDescriptor,
+}
+
+impl From<UserDescriptor> for SessionUser {
+    fn from(value: UserDescriptor) -> Self {
+        Self{user: value}
+    }
+}
+
+impl From<User> for SessionUser {
+    fn from(value: User) -> Self {
+        Self{user: value.into()}
     }
 }
 
