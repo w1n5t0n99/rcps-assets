@@ -15,26 +15,26 @@
                 <span class="label-text">Email</span>
             </div>
             <div class="col-span-7">
-                <input id="email" type="email" value="{{ user.email }}" class="input input-bordered input-sm w-full" disabled />
+                <input id="email" type="email" value="{{ session_user.user.email }}" class="input input-bordered input-sm w-full" disabled />
             </div>
             <div class="label col-span-5">
                 <span class="label-text">First Name</span>
             </div>
             <div class="col-span-7">
-                <input id="given_name" type="text" value="{{ user.given_name }}" class="input input-bordered input-sm w-full" />
+                <input id="given_name" type="text" value="{{ session_user.user.given_name }}" class="input input-bordered input-sm w-full" />
             </div>
             <div class="label col-span-5">
                 <span class="label-text">Last Name</span>
             </div>
             <div class="col-span-7">
-                <input id="family_name" type="text" value="{{ user.family_name }}" class="input input-bordered input-sm w-full" />
+                <input id="family_name" type="text" value="{{ session_user.user.family_name }}" class="input input-bordered input-sm w-full" />
             </div>
             <div class="label col-span-5">
                 <span class="label-text">Role</span>
             </div>
             <div class="col-span-7">
                 <select id="role" class="select select-sm select-bordered select-disabled w-full" hx-trigger="load"
-                    hx-get="/settings/roles?selected={{user.role}}" hx-swap="innerHTML">
+                    hx-get="/settings/roles?selected={{session_user.user.role}}" hx-swap="innerHTML">
                 </select>
             </div>
         </div>

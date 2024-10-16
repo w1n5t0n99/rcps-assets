@@ -1,19 +1,20 @@
 use anyhow::anyhow;
 use askama_axum::IntoResponse;
-use axum::Form;
+use axum::{Extension, Form};
 use axum_login::AuthSession;
 use axum_messages::Messages;
 use garde::{Report, Validate};
 use serde::Deserialize;
 use tracing::instrument;
 
-use crate::{application::{errors::ApplicationError, identityaccess::{identity_application_service::{IdentityApplicationService, IdentityError}, schema::NewUserSchema}, templates::{pages::{user_create::UserCreateTemplate, users::UsersTemplate}, partials::form_alert::FormAlertTemplate}}, domain::identityaccess::model::user_repository::{UserRepository, UserRepositoryError}};
+use crate::{application::{errors::ApplicationError, identityaccess::{identity_application_service::{IdentityApplicationService, IdentityError}, schema::NewUserSchema}, templates::{pages::{user_create::UserCreateTemplate, users::UsersTemplate}, partials::form_alert::FormAlertTemplate}}, domain::identityaccess::model::{user_repository::{UserRepository, UserRepositoryError}, users::SessionUser}};
 
 
 #[instrument(skip_all)]
 pub async fn get_user_create<U: UserRepository>(
     auth_session: AuthSession<IdentityApplicationService<U>>,
     messages: Messages,
+    Extension(session_user): Extension<SessionUser>,
 ) -> Result<UserCreateTemplate, ApplicationError> {
     let message = messages
         .into_iter()
@@ -21,16 +22,13 @@ pub async fn get_user_create<U: UserRepository>(
         .first()
         .map(|m| m.to_owned());
 
-    if let Some(user) = auth_session.user {
-        return Ok(UserCreateTemplate::new(user, message));
-    }
-    
-    Err(ApplicationError::forbidden(anyhow!("user not logged in"), "User Not Logged In"))
+    Ok(UserCreateTemplate::new(session_user, message))
 }
 
 #[instrument(skip_all)]
 pub async fn post_user_create<U: UserRepository>(
     auth_session: AuthSession<IdentityApplicationService<U>>,
+    messages: Messages,
     Form(new_user): Form<NewUserSchema>,
 ) -> Result<impl IntoResponse, ApplicationError> {
 
@@ -52,5 +50,6 @@ pub async fn post_user_create<U: UserRepository>(
         }
     }
 
+    messages.success("user created");
     Ok(([("HX-Redirect", "/settings/users")], "success"))
 }

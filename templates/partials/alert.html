@@ -1,5 +1,5 @@
 {% if message.level == Level::Error %}
-<div id="{{ alert_id }}" role="alert" class="alert alert-error">
+<div id="{{ alert_id }}" role="alert" class="alert alert-error rounded-none my-1">
     <svg
         xmlns="http://www.w3.org/2000/svg"
         class="h-6 w-6 shrink-0 stroke-current"
@@ -14,7 +14,7 @@
     <span>{{ message.message }}</span>
 </div>
 {% else if message.level == Level::Warning %}
-<div id="{{ alert_id }}" role="alert" class="alert alert-warning">
+<div id="{{ alert_id }}" role="alert" class="alert alert-warning rounded-none my-1">
     <svg
       xmlns="http://www.w3.org/2000/svg"
       class="h-6 w-6 shrink-0 stroke-current"
@@ -29,7 +29,7 @@
     <span>{{ message.message }}</span>
 </div>
 {% else if message.level == Level::Success %}
-<div id="{{ alert_id }}" role="alert" class="alert alert-success">
+<div id="{{ alert_id }}" role="alert" class="alert alert-success rounded-none my-1">
     <svg
       xmlns="http://www.w3.org/2000/svg"
       class="h-6 w-6 shrink-0 stroke-current"
@@ -44,7 +44,7 @@
     <span>{{ message.message }}</span>
 </div>
 {% else if message.level == Level::Info %}
-<div id="{{ alert_id }}" role="alert" class="alert alert-info">
+<div id="{{ alert_id }}" role="alert" class="alert alert-info rounded-none my-1">
     <svg
       xmlns="http://www.w3.org/2000/svg"
       class="h-6 w-6 shrink-0 stroke-current"
@@ -59,7 +59,7 @@
     <span>{{ message.message }}</span>
 </div>
 {% else %}
-<div id="{{ alert_id }}" role="alert" class="alert">
+<div id="{{ alert_id }}" role="alert" class="alert rounded-none my-1">
     <svg
       xmlns="http://www.w3.org/2000/svg"
       class="h-6 w-6 shrink-0 stroke-current"

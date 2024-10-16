@@ -1,7 +1,8 @@
 use askama::Template;
 use axum_messages::Message;
+use tower_sessions::Session;
 
-use crate::{application::templates::partials::{alert::AlertTemplate, navbar::NavbarTemplate}, domain::identityaccess::model::users::UserDescriptor};
+use crate::{application::templates::partials::{alert::AlertTemplate, navbar::NavbarTemplate}, domain::identityaccess::model::users::{SessionUser, UserDescriptor}};
 
 
 #[derive(Template)]
@@ -9,13 +10,13 @@ use crate::{application::templates::partials::{alert::AlertTemplate, navbar::Nav
 pub struct SettingsTemplate {
     navbar: NavbarTemplate,
     alert: Option<AlertTemplate>,
-    user: UserDescriptor,
+    session_user: SessionUser,
 }
 
 impl SettingsTemplate {
-    pub fn new(logged_in_user: UserDescriptor, message: Option<Message>) -> Self {
-        let navbar = NavbarTemplate::new(logged_in_user.picture.to_string());
+    pub fn new(session_user: SessionUser, message: Option<Message>) -> Self {
+        let navbar = NavbarTemplate::new(session_user.user.picture.to_string());
         let alert = message.map(|m| AlertTemplate::new("global_alert_message", m));
-        Self {navbar, user: logged_in_user, alert}
+        Self {navbar, session_user, alert}
     }
 }

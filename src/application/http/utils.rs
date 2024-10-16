@@ -6,7 +6,7 @@ use axum::{
 use axum_login::AuthSession;
 use axum_messages::Messages;
 
-use crate::{application::{errors::ApplicationError, identityaccess::identity_application_service::IdentityApplicationService}, domain::identityaccess::model::user_repository::UserRepository};
+use crate::{application::{errors::ApplicationError, identityaccess::identity_application_service::IdentityApplicationService}, domain::identityaccess::model::{user_repository::UserRepository, users::SessionUser}};
 
 
 pub async fn login_required<U: UserRepository>(
@@ -14,12 +14,15 @@ pub async fn login_required<U: UserRepository>(
     // you can also add more extractors here but the last
     // extractor must implement `FromRequest` which
     // `Request` does
-    request: Request,
+    mut request: Request,
     next: Next,
 ) -> Result<Response, StatusCode> {
-    if auth_session.user.is_some() {
+    if let Some(user) = auth_session.user {
+        let session_user: SessionUser = user.into();
+        request.extensions_mut().insert(session_user);
+
         let response = next.run(request).await;
-            return Ok(response);
+        return Ok(response);
     }
    
     Ok(Redirect::temporary("/sessions/login").into_response()) 

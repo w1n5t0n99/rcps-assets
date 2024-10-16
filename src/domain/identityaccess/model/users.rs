@@ -44,7 +44,6 @@ pub enum Provider {
     Google,
 }
 
-
 #[derive(Clone, Debug, Serialize, Deserialize)]
 pub struct NewUser {
     pub password_hash: PasswordHash,  //hashed user password or unique identifier from oauth provider
@@ -54,6 +53,13 @@ pub struct NewUser {
     pub family_name: String,
     pub role_id: i32,
     pub picture: Picture,
+}
+
+#[derive(Clone, Debug, Serialize, Deserialize)]
+pub struct UpdateUser {
+    pub given_name: String,
+    pub family_name: String,
+    pub role_id: i32,
 }
 
 #[derive(Clone, Debug, Serialize, Deserialize, sqlx::FromRow, sqlx::Type)]

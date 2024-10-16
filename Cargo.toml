@@ -8,6 +8,7 @@ axum = { version = "0.7.5", features = ["macros"] }
 axum-extra = { version = "0.9.3", features = ["cookie", "query"] }
 axum-login = "0.16.0"
 axum-messages = "0.7.0"
+axum_typed_multipart = "0.13.1"
 tokio = { version = "1.39", features = ["full"] }
 tower-http = { version = "0.5.2", features = ["trace", "fs", "compression-br"] }
 tower-layer = "0.3.3"

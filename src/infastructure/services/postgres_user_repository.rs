@@ -1,7 +1,8 @@
 use anyhow::Context;
 use sqlx::{postgres::{PgConnectOptions, PgPoolOptions, PgSslMode}, PgPool};
+use uuid::Uuid;
 
-use crate::{domain::identityaccess::model::{roles::Role, user_repository::{UserRepository, UserRepositoryError}, users::{EmailAddress, NewUser, PasswordHash, Picture, User, UserDescriptor}}, settings::DatabaseConfig};
+use crate::{domain::identityaccess::model::{roles::Role, user_repository::{UserRepository, UserRepositoryError}, users::{EmailAddress, NewUser, PasswordHash, Picture, UpdateUser, User, UserDescriptor}}, settings::DatabaseConfig};
 
 
 #[derive(Debug, Clone)]
@@ -41,7 +42,6 @@ fn is_unique_constraint_violation(err: &sqlx::Error) -> bool {
     false
 }
 
-
 impl UserRepository for PostgresUserRepository {
     async fn add_user(&self, user: NewUser) -> Result<UserDescriptor, UserRepositoryError> {
         let user_descriptor = sqlx::query_as!(
@@ -69,6 +69,71 @@ impl UserRepository for PostgresUserRepository {
             if is_unique_constraint_violation(&e) == true { UserRepositoryError::Duplicate }
             else { UserRepositoryError::Unknown(e.into()) }
         })?;
+
+        Ok(user_descriptor)
+    }
+
+    async fn delete_user(&self, user_id: Uuid) -> Result<Option<Uuid>, UserRepositoryError> {
+        
+        let returned_user_id = sqlx::query!(
+            r#"
+            DELETE FROM users WHERE id = $1
+            RETURNING id as "id: Uuid"
+            "#,
+            user_id,
+        )
+        .fetch_optional(&self.pool)
+        .await
+        .context("could not delete user from database")?;
+
+        Ok(returned_user_id.map(|r| r.id))
+    }
+
+    async fn update_session_user(&self, user_id: Uuid, user: UpdateUser) -> Result<Option<UserDescriptor>, UserRepositoryError> {
+        let user_descriptor = sqlx::query_as!(
+            UserDescriptor,
+            r#"
+            WITH updated AS (
+                UPDATE users
+                SET given_name = $1, family_name = $2
+                WHERE id = $3
+                RETURNING id, email, given_name, family_name, role_id, picture
+            )
+            SELECT updated.id, updated.email as "email: EmailAddress", updated.given_name, updated.family_name, updated.picture as "picture: Picture", roles.name as role
+            FROM updated INNER JOIN roles ON updated.role_id = roles.id
+            "#,
+            user.given_name.clone(),
+            user.family_name.clone(),
+            user_id,
+        )
+        .fetch_optional(&self.pool)
+        .await
+        .context("could not retrieve user from database")?;
+
+        Ok(user_descriptor)
+    }
+
+    async fn update_user(&self, user_id: Uuid, user: UpdateUser) -> Result<Option<UserDescriptor>, UserRepositoryError> {
+        let user_descriptor = sqlx::query_as!(
+            UserDescriptor,
+            r#"
+            WITH updated AS (
+                UPDATE users
+                SET given_name = $1, family_name = $2, role_id = $3
+                WHERE id = $4
+                RETURNING id, email, given_name, family_name, role_id, picture
+            )
+            SELECT updated.id, updated.email as "email: EmailAddress", updated.given_name, updated.family_name, updated.picture as "picture: Picture", roles.name as role
+            FROM updated INNER JOIN roles ON updated.role_id = roles.id
+            "#,
+            user.given_name.clone(),
+            user.family_name.clone(),
+            user.role_id,
+            user_id,
+        )
+        .fetch_optional(&self.pool)
+        .await
+        .context("could not retrieve user from database")?;
 
         Ok(user_descriptor)
     }

@@ -18,5 +18,7 @@ where U: UserRepository
         .route("/settings/users/new", get(self::user_create::get_user_create::<U>))
         .route("/settings/users/new", post(self::user_create::post_user_create::<U>))
         .route("/settings/users/:user_id/edit", get(self::user_edit::get_user_edit::<U>))
+        .route("/settings/users/:user_id/edit", post(self::user_edit::post_user_edit::<U>))
+        .route("/settings/users/:user_id/delete", post(self::user_edit::post_user_delete::<U>))
         .route_layer(middleware::from_fn(utils::login_required::<U>))
 }

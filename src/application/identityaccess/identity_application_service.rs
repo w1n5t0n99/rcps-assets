@@ -1,9 +1,11 @@
+use anyhow::anyhow;
 use axum::async_trait;
 use axum_login::{AuthUser, AuthnBackend, UserId};
 use oauth2::{url::Url, CsrfToken};
 use thiserror::Error;
+use uuid::Uuid;
 
-use crate::{domain::identityaccess::model::{credentials::Credentials, oauth_service::{OAuthError, OAuthService}, password_service::{PasswordError, PasswordService}, roles::Role, user_repository::{UserRepository, UserRepositoryError}, users::{EmailAddress, NewUser, PasswordHash, Picture, UserDescriptor}}, infastructure::services::google_oauth_service::GoogleOauthService};
+use crate::{domain::identityaccess::model::{credentials::Credentials, oauth_service::{OAuthError, OAuthService}, password_service::{PasswordError, PasswordService}, roles::Role, user_repository::{UserRepository, UserRepositoryError}, users::{EmailAddress, NewUser, PasswordHash, Picture, SessionUser, UpdateUser, UserDescriptor}}, infastructure::services::google_oauth_service::GoogleOauthService};
 
 use super::schema::{NewUserSchema, UpdateUserSchema};
 
@@ -79,8 +81,33 @@ where
         Ok(user_desc)
     }
 
-    pub async fn update_user(&self, user: UpdateUserSchema) -> Result<UserDescriptor, IdentityError> {
-        todo!()
+    pub async fn delete_user(&self, session_user: SessionUser, user_id: Uuid) -> Result<Option<Uuid>, IdentityError> {
+        if session_user.user.id == user_id {
+            return Err(IdentityError::Unknown(anyhow!("cannot delete session user")))?;
+        }
+
+        self.user_repo.delete_user(user_id)
+            .await
+            .map_err(|e| e.into())
+    }
+
+    pub async fn update_user(&self, session_user: SessionUser, user_id: Uuid, user: UpdateUserSchema) -> Result<Option<UserDescriptor>, IdentityError> {
+        let update_user = UpdateUser {
+            given_name: user.given_name,
+            family_name: user.family_name,
+            role_id: user.role_id,
+        };
+
+        if session_user.user.id == user_id {
+            self.user_repo.update_session_user(user_id, update_user)
+                .await
+                .map_err(|e| e.into())
+        }
+        else {
+            self.user_repo.update_user(user_id, update_user)
+                .await
+                .map_err(|e| e.into())
+        }
     }
 
     pub fn google_client_id(&self) -> String {

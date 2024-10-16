@@ -5,11 +5,11 @@
     <h1 class="text-2xl">User Configuration</h1>
     <div class="space-x-2">
         <a class="btn btn-sm" href="javascript:history.back()">Back</a>
-        {% if logged_in_user.id != user.id  %}
+        {% if session_user.user.id != user.id  %}
             <button class="btn btn-sm" onclick="delete_modal.showModal()">Delete</button>
             <dialog id="delete_modal" class="modal">
                 <div class="modal-box">
-                    <h3 class="text-lg font-bold">Permanently Delete {{ user.email }} User</h3>
+                    <h3 class="text-lg font-bold">Permanently Delete <span class="text-primary">{{ user.email }}</span> User</h3>
                     <p class="py-4">Are you sure?</p>
                     <div class="modal-action justify-between px-1">
                         <button class="btn btn-sm btn-error" hx-post="/settings/users/{{user.id}}/delete">Delete</button>
@@ -35,37 +35,37 @@
     <input type="file" hx-post="/settings/users/{{user.id}}/change_picture" hx-trigger="changed" class="file-input file-input-sm file-input-bordered w-full max-w-xs" />
 </div>
 <div id="content-profile" class="mx-4 flex">
-    <form id="profile" action="/settings/users/{{user.id}}/edit" class="form-control w-full">
+    <form id="profile" hx-boost="true" action="/settings/users/{{user.id}}/edit" method="post" class="form-control w-full" hx-swap="outerHTML" hx-target-400="#global_alert_message">
         <div class="md:grid grid-cols-12 gap-3">
             <div class="label col-span-5">
                 <span class="label-text">Email</span>
             </div>
             <div class="col-span-7">
-                <input id="email" type="email" value="{{ user.email }}" class="input input-bordered input-sm w-full" disabled />
+                <input name="email" type="email" value="{{ user.email }}" class="input input-bordered input-sm w-full" disabled />
             </div>
             <div class="label col-span-5">
                 <span class="label-text">First Name</span>
             </div>
             <div class="col-span-7">
-                <input id="given_name" type="text" value="{{ user.given_name }}" class="input input-bordered input-sm w-full" />
+                <input name="given_name" type="text" value="{{ user.given_name }}" class="input input-bordered input-sm w-full" required/>
             </div>
             <div class="label col-span-5">
                 <span class="label-text">Last Name</span>
             </div>
             <div class="col-span-7">
-                <input id="family_name" type="text" value="{{ user.family_name }}" class="input input-bordered input-sm w-full" />
+                <input name="family_name" type="text" value="{{ user.family_name }}" class="input input-bordered input-sm w-full" required/>
             </div>
             <div class="label col-span-5">
                 <span class="label-text">Role</span>
             </div>
             <div class="col-span-7">
-                {% if logged_in_user.id == user.id  %}
-                    <select id="role" class="select select-sm select-bordered select-disabled w-full" hx-trigger="load"
-                        hx-get="/settings/roles?selected={{user.role}}" hx-swap="innerHTML">
+                {% if session_user.user.id == user.id  %}
+                    <select name="role_id" class="select select-sm select-bordered select-disabled w-full" hx-trigger="load"
+                        hx-get="/settings/roles?selected={{user.role}}" hx-swap="innerHTML" required>
                     </select>
                 {% else %}
-                    <select id="role" class="select select-sm select-bordered w-full" hx-trigger="load"
-                        hx-get="/settings/roles?selected={{user.role}}" hx-swap="innerHTML">
+                    <select name="role_id" class="select select-sm select-bordered w-full" hx-trigger="load"
+                        hx-get="/settings/roles?selected={{user.role}}" hx-swap="innerHTML" required>
                     </select>
                 {% endif %}
             </div>

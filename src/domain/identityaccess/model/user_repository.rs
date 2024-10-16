@@ -1,8 +1,9 @@
 use std::future::Future;
 
 use thiserror::Error;
+use uuid::Uuid;
 
-use super::{roles::Role, users::{EmailAddress, NewUser, Picture, User, UserDescriptor}};
+use super::{roles::Role, users::{EmailAddress, NewUser, Picture, UpdateUser, User, UserDescriptor}};
 
 
 #[derive(Error, Debug)]
@@ -19,6 +20,22 @@ pub trait UserRepository: Send + Sync + Clone + 'static {
         &self,
         user: NewUser,
     ) -> impl Future<Output = Result<UserDescriptor, UserRepositoryError>> + Send;
+
+    fn update_session_user(
+        &self,
+        user_id: Uuid,
+        user: UpdateUser,
+    ) -> impl Future<Output = Result<Option<UserDescriptor>, UserRepositoryError>> + Send;
+
+    fn update_user(
+        &self,
+        user_id: Uuid,
+        user: UpdateUser,
+    ) -> impl Future<Output = Result<Option<UserDescriptor>, UserRepositoryError>> + Send;
+
+    fn delete_user(&self,
+        user_id: Uuid,
+    ) -> impl Future<Output = Result<Option<Uuid>, UserRepositoryError>> + Send;
 
     fn get_user(
         &self,
