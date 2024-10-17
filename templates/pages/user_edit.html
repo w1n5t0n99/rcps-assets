@@ -32,7 +32,7 @@
           src="{{user.picture}}"
           referrerpolicy="no-referrer" />
     </div>
-    <input type="file" hx-post="/settings/users/{{user.id}}/change_picture" hx-trigger="changed" class="file-input file-input-sm file-input-bordered w-full max-w-xs" />
+    <input name="image" type="file" hx-encoding="multipart/form-data" hx-post="/settings/users/{{user.id}}/change_picture" hx-trigger="change" class="file-input file-input-sm file-input-bordered w-full max-w-xs" />
 </div>
 <div id="content-profile" class="mx-4 flex">
     <form id="profile" hx-boost="true" action="/settings/users/{{user.id}}/edit" method="post" class="form-control w-full" hx-swap="outerHTML" hx-target-400="#global_alert_message">

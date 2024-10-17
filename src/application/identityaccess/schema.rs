@@ -1,6 +1,6 @@
 use oauth2::CsrfToken;
 use serde::{Deserialize};
-use garde::{Validate, Valid};
+use garde::Validate;
 
 
 #[derive(Clone, Debug, Deserialize)]
@@ -39,9 +39,10 @@ pub struct UpdateUserSchema {
 }
 
 #[derive(Debug, Clone, Deserialize)]
-pub struct OauthSchema {
-    pub code: String,
-    pub state: CsrfToken,
+#[serde(untagged)]
+pub enum OauthSchema {
+    Success { code: String, state: CsrfToken },
+    Error { error: String, state: CsrfToken },
 }
 
 #[derive(Debug, Clone, Deserialize)]
@@ -49,3 +50,4 @@ pub struct AuthSchema {
     pub email: String,
     pub password: String,
 }
+

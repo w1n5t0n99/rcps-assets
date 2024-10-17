@@ -24,10 +24,7 @@ pub async fn google_oauth_callback<U: UserRepository>(
     mut auth_session: AuthSession<IdentityApplicationService<U>>,
     session: Session,
     messages: Messages,
-    Query(OauthSchema {
-        code,
-        state: new_state,
-    }): Query<OauthSchema>,
+    Query( oauth_query): Query<OauthSchema>,
 ) -> Result<impl IntoResponse, ApplicationError> {
     let Ok(Some(old_state)) = session.get(CSRF_STATE_KEY).await else {
         messages.error("Failed to sign in with Google");
@@ -37,11 +34,22 @@ pub async fn google_oauth_callback<U: UserRepository>(
         ); 
     };
 
-    let creds = Credentials::OAuth(OauthCredentials {
-        code,
-        old_state,
-        new_state,
-    });
+    let creds = match oauth_query {
+        OauthSchema::Success { code, state } => {
+           Credentials::OAuth(OauthCredentials {
+                code,
+                old_state,
+                new_state: state,
+            })
+        },
+        OauthSchema::Error { error, state } => {
+            messages.error("Failed to sign in with Google");
+
+            return Err(
+                ApplicationError::redirect(anyhow!("oauth login failure - csrf mismatch"), "/sessions/login")
+             ); 
+        },
+    };
 
     let user = auth_session.authenticate(creds).await;
 
