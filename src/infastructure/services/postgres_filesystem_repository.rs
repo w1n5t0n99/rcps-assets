@@ -29,6 +29,7 @@ impl PostgresFilesystemRepository {
         Ok(Self { pool: pg_pool })
     }
 
+    /// Accepts a multipart field, [stores it on the disk], and returns indentifying information about it.
     fn generate_payload(&self, field: &FieldData<NamedTempFile>) -> Result<FilePayload, FilesystemRepositoryError> {
         let mut hasher = blake3::Hasher::new();
         let mut data = Vec::new();

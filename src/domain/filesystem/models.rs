@@ -69,16 +69,19 @@ pub struct Attachment {
 
 /*
     UPLOAD file
-    - save field as temp file
-    - deduplicate or insert as attachment
-        - generate unique file name
-        - hash file data
-        - save file to somewhere permanent like S3
-        - save file atachment info to database
-        - use GET //fs/:id route to get uploaded data
+    - FilesystemService.generate_payload()
 
-        - if file is found in db by unique filehash, return that
-    - return attachment data(path, filename, mime)
+    - deduplicate
+    - FilesystemRepo.get_attachment_by_hash()
 
-    - return response (HTMX img tag)
+    - or -
+
+    - FilesystemService.process_payload() // e.g. if image convert to webp and upload to S3 or persist to disk
+    - FilesystemRepo.insert_payload_as_attachment() // return hash as id to use in url
+
+    GET file
+    - FilesystemRepo.get_attachment_by_hash()
+    - FilesystemService.get_payload_by_id()
+
+    - use attachment and payload to generate response with streaming body
 */
