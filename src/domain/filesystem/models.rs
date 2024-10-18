@@ -2,7 +2,9 @@ use std::path::PathBuf;
 use std::collections::HashMap;
 use std::sync::LazyLock;
 
+use chrono::{DateTime, Utc};
 use mime_guess::Mime;
+use serde::{Deserialize, Serialize};
 
 
 /// Route for passing local assets through the webserver.
@@ -37,6 +39,7 @@ pub static MIME_LOOKUP: LazyLock<HashMap<&'static str, &'static str>> = LazyLock
         ("text/html", "html"),
         ("text/plain", "txt"),
         ("text/xml", "xml"),
+        ("text/csv", "csv"),
         ("video/mp4", "mp4"),
         ("video/ogg", "ogv"),
         ("video/quicktime", "mov"),
@@ -49,15 +52,19 @@ pub static MIME_LOOKUP: LazyLock<HashMap<&'static str, &'static str>> = LazyLock
 });
 
 pub struct FilePayload {
-    data: Vec<u8>,
-    filename: String,
-    hash: blake3::Hash,
-    tmp_path: PathBuf,
-    mime: Mime,
+    pub data: Vec<u8>,
+    pub filename: String,
+    pub hash: String,
+    pub content_type: String,
 }
 
+#[derive(Clone, Debug, Serialize, Deserialize, sqlx::FromRow)]
 pub struct Attachment {
-
+    pub id: i32,
+    pub filename: String,
+    pub hash: String,
+    pub content_type: String,
+    pub created_at: DateTime<Utc>,
 }
 
 /*

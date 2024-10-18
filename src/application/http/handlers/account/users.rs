@@ -1,4 +1,5 @@
 use anyhow::anyhow;
+use askama_axum::IntoResponse;
 use axum::Extension;
 use axum_login::AuthSession;
 use axum_messages::Messages;
@@ -12,7 +13,7 @@ pub async fn get_users<U: UserRepository>(
     auth_session: AuthSession<IdentityApplicationService<U>>,
     messages: Messages,
     Extension(session_user): Extension<SessionUser>,
-) -> Result<UsersTemplate, ApplicationError> {
+) -> Result<impl IntoResponse, ApplicationError> {
     let message = messages
         .into_iter()
         .collect::<Vec<_>>()
@@ -23,5 +24,5 @@ pub async fn get_users<U: UserRepository>(
         .await
         .map_err(|e| ApplicationError::InternalServerError(anyhow!(e)))?;
 
-    Ok(UsersTemplate::new(session_user, users, message))
+    Ok(([("Cache-Control", "no-store")], UsersTemplate::new(session_user, users, message)))
 }
