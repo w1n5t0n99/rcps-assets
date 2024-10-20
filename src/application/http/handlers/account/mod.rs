@@ -22,5 +22,6 @@ where U: UserRepository
         .route("/settings/users/:user_id/edit", post(self::user_edit::post_user_edit::<U>))
         .route("/settings/users/:user_id/delete", post(self::user_edit::post_user_delete::<U>))
         .route("/settings/users/:user_id/change_picture", post(self::user_content::post_change_user_picture::<U>))
+        .route("/content/:hash/*filename", get(self::user_content::get_content::<U>))
         .route_layer(middleware::from_fn(utils::login_required::<U>))
 }

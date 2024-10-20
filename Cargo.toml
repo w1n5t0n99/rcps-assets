@@ -10,6 +10,7 @@ axum-login = "0.16.0"
 axum-messages = "0.7.0"
 axum_typed_multipart = "0.13.1"
 tokio = { version = "1.39", features = ["full"] }
+tokio-util = "0.7.12"
 tower-http = { version = "0.5.2", features = ["trace", "fs", "compression-br"] }
 tower-layer = "0.3.3"
 tower-sessions = { version = "0.13.0", features = ["signed",] }
@@ -40,3 +41,5 @@ garde = { version = "0.20.0", features = ["full"] }
 blake3 = "1.5.4"
 mime_guess = "=2.0.5"
 tempfile = "3.13.0"
+image = "0.25.4"
+webp = "0.3.0"

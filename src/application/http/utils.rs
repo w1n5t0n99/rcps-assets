@@ -25,7 +25,12 @@ pub async fn login_required<U: UserRepository>(
         return Ok(response);
     }
    
-    Ok(Redirect::temporary("/sessions/login").into_response()) 
+   if request.headers().contains_key("Hx-Request") {
+        // HTMX does not procees 300 responses, so we must send a 200 response to redirect
+        Ok(([("HX-Redirect", "/sessions/login")], "HTMX request not logged in").into_response())
+   } else {
+        Ok(Redirect::to("/sessions/login").into_response()) 
+   }
 }
 
 pub async fn public_only<U: UserRepository>(
