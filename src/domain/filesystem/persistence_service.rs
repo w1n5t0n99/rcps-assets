@@ -53,13 +53,13 @@ pub static MIME_LOOKUP: LazyLock<HashMap<&'static str, &'static str>> = LazyLock
 
 #[derive(Error, Debug)]
 pub enum PersistenceError {
-    #[error("uploaded file missing metadata")]
-    MissingMetadata,
-    #[error("invalid file type")]
-    InvalidFileType,
+    #[error("file type not supported")]
+    ExtNotSupported,
     #[error(transparent)]
-    Unknown(#[from] anyhow::Error),
+    ProcessingFailed(#[from] anyhow::Error),
 }
+
+#[derive(Clone, Debug)]
 
 pub struct PersistenceSuccess {
     pub filename: String,
@@ -67,6 +67,7 @@ pub struct PersistenceSuccess {
     pub content_type: String,
 }
 
+#[derive(Clone, Debug)]
 pub struct FilePayload {
     pub data: Vec<u8>,
     pub filename: String,
@@ -76,7 +77,7 @@ pub struct FilePayload {
 
 pub trait PersistenceService {
     //fn persist_field_as_attachment(&self, field: FieldData<NamedTempFile>) -> impl Future<Output = Result<Attachment, PersistenceError>> + Send; 
-    fn persist_file(&self, paylodad: FilePayload) -> impl Future<Output = Result<PersistenceSuccess, PersistenceError>> + Send; 
+    fn persist_file(&self, data: Vec<u8>, content_type: String, filename: String) -> impl Future<Output = Result<PersistenceSuccess, PersistenceError>> + Send; 
     fn get_file(&self, hash: String, filename: String) -> impl Future<Output = Result<FilePayload, PersistenceError>> + Send; 
     //fn get_attachent_hash(&self, hash: String)-> impl Future<Output = Result<Attachment, PersistenceError>> + Send;
 }

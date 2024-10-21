@@ -30,9 +30,7 @@ pub async fn post_change_user_picture<U: UserRepository>(
 
     let ext = mime_guess::from_path(file_name.clone()).first_raw().unwrap_or("Could not guess extension");
 
-
     let process_image_task = tokio::task::spawn_blocking(move || {
-
         let mut data = Vec::new();
         image.contents.as_file().read_to_end(&mut data).unwrap();
 

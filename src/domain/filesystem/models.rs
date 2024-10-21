@@ -7,10 +7,16 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Debug, Serialize, Deserialize, sqlx::FromRow)]
 pub struct Attachment {
-    pub id: i32,
     pub filename: String,
     pub hash: String,
     pub content_type: String,
-    pub created_at: DateTime<Utc>,
+    pub first_seen_at: DateTime<Utc>,
+}
+
+#[derive(Clone, Debug, Serialize, Deserialize)]
+pub struct NewAttachment {
+    pub filename: String,
+    pub hash: String,
+    pub content_type: String,
 }
 
