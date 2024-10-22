@@ -8,14 +8,14 @@ use super::models::{Attachment, NewAttachment};
 
 
 #[derive(Error, Debug)]
-pub enum FilesystemRepositoryError {
+pub enum AttachmentRepositoryError {
     #[error("attachment already exists")]
     Duplicate,
     #[error(transparent)]
     Unknown(#[from] anyhow::Error),
 }
 
-pub trait FilesystemRepository {
-    fn get_attachent_from_hash(&self, hash: String)-> impl Future<Output = Result<Attachment, FilesystemRepositoryError>> + Send;
-    fn add_attachent(&self, attachment: NewAttachment)-> impl Future<Output = Result<Attachment, FilesystemRepositoryError>> + Send;
+pub trait AttachmentRepository {
+    fn get_attachent_from_hash(&self, hash: String)-> impl Future<Output = Result<Option<Attachment>, AttachmentRepositoryError>> + Send;
+    fn add_attachent(&self, new_attachment: NewAttachment)-> impl Future<Output = Result<Attachment, AttachmentRepositoryError>> + Send;
 }

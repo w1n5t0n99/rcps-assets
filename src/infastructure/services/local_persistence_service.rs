@@ -1,9 +1,10 @@
 use anyhow::{anyhow, Context};
 use image::EncodableLayout;
 use tempfile::NamedTempFile;
+use tokio_util::io::ReaderStream;
 use std::{io::Write, path::{Path, PathBuf}};
 
-use crate::domain::filesystem::persistence_service::{FilePayload, PersistenceError, PersistenceService, PersistenceSuccess};
+use crate::domain::filesystem::{image_utils::process_image, models::{Attachment, ExtensionType, FilePayload, NewAttachment, MIME_LOOKUP}, persistence_service::{PersistenceError, PersistenceService}};
 
 
 #[derive(Debug, Clone)]
@@ -19,34 +20,60 @@ impl LocalPersistenceService {
 
         Err(anyhow!("path is not a directory"))
     }
-
-    fn process_image(&self, data: Vec<u8>, content_type: String) -> Result<(), PersistenceError> {
-
-        todo!()
-    }
 }
 
 impl PersistenceService for LocalPersistenceService {
-    async fn persist_file(&self, data: Vec<u8>, content_type: String, filename: String) -> Result<PersistenceSuccess, PersistenceError> {
-        let hash = blake3::hash(&data);
+    async fn persist_file(&self, payload: FilePayload) -> Result<NewAttachment, PersistenceError> {
 
-        let img = image::load_from_memory(&data)
-            .context("loading image failed")?;
-        // Create the WebP encoder for the above image
-        let encoder = webp::Encoder::from_image(&img).unwrap();
-        // Encode the image at a specified quality 0-100
-        let webp = encoder.encode(75f32);
+        let ext = MIME_LOOKUP.get(payload.content_type.as_str()).ok_or(PersistenceError::ExtNotSupported)?;
+        if ext.ext_type() == ExtensionType::Image {
+            let process_image_task = tokio::task::spawn_blocking(move || {
+                process_image(payload.data, ext.clone())
+            });
 
-        let mut processed_img = NamedTempFile::new().unwrap();
-        let t = processed_img.write(webp.as_bytes()).unwrap();
+            let processed_results = process_image_task
+                .await??;
 
-        let process_img_name = format!("{}.webp", uuid::Uuid::new_v4());
-        processed_img.persist(format!("./content/{}", process_img_name)).unwrap();
+            let mut processed_img = NamedTempFile::new().unwrap();
+            let _ = processed_img.write(&processed_results.0).unwrap();
 
-        Ok(PersistenceSuccess { filename: "test".to_string(), hash: hash.to_string(), content_type: "image/webp".to_string() })
+            let process_img_name = format!("{}.webp", uuid::Uuid::new_v4());
+            processed_img.persist(self.content_directory.join(&process_img_name)).unwrap();
+
+            // we store the original hash so it can be used for deduplication
+            return Ok(NewAttachment { filename: process_img_name, hash: payload.hash, content_type: "image/webp".to_string() });
+
+        } else {
+            let mut tmp_file = NamedTempFile::new().unwrap();
+            let _ = tmp_file.write(&payload.data).unwrap();
+
+            // TODO: use original filename for text and application files, might eant to change 
+            tmp_file.persist(self.content_directory.join(&payload.filename)).unwrap();
+
+            return Ok(NewAttachment { filename: payload.filename, hash: payload.hash, content_type: payload.content_type });
+        }
+
     }
 
-    async fn get_file(&self, hash: String, filename: String) -> Result<FilePayload, PersistenceError> {
-        todo!()
+    async fn get_file(&self, attachment: Attachment) -> Result<FilePayload, PersistenceError> {       
+        let data = tokio::fs::read(self.content_directory.join(&attachment.filename))
+            .await?;
+
+        Ok(FilePayload {
+            data,
+            filename: attachment.filename,
+            hash: attachment.hash,
+            content_type: attachment.content_type,
+        })
+    }
+
+    async fn hash_file(&self, data: Vec<u8>)-> Result<String, PersistenceError> {
+        let hash = tokio::task::spawn_blocking(move|| {
+                blake3::hash(&data)
+        })
+        .await?
+        .to_string();
+
+        Ok(hash)
     }
 }

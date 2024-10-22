@@ -7,3 +7,9 @@ pub struct ProfileImageSchema {
     #[form_data(limit = "5MiB")]
     pub image: FieldData<NamedTempFile>,
 }
+
+#[derive(TryFromMultipart)]
+pub struct SingleUploadSchema {
+    #[form_data(limit = "5MiB")]
+    pub field: FieldData<NamedTempFile>,
+}

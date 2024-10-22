@@ -14,7 +14,7 @@ use tokio_util::io::ReaderStream;
 use tracing::{info, instrument};
 use uuid::Uuid;
 
-use crate::{application::{attachments::schema::ProfileImageSchema, errors::ApplicationError}, domain::identityaccess::model::user_repository::UserRepository};
+use crate::{application::{content::schema::ProfileImageSchema, errors::ApplicationError}, domain::identityaccess::model::user_repository::UserRepository};
 
 struct IPayload {
     data: Vec<u8>,
