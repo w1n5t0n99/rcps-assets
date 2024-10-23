@@ -110,6 +110,14 @@ where
         }
     }
 
+    pub async fn update_user_picture(&self, user_id: Uuid, picture_url: String) -> Result<Option<UserDescriptor>, IdentityError> {
+        let picture = Picture::new(picture_url);
+
+        self.user_repo.update_user_picture(user_id, picture)
+            .await
+            .map_err(|e| e.into())
+    }
+
     pub fn google_client_id(&self) -> String {
         self.google_oauth.client_id()
     }

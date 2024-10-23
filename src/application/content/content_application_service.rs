@@ -1,16 +1,18 @@
 use std::io::Read;
 
 use anyhow::Context;
+use axum_typed_multipart::FieldData;
+use tempfile::NamedTempFile;
 
 use crate::{domain::filesystem::{attachment_repository::AttachmentRepository, models::{Attachment, FilePayload}, persistence_service::PersistenceService}, infastructure::services::{local_persistence_service::LocalPersistenceService, postgres_attachment_repository::PostgresAttachmentRepository}};
-
-use super::schema::SingleUploadSchema;
 
 
 #[derive(Debug, thiserror::Error)]
 pub enum ContentError {
     #[error("the file metadata is corrupted or missing")]
     InvalidFileMetadata,
+    #[error("the file attachment could not be found")]
+    Missing,
     #[error(transparent)]
     Unknown(#[from] anyhow::Error),
 }
@@ -19,18 +21,20 @@ pub enum ContentError {
 pub struct ContentApplicationService {
     attachment_repo: PostgresAttachmentRepository,
     persistence: LocalPersistenceService,
+    content_url: String,
 }
 
 impl ContentApplicationService {
-    pub fn new(attachment_repo: PostgresAttachmentRepository, persistence: LocalPersistenceService) -> Self {
+    pub fn new(attachment_repo: PostgresAttachmentRepository, persistence: LocalPersistenceService, content_url: String) -> Self {
         Self {
             attachment_repo,
             persistence,
+            content_url
         }
     }
 
-    pub async fn upload_file_as_attachment(&self, upload: SingleUploadSchema) -> Result<Attachment, ContentError> {
-        let payload = self.create_file_payload(&upload).await?;
+    pub async fn upload_file_as_attachment(&self, uploaded_file: FieldData<NamedTempFile>) -> Result<Attachment, ContentError> {
+        let payload = self.create_file_payload(&uploaded_file).await?;
 
         let attachment = self.attachment_repo.get_attachent_from_hash(payload.hash.clone())
             .await
@@ -40,7 +44,7 @@ impl ContentApplicationService {
             return Ok(attachment.unwrap());
         }
 
-        let new_attachment = self.persistence.persist_file(payload)
+        let new_attachment = self.persistence.persist_file(payload, self.content_url.clone())
             .await
             .context("error persisting file")?;
 
@@ -51,17 +55,25 @@ impl ContentApplicationService {
         Ok(attachment)
     }
 
-    pub async fn retrieve_file_from_attachment(&self, attachment: Attachment) -> Result<FilePayload, ContentError> {
+    pub async fn retrieve_file(&self, hash: String) -> Result<FilePayload, ContentError> {
+        let attachment = self.attachment_repo.get_attachent_from_hash(hash)
+            .await
+            .context("could not retrieve attachment from database")?
+            .ok_or(ContentError::Missing)?;
 
-        todo!()
+        let payload = self.persistence.get_file(attachment)
+            .await
+            .context("could not retrieve file payload")?;
+
+        Ok(payload)
     }
 
-    async fn create_file_payload(&self, upload: &SingleUploadSchema) -> Result<FilePayload, ContentError> {
-        let filename = upload.field.metadata.file_name.clone().ok_or(ContentError::InvalidFileMetadata)?;
-        let content_type = upload.field.metadata.content_type.clone().ok_or(ContentError::InvalidFileMetadata)?;
+    async fn create_file_payload(&self, uploaded_file: &FieldData<NamedTempFile>) -> Result<FilePayload, ContentError> {
+        let filename = uploaded_file.metadata.file_name.clone().ok_or(ContentError::InvalidFileMetadata)?;
+        let content_type = uploaded_file.metadata.content_type.clone().ok_or(ContentError::InvalidFileMetadata)?;
 
         let mut data = Vec::new();
-        upload.field.contents.as_file().read_to_end(&mut data).unwrap();
+        uploaded_file.contents.as_file().read_to_end(&mut data).unwrap();
 
         let hash = self.persistence.hash_file(data.clone())
             .await

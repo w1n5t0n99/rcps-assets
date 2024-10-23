@@ -3,12 +3,13 @@ use reqwest::Client;
 
 use crate::domain::identityaccess::model::user_repository::UserRepository;
 
-use super::identityaccess::identity_application_service::IdentityApplicationService;
+use super::{content::content_application_service::ContentApplicationService, identityaccess::identity_application_service::IdentityApplicationService};
 
 
 #[derive(Debug, Clone)]
 pub struct AppState<U: UserRepository> {
     pub identity_service: IdentityApplicationService<U>,
+    pub content_service: ContentApplicationService,
 }
 
 impl<U> FromRef<AppState<U>> for IdentityApplicationService<U>
@@ -22,9 +23,10 @@ where U: UserRepository
 impl<U> AppState<U>
     where U: UserRepository
 {
-    pub fn new(identity_service: IdentityApplicationService<U>) -> Self {
+    pub fn new(identity_service: IdentityApplicationService<U>, content_service: ContentApplicationService) -> Self {
         Self {
             identity_service,
+            content_service,
         }
     }
 }

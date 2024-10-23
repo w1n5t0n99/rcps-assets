@@ -33,6 +33,12 @@ pub trait UserRepository: Send + Sync + Clone + 'static {
         user: UpdateUser,
     ) -> impl Future<Output = Result<Option<UserDescriptor>, UserRepositoryError>> + Send;
 
+    fn update_user_picture(
+        &self,
+        user_id: Uuid,
+        picture: Picture,
+    ) -> impl Future<Output = Result<Option<UserDescriptor>, UserRepositoryError>> + Send;
+
     fn delete_user(&self,
         user_id: Uuid,
     ) -> impl Future<Output = Result<Option<Uuid>, UserRepositoryError>> + Send;

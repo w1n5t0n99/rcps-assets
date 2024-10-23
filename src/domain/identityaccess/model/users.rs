@@ -35,6 +35,12 @@ impl Picture {
     }
 }
 
+impl Default for Picture {
+    fn default() -> Self {
+        Self(Default::default())
+    }
+}
+
 
 #[derive(Clone, Copy, Debug, Display, Serialize, Deserialize, sqlx::Type)]
 #[sqlx(type_name = "provider", rename_all = "lowercase")]

@@ -23,7 +23,7 @@ impl LocalPersistenceService {
 }
 
 impl PersistenceService for LocalPersistenceService {
-    async fn persist_file(&self, payload: FilePayload) -> Result<NewAttachment, PersistenceError> {
+    async fn persist_file(&self, payload: FilePayload, base_url: String) -> Result<NewAttachment, PersistenceError> {
 
         let ext = MIME_LOOKUP.get(payload.content_type.as_str()).ok_or(PersistenceError::ExtNotSupported)?;
         if ext.ext_type() == ExtensionType::Image {
@@ -37,20 +37,24 @@ impl PersistenceService for LocalPersistenceService {
             let mut processed_img = NamedTempFile::new().unwrap();
             let _ = processed_img.write(&processed_results.0).unwrap();
 
-            let process_img_name = format!("{}.webp", uuid::Uuid::new_v4());
-            processed_img.persist(self.content_directory.join(&process_img_name)).unwrap();
+            let processed_img_name = format!("{}.webp", &payload.hash);
+            processed_img.persist(self.content_directory.join(&processed_img_name)).unwrap();
+
+            let url = format!("{}/{}/{}",base_url, &payload.hash, &processed_img_name);
 
             // we store the original hash so it can be used for deduplication
-            return Ok(NewAttachment { filename: process_img_name, hash: payload.hash, content_type: "image/webp".to_string() });
+            return Ok(NewAttachment { filename: processed_img_name, hash: payload.hash, content_type: "image/webp".to_string(), url: url });
 
         } else {
             let mut tmp_file = NamedTempFile::new().unwrap();
             let _ = tmp_file.write(&payload.data).unwrap();
 
-            // TODO: use original filename for text and application files, might eant to change 
+            // TODO: uses original filename for text and application files, might need to change 
             tmp_file.persist(self.content_directory.join(&payload.filename)).unwrap();
 
-            return Ok(NewAttachment { filename: payload.filename, hash: payload.hash, content_type: payload.content_type });
+            let url = format!("{}/{}/{}",base_url, &payload.hash, &payload.filename);
+
+            return Ok(NewAttachment { filename: payload.filename, hash: payload.hash, content_type: payload.content_type, url: url });
         }
 
     }

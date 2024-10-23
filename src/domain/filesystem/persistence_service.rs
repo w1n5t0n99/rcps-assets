@@ -19,7 +19,7 @@ pub enum PersistenceError {
 }
 
 pub trait PersistenceService {
-    fn persist_file(&self, payload: FilePayload) -> impl Future<Output = Result<NewAttachment, PersistenceError>> + Send; 
+    fn persist_file(&self, payload: FilePayload, base_url: String) -> impl Future<Output = Result<NewAttachment, PersistenceError>> + Send; 
     fn get_file(&self, attachment: Attachment) -> impl Future<Output = Result<FilePayload, PersistenceError>> + Send; 
     fn hash_file(&self, data: Vec<u8>)-> impl Future<Output = Result<String, PersistenceError>> + Send;
 }

@@ -65,13 +65,14 @@ impl AttachmentRepository for PostgresAttachmentRepository {
         let attachment = sqlx::query_as!(
             Attachment,
             r#"
-            INSERT INTO attachments (hash, filename, content_type)
-            VALUES ($1, $2, $3)
+            INSERT INTO attachments (hash, filename, content_type, url)
+            VALUES ($1, $2, $3, $4)
             RETURNING *
             "#,
             new_attachment.hash,
             new_attachment.filename,
             new_attachment.content_type,
+            new_attachment.url,
         )
         .fetch_one(&self.pool)
         .await

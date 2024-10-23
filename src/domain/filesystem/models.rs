@@ -111,7 +111,8 @@ pub struct Attachment {
     pub filename: String,
     pub hash: String,
     pub content_type: String,
-    pub first_seen_at: DateTime<Utc>,
+    pub url: String,
+    pub created_at: DateTime<Utc>,
 }
 
 #[derive(Clone, Debug, Serialize)]
@@ -119,6 +120,7 @@ pub struct NewAttachment {
     pub filename: String,
     pub hash: String,
     pub content_type: String,
+    pub url: String,
 }
 
 #[derive(Clone, Debug)]

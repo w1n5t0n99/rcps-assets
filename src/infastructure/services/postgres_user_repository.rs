@@ -138,6 +138,29 @@ impl UserRepository for PostgresUserRepository {
         Ok(user_descriptor)
     }
 
+    async fn update_user_picture(&self, user_id: Uuid, picture: Picture) -> Result<Option<UserDescriptor>, UserRepositoryError> {
+        let user_descriptor = sqlx::query_as!(
+            UserDescriptor,
+            r#"
+            WITH updated AS (
+                UPDATE users
+                SET picture = $1
+                WHERE id = $2
+                RETURNING id, email, given_name, family_name, role_id, picture
+            )
+            SELECT updated.id, updated.email as "email: EmailAddress", updated.given_name, updated.family_name, updated.picture as "picture: Picture", roles.name as role
+            FROM updated INNER JOIN roles ON updated.role_id = roles.id
+            "#,
+            picture.to_string(),
+            user_id,
+        )
+        .fetch_optional(&self.pool)
+        .await
+        .context("could not retrieve user from database")?;
+
+        Ok(user_descriptor)
+    }
+
     async fn get_user(&self, id: &uuid::Uuid) ->Result<Option<User>, UserRepositoryError> {
         let user = sqlx::query_as!(
             User,
