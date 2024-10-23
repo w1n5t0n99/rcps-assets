@@ -41,6 +41,7 @@ impl ContentApplicationService {
             .context("could not retrieve attachment from database")?;
 
         if attachment.is_some() {
+            tracing::info!("duplicate attachment found");
             return Ok(attachment.unwrap());
         }
 

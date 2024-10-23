@@ -1,14 +1,14 @@
 use anyhow::anyhow;
 use askama_axum::IntoResponse;
-use axum::{debug_handler, extract::Path, Extension, Form};
+use axum::{extract::{Path, State}, Extension, Form};
 use axum_login::{AuthSession, AuthnBackend};
 use axum_messages::Messages;
+use axum_typed_multipart::TypedMultipart;
 use garde::{Report, Validate};
-use serde::Deserialize;
 use tracing::instrument;
 use uuid::Uuid;
 
-use crate::{application::{errors::ApplicationError, identityaccess::{identity_application_service::{IdentityApplicationService, IdentityError}, schema::{NewUserSchema, UpdateUserSchema}}, templates::{pages::{user_create::UserCreateTemplate, user_edit::UserEditTemplate, users::UsersTemplate}, partials::form_alert::FormAlertTemplate}}, domain::identityaccess::model::{user_repository::{UserRepository, UserRepositoryError}, users::SessionUser}};
+use crate::{application::{content::schema::ProfileImageSchema, errors::ApplicationError, identityaccess::{identity_application_service::{IdentityApplicationService, IdentityError}, schema::UpdateUserSchema}, state::AppState, templates::{pages::user_edit::UserEditTemplate, partials::form_alert::FormAlertTemplate}}, domain::identityaccess::model::{user_repository::{UserRepository, UserRepositoryError}, users::SessionUser}};
 
 
 #[instrument(skip_all)]
@@ -70,6 +70,29 @@ pub async fn post_user_edit<U: UserRepository>(
 
     messages.success("user updated");
     Ok(([("HX-Redirect", "/settings/users")], "success"))
+}
+
+#[instrument(skip_all)]
+pub async fn post_change_user_picture<U: UserRepository>(
+    Path(user_id): Path<Uuid>,
+    State(state): State<AppState<U>>,
+    TypedMultipart(ProfileImageSchema{image} ): TypedMultipart<ProfileImageSchema>,
+) -> Result<impl IntoResponse, ApplicationError> {
+    let attachment = state.content_service.upload_file_as_attachment(image)
+        .await
+        .map_err(|e| {
+            let mut report = Report::new();
+            report.append(garde::Path::new("profile picture"), garde::Error::new("something went wrong during image upload"));
+
+            ApplicationError::bad_request(e.into(), FormAlertTemplate::global_new(report).to_string())
+        })?;
+
+    let user = state.identity_service.update_user_picture(user_id, attachment.url.clone())
+        .await
+        .map_err(|e| ApplicationError::InternalServerError(e.into()))?;
+
+    Ok(format!(r#"<img id="content-profile-image" alt="profile image" src="{}" referrerpolicy="no-referrer" hx-swap-oob="true"/>"#, attachment.url))
+
 }
 
 #[instrument(skip_all)]

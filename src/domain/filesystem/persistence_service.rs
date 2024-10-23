@@ -1,7 +1,7 @@
 use std::future::Future;
 
 use thiserror::Error;
-use tokio::task::JoinError;
+use tokio::{sync::oneshot::error::RecvError, task::JoinError};
 
 use super::models::{Attachment, FilePayload, NewAttachment};
 
@@ -12,6 +12,8 @@ pub enum PersistenceError {
     ExtNotSupported,
     #[error(transparent)]
     Task(#[from] JoinError),
+    #[error(transparent)]
+    Worker(#[from] RecvError),
     #[error(transparent)]
     IO(#[from] std::io::Error),
     #[error(transparent)]

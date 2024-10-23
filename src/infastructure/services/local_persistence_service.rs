@@ -27,17 +27,19 @@ impl PersistenceService for LocalPersistenceService {
 
         let ext = MIME_LOOKUP.get(payload.content_type.as_str()).ok_or(PersistenceError::ExtNotSupported)?;
         if ext.ext_type() == ExtensionType::Image {
-            let process_image_task = tokio::task::spawn_blocking(move || {
-                process_image(payload.data, ext.clone())
+            let (send, recv) = tokio::sync::oneshot::channel();
+
+            rayon::spawn(move || {
+                let res = process_image(payload.data, ext.clone());
+                let _ = send.send(res);
             });
 
-            let processed_results = process_image_task
-                .await??;
+            let (processed_data, processed_ext)= recv.await??;
 
             let mut processed_img = NamedTempFile::new().unwrap();
-            let _ = processed_img.write(&processed_results.0).unwrap();
+            let _ = processed_img.write(&processed_data).unwrap();
 
-            let processed_img_name = format!("{}.webp", &payload.hash);
+            let processed_img_name = format!("{}.webp", uuid::Uuid::new_v4());
             processed_img.persist(self.content_directory.join(&processed_img_name)).unwrap();
 
             let url = format!("{}/{}/{}",base_url, &payload.hash, &processed_img_name);

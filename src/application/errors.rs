@@ -8,6 +8,8 @@ use super::identityaccess::identity_application_service::IdentityError;
 pub enum ApplicationError {
     #[error(transparent)]
     InternalServerError(#[from] anyhow::Error),
+    #[error(transparent)]
+    NotFound(anyhow::Error),
     #[error("{0}")]
     UnprocessableEntity(anyhow::Error, String),
     #[error("{0}")]
@@ -38,6 +40,10 @@ impl ApplicationError {
     pub fn internal_server_error(error: anyhow::Error) -> Self {
         ApplicationError::InternalServerError(error)
     }
+
+    pub fn not_found(error: anyhow::Error) -> Self {
+        ApplicationError::NotFound(error)
+    }
 }
 
 impl IntoResponse for ApplicationError {
@@ -47,6 +53,11 @@ impl IntoResponse for ApplicationError {
                 tracing::error!("{}", e);
                 //TODO: create error page
                 (StatusCode::INTERNAL_SERVER_ERROR, e.to_string()).into_response()
+            },
+            Self::NotFound(e) => {
+                tracing::error!("{}", e);
+                //TODO: create error page
+                (StatusCode::NOT_FOUND, e.to_string()).into_response()
             },
             Self::UnprocessableEntity(e, r) => {
                 tracing::error!("{}", e);
