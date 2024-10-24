@@ -1,0 +1,54 @@
+{% extends "layouts/main.html" %}
+
+{% block content %}
+<script>
+    function previewPhoto(event) {
+        var reader = new FileReader();
+        reader.onload = function(){
+        var output = document.getElementById('content-picture0');
+        output.src = reader.result;
+        };
+        reader.readAsDataURL(event.target.files[0]);
+    }
+</script>
+<div id="content-header" class="my-4 mx-4 flex justify-between">
+    <h1 class="text-2xl">New Asset-Type</h1>
+    <div class="space-x-2">
+        <a class="btn btn-sm" href="javascript:history.back()">Back</a>
+        <button class="btn btn-sm btn-primary" type="submit" form="profile">Save</button>
+    </div>
+</div>
+<div id="content-profile" class="mx-4 flex">
+    <form id="profile" hx-boost="true" action="/asset_types/new" class="form-control w-full" method="post" enctype="multipart/form-data" hx-swap="outerHTML" hx-target-400="#global_alert_message">
+        <div class="mx-4 mb-4">
+            <div class="w-16 rounded-full mb-1">
+                <img 
+                  id="content-picture0"
+                  alt="profile image"
+                  src="/static/images/empty-image.svg"
+                  referrerpolicy="no-referrer" />
+            </div>
+            <label class="form-control w-full max-w-xs">
+                <div class="label">
+                  <span class="label-text">*Example image of asset type</span>
+                </div>
+                <input id="picture0" name="picture0" type="file" hx-on:change="previewPhoto(event)" class="file-input file-input-sm file-input-bordered w-full max-w-xs" />
+            </label>
+        </div>
+        <div class=" mx-4 md:grid grid-cols-12 gap-3">
+            <div class="label col-span-5">
+                <span class="label-text">Brand</span>
+            </div>
+            <div class="col-span-7">
+                <input name="brand" type="text" class="input input-bordered input-sm w-full" required/>
+            </div>
+            <div class="label col-span-5">
+                <span class="label-text">Model</span>
+            </div>
+            <div class="col-span-7">
+                <input name="model" type="text" class="input input-bordered input-sm w-full" required/>
+            </div>
+        </div>
+    </form>
+</div>
+{% endblock %}

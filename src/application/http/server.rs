@@ -10,7 +10,7 @@ use tracing::instrument;
 use axum_messages::{Messages, MessagesManagerLayer};
 
 use crate::{application::{identityaccess::identity_application_service::IdentityApplicationService, state::AppState}, domain::identityaccess::model::user_repository::UserRepository, infastructure::services::postgres_user_repository::PostgresUserRepository, settings::ApplicationConfig};
-use super::{handlers::{account, auth, content, oauth}, utils};
+use super::{handlers::{account, asset_types, auth, content, oauth}, utils};
 
 
 #[instrument]
@@ -48,6 +48,7 @@ impl AppHttpServer {
             .merge(oauth::router())
             .merge(auth::router())
             .merge(content::router())
+            .merge(asset_types::router())
             .nest_service("/static", ServeDir::new("static").precompressed_gzip())
             .layer(compression_layer)
             .layer(trace_layer)
