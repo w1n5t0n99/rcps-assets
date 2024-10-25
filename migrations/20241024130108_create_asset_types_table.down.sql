@@ -1,1 +1,1 @@
-drop table if exists attachments;
+drop table if exists asset_types;

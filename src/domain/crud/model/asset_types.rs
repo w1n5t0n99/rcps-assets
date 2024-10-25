@@ -10,6 +10,8 @@ pub struct AssetType {
     pub id: i32,
     pub brand: String, 
     pub model: String,
+    pub description: Option<String>,
+    pub cost: Option<String>,
     pub picture0: Option<String>,
     pub picture1: Option<String>,
     pub created_at: DateTime<Utc>,
@@ -19,6 +21,8 @@ pub struct AssetType {
 pub struct NewAssetType {
     pub brand: String, 
     pub model: String,
+    pub description: Option<String>,
+    pub cost: Option<String>,
     pub picture0: Option<String>,
     pub picture1: Option<String>,
 }
