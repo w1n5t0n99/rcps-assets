@@ -11,3 +11,5 @@ CREATE TABLE
             WITH TIME ZONE NOT NULL DEFAULT NOW(),
         UNIQUE (brand, model)
     );
+
+CREATE INDEX idx_model ON asset_types (model);
