@@ -5,8 +5,7 @@ CREATE TABLE
         model TEXT NOT NULL,
         description TEXT,
         cost TEXT,
-        picture0 TEXT,
-        picture1 TEXT,
+        picture TEXT,
         created_at TIMESTAMP
             WITH TIME ZONE NOT NULL DEFAULT NOW(),
         UNIQUE (brand, model)

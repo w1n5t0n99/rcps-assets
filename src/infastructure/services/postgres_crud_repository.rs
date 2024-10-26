@@ -63,16 +63,15 @@ impl CrudRepository for PostgresCrudRepository {
         let asset_type = sqlx::query_as!(
             AssetType,
             r#"
-            INSERT INTO asset_types (brand, model, description, cost, picture0, picture1)
-            VALUES($1, $2, $3, $4, $5, $6)
-            RETURNING *
+            INSERT INTO asset_types (brand, model, description, cost, picture)
+            VALUES($1, $2, $3, $4, $5)
+            RETURNING id, brand, model, description, cost, picture, created_at
             "#,
             new_asset_type.brand,
             new_asset_type.model,
             new_asset_type.description,
             new_asset_type.cost,
-            new_asset_type.picture0,
-            new_asset_type.picture1
+            new_asset_type.picture,
         )
         .fetch_one(&self.pool)
         .await
@@ -88,7 +87,8 @@ impl CrudRepository for PostgresCrudRepository {
         let asset_type = sqlx::query_as!(
             AssetType,
             r#"
-            SELECT * FROM asset_types
+            SELECT id, brand, model, description, cost, picture, created_at
+            FROM asset_types
             WHERE asset_types.id = $1
             "#,
             id
@@ -104,7 +104,8 @@ impl CrudRepository for PostgresCrudRepository {
         let asset_type = sqlx::query_as!(
             AssetType,
             r#"
-            SELECT * FROM asset_types
+            SELECT id, brand, model, description, cost, picture, created_at
+            FROM asset_types
             WHERE asset_types.brand = $1 AND asset_types.model = $2
             "#,
             brand,
@@ -122,7 +123,8 @@ impl CrudRepository for PostgresCrudRepository {
         let asset_types = sqlx::query_as!(
             AssetType,
             r#"
-            SELECT * FROM asset_types
+            SELECT id, brand, model, description, cost, picture, created_at
+            FROM asset_types
             "#,
         )
         .fetch_all(&self.pool)

@@ -9,8 +9,12 @@ pub struct NewAssetTypeSchema {
     pub brand: String,
     #[garde(length(min=1))]
     pub model: String,
+    #[garde(length(min=1))]
+    pub description: Option<String>,
+    #[garde(length(min=1))]
+    pub cost: Option<String>,
     #[garde(skip)]	
     #[form_data(limit = "5MiB")]
-    pub picture0: Option<FieldData<NamedTempFile>>,
+    pub picture: Option<FieldData<NamedTempFile>>,
 }
 

@@ -2,7 +2,10 @@
 
 {% block content %}
     <div id="content-header" class="mt-4 mx-4 flex justify-between">
-        <h1 class="text-2xl">Asset Types</h1>
+        <div class="space-x-2">
+          <h1 class="text-2xl inline-block">Asset Types</h1>
+          <input class="input input-bordered input-sm inline-block" type="text" class="grow" placeholder="Search" />
+        </div>
         <div class="space-x-2">
             <a href="/asset_types/new" class="btn btn-sm">Add New</a>
             <a href="#" class="btn btn-sm btn-disabled">Import</a>
@@ -15,6 +18,8 @@
               <tr>
                 <th>Brand</th>
                 <th>Model</th>
+                <th>Description</th>
+                <th>Cost</th>
               </tr>
             </thead>
             <tbody>

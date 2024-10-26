@@ -1,4 +1,6 @@
-use crate::{domain::crud::{crud_repository::{CrudRepository, CrudRepositoryError}, model::asset_types::AssetType}, infastructure::services::postgres_crud_repository::PostgresCrudRepository};
+use crate::{domain::crud::{crud_repository::{CrudRepository, CrudRepositoryError}, model::asset_types::{AssetType, NewAssetType}}, infastructure::services::postgres_crud_repository::PostgresCrudRepository};
+
+use super::schema::NewAssetTypeSchema;
 
 
 
@@ -24,5 +26,23 @@ impl CrudApplicationService {
         let asset_types = self.crud_repo.get_asset_types().await?;
 
         Ok(asset_types)
+   }
+
+   pub async fn add_asset_type(&self, schema: NewAssetTypeSchema) -> Result<AssetType, CrudError> {
+        // should be validated in handler
+        //TODO: process uploaded image
+
+        let new_asset_type = NewAssetType {
+            brand: schema.brand,
+            model: schema.model,
+            description: schema.description,
+            cost: schema.cost,
+            picture: None,
+        };
+
+        let asset_type = self.crud_repo.add_asset_type(new_asset_type)
+            .await?;
+
+        Ok(asset_type)
    } 
 }
