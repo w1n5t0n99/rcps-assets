@@ -6,8 +6,9 @@ mod infastructure;
 mod application;
 
 use anyhow::{Context, Ok};
-use application::{content::content_application_service::ContentApplicationService, http::server::AppHttpServer, identityaccess::identity_application_service::IdentityApplicationService, state::AppState};
-use infastructure::services::{google_oauth_service::GoogleOauthService, local_persistence_service::LocalPersistenceService, postgres_attachment_repository::PostgresAttachmentRepository, postgres_user_repository::PostgresUserRepository};
+use application::{content::content_application_service::ContentApplicationService, crud::crud_application_service::CrudApplicationService, http::server::AppHttpServer, identityaccess::identity_application_service::IdentityApplicationService, state::AppState};
+use domain::filesystem::persistence_service;
+use infastructure::services::{google_oauth_service::GoogleOauthService, local_persistence_service::LocalPersistenceService, postgres_attachment_repository::PostgresAttachmentRepository, postgres_crud_repository::PostgresCrudRepository, postgres_user_repository::PostgresUserRepository};
 use settings::Settings;
 use telemetry::init_console_subscriber;
 use tracing::Level;
@@ -24,14 +25,16 @@ async fn main() -> anyhow::Result<()> {
     // init services
     let google_oauth = GoogleOauthService::new(&config.google).context("failed to init google oauth client")?;
     let user_repo = PostgresUserRepository::new(&config.database).context("failed to init user repository")?;
-    let identity_serivce = IdentityApplicationService::new(user_repo, google_oauth);
-
-    let loc_persist_service = LocalPersistenceService::new("./content")?;
     let attachment_repo = PostgresAttachmentRepository::new(&config.database).context("failed to init attachment repository")?;
-    let content_service = ContentApplicationService::new(attachment_repo, loc_persist_service, "/content".to_string());
+    let crud_repo = PostgresCrudRepository::new(&config.database).context("failed to init attachment repository")?;
+    let persistence = LocalPersistenceService::new(&config.local_storage).context("failed to init persistence repository")?;
+
+    let content_service = ContentApplicationService::new(attachment_repo, persistence);
+    let identity_serivce = IdentityApplicationService::new(user_repo, google_oauth);
+    let crud_service = CrudApplicationService::new(crud_repo);
 
     //init server
-    let app_state = AppState::new(identity_serivce, content_service);
+    let app_state = AppState::new(identity_serivce, crud_service, content_service);
     let app_server = AppHttpServer::new(&config.application, app_state).await?;
 
     // run tasks

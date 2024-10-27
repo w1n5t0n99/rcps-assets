@@ -40,10 +40,18 @@ pub struct GoogleConfig {
 
 #[derive(Debug, Deserialize)]
 #[allow(unused)]
+pub struct LocalStorageConfig {
+    pub local_directory_path: String,
+    pub public_url: String,
+}
+
+#[derive(Debug, Deserialize)]
+#[allow(unused)]
 pub struct Settings {
     pub database: DatabaseConfig,
     pub application: ApplicationConfig,
     pub google: GoogleConfig,
+    pub local_storage: LocalStorageConfig,
 }
 
 impl Settings {

@@ -9,8 +9,8 @@ use axum_messages::Messages;
 use crate::{application::{errors::ApplicationError, identityaccess::identity_application_service::IdentityApplicationService}, domain::identityaccess::model::{user_repository::UserRepository, users::SessionUser}};
 
 
-pub async fn login_required<U: UserRepository>(
-    auth_session: AuthSession<IdentityApplicationService<U>>,
+pub async fn login_required(
+    auth_session: AuthSession<IdentityApplicationService>,
     // you can also add more extractors here but the last
     // extractor must implement `FromRequest` which
     // `Request` does
@@ -33,8 +33,8 @@ pub async fn login_required<U: UserRepository>(
    }
 }
 
-pub async fn public_only<U: UserRepository>(
-    auth_session: AuthSession<IdentityApplicationService<U>>,
+pub async fn public_only(
+    auth_session: AuthSession<IdentityApplicationService>,
     mut request: Request,
     next: Next,
 ) -> Result<Response, ApplicationError> {

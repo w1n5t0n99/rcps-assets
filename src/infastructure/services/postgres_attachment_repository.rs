@@ -5,7 +5,7 @@ use axum_typed_multipart::FieldData;
 use sqlx::{postgres::{PgConnectOptions, PgPoolOptions, PgSslMode}, PgPool};
 use tempfile::NamedTempFile;
 
-use crate::{domain::filesystem::{attachment_repository::{AttachmentRepository, AttachmentRepositoryError}, models::{Attachment, NewAttachment}}, settings::DatabaseConfig};
+use crate::{domain::filesystem::{attachment_repository::{AttachmentRepository, AttachmentRepositoryError}, models::{ImageAttachment, NewImageAttachment, DocumentAttachment, NewDocumentAttachment, Filename, ContentType}}, settings::DatabaseConfig};
 
 
 const UNIQUE_CONSTRAINT_VIOLATION_CODE: &str = "23505";
@@ -45,11 +45,12 @@ impl PostgresAttachmentRepository {
 }
 
 impl AttachmentRepository for PostgresAttachmentRepository {
-    async fn get_attachent_from_hash(&self, hash: String)-> Result<Option<Attachment>, AttachmentRepositoryError> {
+    async fn get_image_attachent_from_hash(&self, hash: String)-> Result<Option<ImageAttachment>, AttachmentRepositoryError> {
         let attachment = sqlx::query_as!(
-            Attachment,
+            ImageAttachment,
             r#"
-            SELECT * FROM attachments
+            SELECT id, filename as "filename: Filename", hash, content_type as "content_type: ContentType", url, url_thumb, created_at
+            FROM image_attachments
             WHERE $1 = hash
             "#,
             hash
@@ -61,18 +62,60 @@ impl AttachmentRepository for PostgresAttachmentRepository {
         Ok(attachment)
     }
 
-    async fn add_attachent(&self, new_attachment: NewAttachment)-> Result<Attachment, AttachmentRepositoryError> {
+    async fn get_document_attachent_from_hash(&self, hash: String)-> Result<Option<DocumentAttachment>, AttachmentRepositoryError> {
         let attachment = sqlx::query_as!(
-            Attachment,
+            DocumentAttachment,
             r#"
-            INSERT INTO attachments (hash, filename, content_type, url)
-            VALUES ($1, $2, $3, $4)
-            RETURNING *
+            SELECT id, filename as "filename: Filename", hash, content_type as "content_type: ContentType", url, description, created_at
+            FROM document_attachments
+            WHERE $1 = hash
+            "#,
+            hash
+        )
+        .fetch_optional(&self.pool)
+        .await
+        .context("could not retrieve attachment from database")?;
+
+        Ok(attachment)
+    }
+
+    async fn add_image_attachent(&self, new_attachment: NewImageAttachment)-> Result<ImageAttachment, AttachmentRepositoryError> {
+        let attachment = sqlx::query_as!(
+            ImageAttachment,
+            r#"
+            INSERT INTO image_attachments (hash, filename, content_type, url ,url_thumb)
+            VALUES ($1, $2, $3, $4, $5)
+            RETURNING id, filename as "filename: Filename", hash, content_type as "content_type: ContentType", url, url_thumb, created_at
             "#,
             new_attachment.hash,
-            new_attachment.filename,
-            new_attachment.content_type,
+            new_attachment.filename.to_string(),
+            new_attachment.content_type.to_string(),
             new_attachment.url,
+            new_attachment.url_thumb,
+        )
+        .fetch_one(&self.pool)
+        .await
+        .map_err(|e| {
+            if is_unique_constraint_violation(&e) == true { AttachmentRepositoryError::Duplicate }
+            else { AttachmentRepositoryError::Unknown(e.into()) }
+        })?;
+
+        Ok(attachment)
+    }
+
+    async fn add_document_attachent(&self, new_attachment: NewDocumentAttachment, description: String)-> Result<DocumentAttachment, AttachmentRepositoryError> {
+        let attachment = sqlx::query_as!(
+            DocumentAttachment,
+            r#"
+            INSERT INTO document_attachments (hash, filename, content_type, url ,description)
+            VALUES ($1, $2, $3, $4, $5)
+            RETURNING id, filename as "filename: Filename", hash, content_type as "content_type: ContentType", url, description, created_at
+            "#,
+            new_attachment.hash,
+            new_attachment.filename.to_string(),
+            new_attachment.content_type.to_string(),
+            new_attachment.url,
+            description,
         )
         .fetch_one(&self.pool)
         .await

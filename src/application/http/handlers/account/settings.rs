@@ -9,8 +9,8 @@ use crate::{application::{errors::ApplicationError, identityaccess::identity_app
 
 
 #[instrument(skip_all)]
-pub async fn get_settings<U: UserRepository>(
-    auth_session: AuthSession<IdentityApplicationService<U>>,
+pub async fn get_settings(
+    auth_session: AuthSession<IdentityApplicationService>,
     messages: Messages,
     Extension(session_user): Extension<SessionUser>,
 ) -> Result<SettingsTemplate, ApplicationError> {

@@ -10,18 +10,17 @@ use tracing::instrument;
 use crate::{application::{errors::ApplicationError, http::utils, identityaccess::{identity_application_service::{IdentityApplicationService, CSRF_STATE_KEY}, schema::OauthSchema}, state::AppState}, domain::identityaccess::model::{credentials::{Credentials, OauthCredentials}, user_repository::UserRepository}, infastructure::services::postgres_user_repository::PostgresUserRepository};
 
 
-pub fn router<U>() -> Router<AppState<U>>
-where U: UserRepository
+pub fn router() -> Router<AppState>
 {
     Router::new()
-        .route("/sessions/oauth/google", post(self::google_oauth::<U>))
-        .route("/sessions/oauth/google", get(self::google_oauth_callback::<U>))
-        .route_layer(middleware::from_fn(utils::public_only::<U>))
+        .route("/sessions/oauth/google", post(self::google_oauth))
+        .route("/sessions/oauth/google", get(self::google_oauth_callback))
+        .route_layer(middleware::from_fn(utils::public_only))
 }
 
 #[instrument(skip_all)]
-pub async fn google_oauth_callback<U: UserRepository>(
-    mut auth_session: AuthSession<IdentityApplicationService<U>>,
+pub async fn google_oauth_callback(
+    mut auth_session: AuthSession<IdentityApplicationService>,
     session: Session,
     messages: Messages,
     Query( oauth_query): Query<OauthSchema>,
@@ -72,8 +71,8 @@ pub async fn google_oauth_callback<U: UserRepository>(
 }
 
 #[instrument(skip_all)]
-pub async fn google_oauth<U: UserRepository>(
-    auth_session: AuthSession<IdentityApplicationService<U>>,
+pub async fn google_oauth(
+    auth_session: AuthSession<IdentityApplicationService>,
     session: Session,
 ) -> impl IntoResponse {
 

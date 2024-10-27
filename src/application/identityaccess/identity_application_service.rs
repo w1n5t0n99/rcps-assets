@@ -5,7 +5,7 @@ use oauth2::{url::Url, CsrfToken};
 use thiserror::Error;
 use uuid::Uuid;
 
-use crate::{domain::identityaccess::model::{credentials::Credentials, oauth_service::{OAuthError, OAuthService}, password_service::{PasswordError, PasswordService}, roles::Role, user_repository::{UserRepository, UserRepositoryError}, users::{EmailAddress, NewUser, PasswordHash, Picture, SessionUser, UpdateUser, UserDescriptor}}, infastructure::services::google_oauth_service::GoogleOauthService};
+use crate::{application::content::content_application_service::ContentApplicationService, domain::identityaccess::model::{credentials::Credentials, oauth_service::{OAuthError, OAuthService}, password_service::{PasswordError, PasswordService}, roles::Role, user_repository::{UserRepository, UserRepositoryError}, users::{EmailAddress, NewUser, PasswordHash, Picture, SessionUser, UpdateUser, UserDescriptor}}, infastructure::services::{google_oauth_service::GoogleOauthService, postgres_user_repository::PostgresUserRepository}};
 
 use super::schema::{NewUserSchema, UpdateUserSchema};
 
@@ -25,20 +25,16 @@ pub enum IdentityError {
 }
 
 #[derive(Debug, Clone)]
-pub struct IdentityApplicationService<U>
-where 
-    U: UserRepository
+pub struct IdentityApplicationService
 {
-    user_repo: U,
+    user_repo: PostgresUserRepository,
     google_oauth: GoogleOauthService,
     password: PasswordService,
 }
 
-impl<U> IdentityApplicationService<U>
-where 
-    U: UserRepository
+impl IdentityApplicationService
 {
-    pub fn new(user_repo: U, google_oauth: GoogleOauthService) -> Self {
+    pub fn new(user_repo: PostgresUserRepository, google_oauth: GoogleOauthService) -> Self {
         Self {
             user_repo,
             google_oauth,
@@ -129,9 +125,7 @@ where
 }
 
 #[async_trait]
-impl<U> AuthnBackend for IdentityApplicationService<U>
-where 
-    U: UserRepository
+impl AuthnBackend for IdentityApplicationService
 {
     type User = UserDescriptor;
     type Credentials = Credentials;

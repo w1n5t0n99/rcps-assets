@@ -10,24 +10,23 @@ use tracing::instrument;
 use crate::{application::{errors::ApplicationError, http::utils, identityaccess::{identity_application_service::IdentityApplicationService, schema::AuthSchema}, state::AppState, templates::{pages::login::LoginTemplate, partials::alert::AlertTemplate}}, domain::identityaccess::model::{credentials::{Credentials, PasswordCredentials}, user_repository::UserRepository}};
 
 
-pub fn router<U>() -> Router<AppState<U>>
-where U: UserRepository
+pub fn router() -> Router<AppState>
 {
-    let loguout_router = Router::<AppState<U>>::new()
-        .route("/sessions/logout", get(self::logout::<U>))
-        .route_layer(middleware::from_fn(utils::login_required::<U>));
+    let loguout_router = Router::<AppState>::new()
+        .route("/sessions/logout", get(self::logout))
+        .route_layer(middleware::from_fn(utils::login_required));
     
-    let login_router = Router::<AppState<U>>::new()
+    let login_router = Router::<AppState>::new()
         .route("/sessions/login", get(self::login))
-        .route("/sessions/login", post(self::post_login::<U>))
-        .route_layer(middleware::from_fn(utils::public_only::<U>));
+        .route("/sessions/login", post(self::post_login))
+        .route_layer(middleware::from_fn(utils::public_only));
 
-    Router::<AppState<U>>::new().merge(loguout_router).merge(login_router)
+    Router::<AppState>::new().merge(loguout_router).merge(login_router)
 }
 
 #[instrument(skip_all)]
-pub async fn post_login<U: UserRepository>(
-    mut auth_session: AuthSession<IdentityApplicationService<U>>,
+pub async fn post_login(
+    mut auth_session: AuthSession<IdentityApplicationService>,
     Form(AuthSchema { email, password, }): Form<AuthSchema>,
 ) ->  Result<impl IntoResponse, ApplicationError> {
     // TODO: validate form
@@ -67,7 +66,7 @@ pub async fn login(messages: Messages) -> LoginTemplate {
 }
 
 #[instrument(skip_all)]
-pub async fn logout<U: UserRepository>(mut auth_session:  AuthSession<IdentityApplicationService<U>>) -> Result<impl IntoResponse, ApplicationError> {
+pub async fn logout(mut auth_session:  AuthSession<IdentityApplicationService>) -> Result<impl IntoResponse, ApplicationError> {
     match auth_session.logout().await {
         Ok(_) => Ok(Redirect::to("/sessions/login").into_response()),
         Err(e) => Err(ApplicationError::internal_server_error(anyhow!(e))),

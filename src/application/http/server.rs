@@ -26,7 +26,7 @@ pub struct AppHttpServer {
 }
 
 impl AppHttpServer {
-    pub async fn new<U: UserRepository>(config: &ApplicationConfig, app_state: AppState<U>) -> Result<Self> {
+    pub async fn new(config: &ApplicationConfig, app_state: AppState) -> Result<Self> {
         let trace_layer = tower_http::trace::TraceLayer::new_for_http();
         let compression_layer = tower_http::compression::CompressionLayer::new().br(true);
 

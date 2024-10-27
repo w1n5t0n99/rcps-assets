@@ -4,7 +4,7 @@ use axum_typed_multipart::FieldData;
 use tempfile::NamedTempFile;
 use thiserror::Error;
 
-use super::models::{Attachment, NewAttachment};
+use super::models::{ImageAttachment, DocumentAttachment, NewImageAttachment, NewDocumentAttachment};
 
 
 #[derive(Error, Debug)]
@@ -16,6 +16,8 @@ pub enum AttachmentRepositoryError {
 }
 
 pub trait AttachmentRepository {
-    fn get_attachent_from_hash(&self, hash: String)-> impl Future<Output = Result<Option<Attachment>, AttachmentRepositoryError>> + Send;
-    fn add_attachent(&self, new_attachment: NewAttachment)-> impl Future<Output = Result<Attachment, AttachmentRepositoryError>> + Send;
+    fn get_image_attachent_from_hash(&self, hash: String)-> impl Future<Output = Result<Option<ImageAttachment>, AttachmentRepositoryError>> + Send;
+    fn get_document_attachent_from_hash(&self, hash: String)-> impl Future<Output = Result<Option<DocumentAttachment>, AttachmentRepositoryError>> + Send;
+    fn add_image_attachent(&self, new_attachment: NewImageAttachment)-> impl Future<Output = Result<ImageAttachment, AttachmentRepositoryError>> + Send;
+    fn add_document_attachent(&self, new_attachment: NewDocumentAttachment, description: String)-> impl Future<Output = Result<DocumentAttachment, AttachmentRepositoryError>> + Send;
 }

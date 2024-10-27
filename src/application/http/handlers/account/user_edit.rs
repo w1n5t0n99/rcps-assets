@@ -12,8 +12,8 @@ use crate::{application::{content::schema::ProfileImageSchema, errors::Applicati
 
 
 #[instrument(skip_all)]
-pub async fn get_user_edit<U: UserRepository>(
-    auth_session: AuthSession<IdentityApplicationService<U>>,
+pub async fn get_user_edit(
+    auth_session: AuthSession<IdentityApplicationService>,
     messages: Messages,
     Path(user_id): Path<Uuid>,
     Extension(session_user): Extension<SessionUser>,
@@ -33,8 +33,8 @@ pub async fn get_user_edit<U: UserRepository>(
 }
 
 #[instrument(skip_all)]
-pub async fn post_user_edit<U: UserRepository>(
-    auth_session: AuthSession<IdentityApplicationService<U>>,
+pub async fn post_user_edit(
+    auth_session: AuthSession<IdentityApplicationService>,
     messages: Messages,
     Extension(session_user): Extension<SessionUser>,
     Path(user_id): Path<Uuid>,
@@ -73,12 +73,12 @@ pub async fn post_user_edit<U: UserRepository>(
 }
 
 #[instrument(skip_all)]
-pub async fn post_change_user_picture<U: UserRepository>(
+pub async fn post_change_user_picture(
     Path(user_id): Path<Uuid>,
-    State(state): State<AppState<U>>,
+    State(state): State<AppState>,
     TypedMultipart(ProfileImageSchema{image} ): TypedMultipart<ProfileImageSchema>,
 ) -> Result<impl IntoResponse, ApplicationError> {
-    let attachment = state.content_service.upload_file_as_attachment(image)
+    let attachment = state.content_service.upload_image_file_as_attachment(image)
         .await
         .map_err(|e| {
             let mut report = Report::new();
@@ -87,17 +87,16 @@ pub async fn post_change_user_picture<U: UserRepository>(
             ApplicationError::bad_request(e.into(), FormAlertTemplate::global_new(report).to_string())
         })?;
 
-    let user = state.identity_service.update_user_picture(user_id, attachment.url.clone())
+    let _user = state.identity_service.update_user_picture(user_id, attachment.url.clone())
         .await
         .map_err(|e| ApplicationError::InternalServerError(e.into()))?;
 
     Ok(format!(r#"<img id="content-profile-image" alt="profile image" src="{}" referrerpolicy="no-referrer" hx-swap-oob="true"/>"#, attachment.url))
-
 }
 
 #[instrument(skip_all)]
-pub async fn post_user_delete<U: UserRepository>(
-    auth_session: AuthSession<IdentityApplicationService<U>>,
+pub async fn post_user_delete(
+    auth_session: AuthSession<IdentityApplicationService>,
     messages: Messages,
     Extension(session_user): Extension<SessionUser>,
     Path(user_id): Path<Uuid>,

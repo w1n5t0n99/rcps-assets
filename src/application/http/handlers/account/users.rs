@@ -5,12 +5,12 @@ use axum_login::AuthSession;
 use axum_messages::Messages;
 use tracing::instrument;
 
-use crate::{application::{errors::ApplicationError, identityaccess::identity_application_service::IdentityApplicationService, templates::pages::users::UsersTemplate}, domain::identityaccess::model::{user_repository::UserRepository, users::SessionUser}};
+use crate::{application::{errors::ApplicationError, identityaccess::identity_application_service::IdentityApplicationService, templates::pages::users::UsersTemplate}, domain::identityaccess::model::users::SessionUser};
 
 
 #[instrument(skip_all)]
-pub async fn get_users<U: UserRepository>(
-    auth_session: AuthSession<IdentityApplicationService<U>>,
+pub async fn get_users(
+    auth_session: AuthSession<IdentityApplicationService>,
     messages: Messages,
     Extension(session_user): Extension<SessionUser>,
 ) -> Result<impl IntoResponse, ApplicationError> {

@@ -1,8 +1,10 @@
-use std::{collections::HashMap, path::PathBuf, sync::LazyLock};
+use std::{collections::HashMap, ffi::OsStr, path::PathBuf, sync::LazyLock};
 
 use chrono::{DateTime, Utc};
 use mime_guess::Mime;
 use serde::{Deserialize, Serialize};
+use derive_more::derive::{Display, AsRef};
+use tempfile::NamedTempFile;
 
 
 /// Route for passing local assets through the webserver.
@@ -105,29 +107,69 @@ pub static MIME_LOOKUP: LazyLock<HashMap<&'static str, Extension>> = LazyLock::n
     map
 });
 
-#[derive(Clone, Debug, Deserialize, sqlx::FromRow)]
-pub struct Attachment {
-    pub id: i32,
+#[derive(Debug)]
+pub struct FilePayload {
+    pub temp_file: NamedTempFile,
     pub filename: String,
     pub hash: String,
     pub content_type: String,
-    pub url: String,
-    pub created_at: DateTime<Utc>,
+}
+
+#[derive(Clone, Debug, Display, Serialize, Deserialize, AsRef, sqlx::Type)]
+#[as_ref(str, [u8], String)]
+pub struct ContentType(String);
+
+impl ContentType {
+    pub fn new(raw_value: impl Into<String>) -> Self {
+        Self(raw_value.into())
+    }
+}
+
+#[derive(Clone, Debug, Display, Serialize, Deserialize, AsRef, sqlx::Type)]
+#[as_ref(str, [u8], String)]
+pub struct Filename(String);
+
+impl Filename {
+    pub fn new(raw_value: impl Into<String>) -> Self {
+        Self(raw_value.into())
+    }
 }
 
 #[derive(Clone, Debug, Serialize)]
-pub struct NewAttachment {
-    pub filename: String,
+pub struct NewImageAttachment {
+    pub filename: Filename,
     pub hash: String,
-    pub content_type: String,
+    pub content_type: ContentType,
+    pub url: String,
+    pub url_thumb: String,
+}
+
+#[derive(Clone, Debug, Serialize)]
+pub struct NewDocumentAttachment {
+    pub filename: Filename,
+    pub hash: String,
+    pub content_type: ContentType,
     pub url: String,
 }
 
-#[derive(Clone, Debug)]
-pub struct FilePayload {
-    pub data: Vec<u8>,
-    pub filename: String,
+#[derive(Clone, Debug, Serialize, Deserialize, sqlx::FromRow, sqlx::Type)]
+pub struct ImageAttachment {
+    pub id: i32,
+    pub filename: Filename,
     pub hash: String,
-    pub content_type: String,
+    pub content_type: ContentType,
+    pub url: String,
+    pub url_thumb: String,
+    pub created_at: DateTime<Utc>,
 }
 
+#[derive(Clone, Debug, Serialize, Deserialize, sqlx::FromRow, sqlx::Type)]
+pub struct DocumentAttachment {
+    pub id: i32,
+    pub filename: Filename,
+    pub hash: String,
+    pub content_type: ContentType,
+    pub url: String,
+    pub description: String,
+    pub created_at: DateTime<Utc>,
+}

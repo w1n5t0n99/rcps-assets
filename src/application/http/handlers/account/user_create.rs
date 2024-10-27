@@ -11,8 +11,8 @@ use crate::{application::{errors::ApplicationError, identityaccess::{identity_ap
 
 
 #[instrument(skip_all)]
-pub async fn get_user_create<U: UserRepository>(
-    auth_session: AuthSession<IdentityApplicationService<U>>,
+pub async fn get_user_create(
+    auth_session: AuthSession<IdentityApplicationService>,
     messages: Messages,
     Extension(session_user): Extension<SessionUser>,
 ) -> Result<UserCreateTemplate, ApplicationError> {
@@ -26,8 +26,8 @@ pub async fn get_user_create<U: UserRepository>(
 }
 
 #[instrument(skip_all)]
-pub async fn post_user_create<U: UserRepository>(
-    auth_session: AuthSession<IdentityApplicationService<U>>,
+pub async fn post_user_create(
+    auth_session: AuthSession<IdentityApplicationService>,
     messages: Messages,
     Form(new_user): Form<NewUserSchema>,
 ) -> Result<impl IntoResponse, ApplicationError> {

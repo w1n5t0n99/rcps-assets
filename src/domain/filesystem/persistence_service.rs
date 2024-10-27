@@ -1,9 +1,10 @@
 use std::future::Future;
 
+use tempfile::NamedTempFile;
 use thiserror::Error;
 use tokio::{sync::oneshot::error::RecvError, task::JoinError};
 
-use super::models::{Attachment, FilePayload, NewAttachment};
+use super::models::{ContentType, FilePayload, Filename, NewDocumentAttachment, NewImageAttachment};
 
 
 #[derive(Error, Debug)]
@@ -17,11 +18,11 @@ pub enum PersistenceError {
     #[error(transparent)]
     IO(#[from] std::io::Error),
     #[error(transparent)]
-    ProcessingFailed(#[from] anyhow::Error),
+    Unexpected(#[from] anyhow::Error),
 }
 
 pub trait PersistenceService {
-    fn persist_file(&self, payload: FilePayload, base_url: String) -> impl Future<Output = Result<NewAttachment, PersistenceError>> + Send; 
-    fn get_file(&self, attachment: Attachment) -> impl Future<Output = Result<FilePayload, PersistenceError>> + Send; 
-    fn hash_file(&self, data: Vec<u8>)-> impl Future<Output = Result<String, PersistenceError>> + Send;
+    fn hash_file(&self, file: NamedTempFile)-> impl Future<Output = Result<(NamedTempFile, String), PersistenceError>> + Send;
+    fn persist_image_file(&self, payload: FilePayload) -> impl Future<Output = Result<NewImageAttachment, PersistenceError>> + Send;
+    fn persist_document_file(&self, payload: FilePayload) -> impl Future<Output = Result<NewDocumentAttachment, PersistenceError>> + Send;
 }

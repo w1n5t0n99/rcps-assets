@@ -13,8 +13,8 @@ pub struct Params {
 }
 
 #[instrument(skip_all)]
-pub async fn get_roles<U: UserRepository>(
-    auth_session: AuthSession<IdentityApplicationService<U>>,
+pub async fn get_roles(
+    auth_session: AuthSession<IdentityApplicationService>,
     Query(params): Query<Params>,
 ) -> Result<RolesListTemplate, ApplicationError> {
 

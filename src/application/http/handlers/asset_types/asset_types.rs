@@ -7,7 +7,7 @@ use crate::{application::{errors::ApplicationError, identityaccess::identity_app
 
 
 #[instrument(skip_all)]
-pub async fn get_asset_types<U: UserRepository>(
+pub async fn get_asset_types(
     messages: Messages,
     Extension(session_user): Extension<SessionUser>,
 ) -> Result<impl IntoResponse, ApplicationError> {

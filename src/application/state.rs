@@ -3,30 +3,44 @@ use reqwest::Client;
 
 use crate::domain::identityaccess::model::user_repository::UserRepository;
 
-use super::{content::content_application_service::ContentApplicationService, identityaccess::identity_application_service::IdentityApplicationService};
+use super::{content::content_application_service::ContentApplicationService, crud::crud_application_service::CrudApplicationService, identityaccess::identity_application_service::IdentityApplicationService};
 
 
 #[derive(Debug, Clone)]
-pub struct AppState<U: UserRepository> {
-    pub identity_service: IdentityApplicationService<U>,
+pub struct AppState {
+    pub identity_service: IdentityApplicationService,
     pub content_service: ContentApplicationService,
+    pub crud_service: CrudApplicationService,
 }
 
-impl<U> FromRef<AppState<U>> for IdentityApplicationService<U>
-where U: UserRepository
+impl FromRef<AppState> for IdentityApplicationService
 {
-    fn from_ref(input: &AppState<U>) -> Self {
+    fn from_ref(input: &AppState) -> Self {
         input.identity_service.clone()
     }
 }
 
-impl<U> AppState<U>
-    where U: UserRepository
+impl FromRef<AppState> for ContentApplicationService
 {
-    pub fn new(identity_service: IdentityApplicationService<U>, content_service: ContentApplicationService) -> Self {
+    fn from_ref(input: &AppState) -> Self {
+        input.content_service.clone()
+    }
+}
+
+impl FromRef<AppState> for CrudApplicationService
+{
+    fn from_ref(input: &AppState) -> Self {
+        input.crud_service.clone()
+    }
+}
+
+impl AppState
+{
+    pub fn new(identity_service: IdentityApplicationService, crud_service: CrudApplicationService, content_service: ContentApplicationService) -> Self {
         Self {
             identity_service,
             content_service,
+            crud_service,
         }
     }
 }
