@@ -1,21 +1,51 @@
 {% extends "layouts/main.html" %}
 
 {% block content %}
+<script>
+    htmx.on('#form', 'htmx:xhr:progress', function(evt) {
+        htmx.find('#progress').setAttribute('value', evt.detail.loaded/evt.detail.total * 100)
+    });
+
+    /**
+     * Convert between any image formats the browser supports
+     * @param {Blob} source A Blob (or File) containing the image to convert
+     * @param {string} type The MIME type of the target format
+     * @returns {Promise<Blob>} The converted image
+     */
+    async function convert(source, type) {
+        let image = await createImageBitmap(source);
+
+        let canvas = new OffscreenCanvas(image.width, image.height);
+        let context = canvas.getContext("2d");
+        context.drawImage(image, 0, 0);
+
+        let result = await canvas.convertToBlob({ type });
+
+        image.close();
+        return result;
+    }
+</script>
 <div id="content-header" class="my-4 mx-4 flex justify-between">
-    <h1 class="text-2xl">{{asset_type.brand}} - {{asset_type.model}}</h1>
+    <h1 class="text-2xl">Asset Type Edit</h1>
     <div class="space-x-2">
         <a class="btn btn-sm" href="javascript:history.back()">Back</a>
         <button class="btn btn-sm btn-primary" type="submit" form="edit-form">Save</button>
     </div>
 </div>
 <div id="content-profile" class="mx-4">
-    <div class="avatar mb-4">
-        <div class="w-28 rounded">
-            <img 
-              id="content-picture"
-              alt="profile image"
-              src='{{asset_type.picture.as_deref().unwrap_or("")}}'
-              referrerpolicy="no-referrer" />
+    <div>
+        <div class="avatar">
+            <div class="w-24 rounded">
+                <img 
+                id="content-picture"
+                alt="profile image"
+                src='{{asset_type.picture.as_deref().unwrap_or("")}}'
+                referrerpolicy="no-referrer" />
+            </div>
+        </div>
+        <div class="flex gap-1 mt-2 mb-4">
+            <input name="image" type="file" hx-encoding="multipart/form-data" hx-post="/asset_types/{{asset_type.id}}/change_picture" hx-trigger="change" hx-indicator="#spinner" class="file-input file-input-sm file-input-bordered w-full max-w-xs" />
+            <progress id='progress' value='0' max='100'></progress>
         </div>
     </div>
     <form id="edit-form" hx-boost="true" action="/asset_types/{{asset_type.id}}/edit" method="post" class="form-control w-full" hx-swap="outerHTML" hx-target-400="#global_alert_message">

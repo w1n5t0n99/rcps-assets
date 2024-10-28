@@ -95,7 +95,7 @@ pub async fn post_change_user_picture(
 }
 
 #[instrument(skip_all)]
-pub async fn post_user_delete(
+pub async fn delete_user(
     auth_session: AuthSession<IdentityApplicationService>,
     messages: Messages,
     Extension(session_user): Extension<SessionUser>,

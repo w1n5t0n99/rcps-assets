@@ -4,7 +4,7 @@ mod users;
 mod user_create;
 mod user_edit;
 
-use axum::{extract::DefaultBodyLimit, middleware, routing::{get, post}, Router};
+use axum::{extract::DefaultBodyLimit, middleware, routing::{delete, get, post}, Router};
 
 use crate::{application::{http::utils, state::AppState}, domain::identityaccess::model::user_repository::UserRepository};
 
@@ -18,7 +18,7 @@ pub fn router() -> Router<AppState>
         .route("/settings/users/new", post(self::user_create::post_user_create))
         .route("/settings/users/:user_id/edit", get(self::user_edit::get_user_edit))
         .route("/settings/users/:user_id/edit", post(self::user_edit::post_user_edit))
-        .route("/settings/users/:user_id/delete", post(self::user_edit::post_user_delete))
+        .route("/settings/users/:user_id", delete(self::user_edit::delete_user))
         .route("/settings/users/:user_id/change_picture", post(self::user_edit::post_change_user_picture).layer(DefaultBodyLimit::max(5242880))) //5MiB
         .route_layer(middleware::from_fn(utils::login_required))
 }

@@ -3,7 +3,7 @@ pub mod asset_type_create;
 pub mod asset_types_view;
 pub mod asset_type_edit;
 
-use axum::{extract::DefaultBodyLimit, middleware, routing::{get, post}, Router};
+use axum::{extract::DefaultBodyLimit, middleware, routing::{delete, get, post}, Router};
 
 use crate::application::{http::utils, state::AppState};
 
@@ -11,6 +11,7 @@ pub fn router() -> Router<AppState>
 {
     Router::new()
         .route("/asset_types/:id", get(self::asset_types_view::get_asset_type_view))
+        .route("/asset_types/:id", delete(self::asset_type_edit::delete_asset_type))
         .route("/asset_types/:id/edit", get(self::asset_type_edit::get_asset_type_edit))
         .route("/asset_types/:id/edit", post(self::asset_type_edit::post_asset_type_edit))
         .route("/asset_types/new", get(self::asset_type_create::get_asset_type_create))

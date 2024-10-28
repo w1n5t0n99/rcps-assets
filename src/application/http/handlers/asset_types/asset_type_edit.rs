@@ -6,7 +6,7 @@ use axum_messages::Messages;
 use garde::{Report, Validate};
 use tracing::instrument;
 
-use crate::{application::{crud::schema::UpdateAssetTypeSchema, errors::ApplicationError, state::AppState, templates::{pages::asset_type_edit::AssetTypeEditTemplate, partials::form_alert::FormAlertTemplate}}, domain::{crud::crud_repository::CrudRepositoryError, identityaccess::model::users::SessionUser}};
+use crate::{application::{crud::{crud_application_service::CrudError, schema::UpdateAssetTypeSchema}, errors::ApplicationError, state::AppState, templates::{pages::asset_type_edit::AssetTypeEditTemplate, partials::form_alert::FormAlertTemplate}}, domain::{crud::crud_repository::CrudRepositoryError, identityaccess::model::users::SessionUser}};
 
 
 #[instrument(skip_all)]
@@ -56,4 +56,38 @@ pub async fn post_asset_type_edit(
 
     messages.success("asset type updated");
     Ok(([("HX-Redirect", "/asset_types".to_string())], "success"))
+}
+
+#[instrument(skip_all)]
+pub async fn delete_asset_type(
+    messages: Messages,
+    State(state): State<AppState>,
+    Path(id): Path<i32>,
+) -> Result<impl IntoResponse, ApplicationError> {
+
+    match state.crud_service.delete_asset_type(id).await {
+        Ok(Some(_)) => { },
+        Ok(None) => {
+            let mut report = Report::new();
+            report.append(garde::Path::new(""), garde::Error::new("something went wrong, could not delete user"));
+            return Err(ApplicationError::bad_request(anyhow!("invalid form"), FormAlertTemplate::global_new(report).to_string()));
+        },
+        Err(e) => {
+            match e {
+                CrudError::Repo(_) => {
+                    // TODO: check for foreign key violation
+                    let mut report = Report::new();
+                    report.append(garde::Path::new(""), garde::Error::new("asset type referenced by assets, could not delete"));
+    
+                    return Err(ApplicationError::bad_request(anyhow!("invalid form"), FormAlertTemplate::global_new(report).to_string()));
+                }
+                _ => {
+                    return Err(ApplicationError::internal_server_error(anyhow!(e)));
+                }
+            }
+        },
+    }
+
+    messages.success("asset type deleted");
+    Ok(([("HX-Redirect", "/asset_types")], "success"))
 }

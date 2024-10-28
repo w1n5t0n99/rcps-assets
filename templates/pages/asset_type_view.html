@@ -2,9 +2,23 @@
 
 {% block content %}
 <div id="content-header" class="my-4 mx-4 flex justify-between">
-    <h1 class="text-2xl">{{asset_type.brand}} - {{asset_type.model}}</h1>
+    <h1 class="text-2xl">Asset Type</h1>
     <div class="space-x-2">
         <a class="btn btn-sm" href="javascript:history.back()">Back</a>
+        <button class="btn btn-sm" onclick="delete_modal.showModal()">Delete</button>
+        <dialog id="delete_modal" class="modal">
+            <div class="modal-box">
+                <h3 class="text-lg font-bold">Permanently Delete Asset Types</h3>
+                <p class="py-4">Are you sure?</p>
+                <div class="modal-action justify-between px-1">
+                    <button class="btn btn-sm btn-error" hx-delete="/asset_types/{{asset_type.id}}">Delete</button>
+                    <form method="dialog">
+                        <!-- if there is a button in form, it will close the modal -->
+                        <button class="btn btn-sm">Close</button>
+                    </form>
+                </div>
+            </div>
+          </dialog>
         <a class="btn btn-sm btn-info" href="/asset_types/{{asset_type.id}}/edit">Edit</a>
     </div>
 </div>
