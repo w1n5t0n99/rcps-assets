@@ -133,7 +133,10 @@ impl UserRepository for PostgresUserRepository {
         )
         .fetch_optional(&self.pool)
         .await
-        .context("could not retrieve user from database")?;
+        .map_err(|e| {
+            if is_unique_constraint_violation(&e) == true { UserRepositoryError::Duplicate }
+            else { UserRepositoryError::Unknown(e.into()) }
+        })?;
 
         Ok(user_descriptor)
     }

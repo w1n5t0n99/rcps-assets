@@ -5,3 +5,5 @@ pub mod user_create;
 pub mod user_edit;
 pub mod asset_types;
 pub mod asset_type_create;
+pub mod asset_type_view;
+pub mod asset_type_edit;

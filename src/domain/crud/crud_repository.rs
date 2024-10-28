@@ -2,7 +2,7 @@ use std::future::Future;
 
 use thiserror::Error;
 
-use super::model::asset_types::{AssetType, NewAssetType};
+use super::model::asset_types::{AssetType, NewAssetType, UpdateAssetType};
 
 
 #[derive(Error, Debug)]
@@ -34,6 +34,12 @@ pub trait CrudRepository: Send + Sync + Clone + 'static {
     fn get_asset_types(
         &self,
     ) -> impl Future<Output = Result<Vec<AssetType>, CrudRepositoryError>> + Send;
+
+    fn update_asset_type(
+        &self,
+        id: i32,
+        update_asset_type: UpdateAssetType,
+    ) -> impl Future<Output = Result<Option<AssetType>, CrudRepositoryError>> + Send;
 
     fn delete_asset_type(
         &self,

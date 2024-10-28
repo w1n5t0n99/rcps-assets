@@ -3,7 +3,7 @@ use futures::TryFutureExt;
 use sqlx::{postgres::{PgConnectOptions, PgPoolOptions, PgSslMode}, PgPool};
 use uuid::Uuid;
 
-use crate::{domain::crud::{crud_repository::{CrudRepository, CrudRepositoryError}, model::asset_types::{AssetType, NewAssetType}}, settings::DatabaseConfig};
+use crate::{domain::crud::{crud_repository::{CrudRepository, CrudRepositoryError}, model::asset_types::{AssetType, NewAssetType, UpdateAssetType}}, settings::DatabaseConfig};
 
 
 #[derive(Debug, Clone)]
@@ -145,8 +145,33 @@ impl CrudRepository for PostgresCrudRepository {
         )
         .fetch_optional(&self.pool)
         .await
-        .context("could not delete user from database")?;
+        .context("could not delete asset from database")?;
 
         Ok(returned_id.map(|r| r.id))
+    }
+
+    async fn update_asset_type(&self, id: i32, update_asset_type: UpdateAssetType) -> Result<Option<AssetType>, CrudRepositoryError> {
+        let asset_type = sqlx::query_as!(
+            AssetType,
+            r#"
+            UPDATE asset_types
+                SET brand = $1, model = $2, description = $3, cost = $4
+                WHERE id = $5
+                RETURNING id, brand, model, description, cost, picture, created_at
+            "#,
+            update_asset_type.brand.clone(),
+            update_asset_type.model.clone(),
+            update_asset_type.description.clone(),
+            update_asset_type.cost.clone(),
+            id,
+        )
+        .fetch_optional(&self.pool)
+        .await
+        .map_err(|e| {
+            if is_unique_constraint_violation(&e) == true { CrudRepositoryError::Duplicate }
+            else { CrudRepositoryError::Unknown(e.into()) }
+        })?;
+
+        Ok(asset_type)
     }
 }

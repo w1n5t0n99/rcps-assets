@@ -24,3 +24,11 @@ pub struct NewAssetType {
     pub cost: Option<String>,
     pub picture: Option<String>,
 }
+
+#[derive(Clone, Debug, Serialize, Deserialize)]
+pub struct UpdateAssetType {
+    pub brand: String, 
+    pub model: String,
+    pub description: Option<String>,
+    pub cost: Option<String>,
+}

@@ -1,0 +1,50 @@
+{% extends "layouts/main.html" %}
+
+{% block content %}
+<div id="content-header" class="my-4 mx-4 flex justify-between">
+    <h1 class="text-2xl">{{asset_type.brand}} - {{asset_type.model}}</h1>
+    <div class="space-x-2">
+        <a class="btn btn-sm" href="javascript:history.back()">Back</a>
+        <button class="btn btn-sm btn-primary" type="submit" form="edit-form">Save</button>
+    </div>
+</div>
+<div id="content-profile" class="mx-4">
+    <div class="avatar mb-4">
+        <div class="w-28 rounded">
+            <img 
+              id="content-picture"
+              alt="profile image"
+              src='{{asset_type.picture.as_deref().unwrap_or("")}}'
+              referrerpolicy="no-referrer" />
+        </div>
+    </div>
+    <form id="edit-form" hx-boost="true" action="/asset_types/{{asset_type.id}}/edit" method="post" class="form-control w-full" hx-swap="outerHTML" hx-target-400="#global_alert_message">
+        <div class=" mx-4 md:grid grid-cols-12 gap-3 divide-y">
+            <div class="label col-span-6">
+                <div class="flex gap-12 flex-grow">
+                    <span class="text-lg label-text font-light">Brand</span>
+                    <input name="brand" type="text" value="{{ asset_type.brand }}" class="input input-bordered w-full" required/>
+                </div>
+            </div>
+            <div class="label col-span-6">
+                <div class="flex gap-12 flex-grow">
+                    <span class="text-lg label-text font-light">Model</span>
+                    <input name="model" type="text" value="{{ asset_type.model }}" class="input input-bordered w-full" required/>
+                </div>
+            </div>
+            <div class="label col-span-6">
+                <div class="flex gap-12 flex-grow">
+                    <span class="text-lg label-text font-light">Description</span>
+                    <input name="description" type="text" value='{{ asset_type.description.as_deref().unwrap_or("") }}' class="input input-bordered w-full" required/>
+                </div>
+            </div>
+            <div class="label col-span-6">
+                <div class="flex gap-12 flex-grow">
+                    <span class="text-lg label-text font-light">Cost</span>
+                    <input name="cost" type="text" value='{{ asset_type.cost.as_deref().unwrap_or("") }}' class="input input-bordered w-full" required/>
+                </div>
+            </div>
+        </div>
+    </div>
+    </form>
+{% endblock %}

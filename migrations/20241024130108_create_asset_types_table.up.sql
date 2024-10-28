@@ -1,7 +1,7 @@
 CREATE TABLE
     "asset_types" (
         id SERIAL PRIMARY KEY,
-        brand TEXT NOT NULL UNIQUE,
+        brand TEXT NOT NULL,
         model TEXT NOT NULL,
         description TEXT,
         cost TEXT,

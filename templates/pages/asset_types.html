@@ -23,7 +23,14 @@
               </tr>
             </thead>
             <tbody>
-                
+              {% for asset_type in asset_types %}
+              <tr class="hover cursor-pointer" hx-on:click="window.location.href = '/asset_types/{{asset_type.id}}'">
+                  <td>{{asset_type.brand}}</td>
+                  <td>{{asset_type.model}}</td>
+                  <td>{{asset_type.description.as_deref().unwrap_or("")}}</td>
+                  <td>{{asset_type.cost.as_deref().unwrap_or("")}}</td>
+              </tr>
+          {% endfor %}
             </tbody>
           </table>
     </div>

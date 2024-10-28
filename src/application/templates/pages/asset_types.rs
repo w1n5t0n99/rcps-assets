@@ -1,7 +1,7 @@
 use askama::Template;
 use axum_messages::Message;
 
-use crate::{application::templates::partials::{alert::AlertTemplate, navbar::NavbarTemplate}, domain::identityaccess::model::users::SessionUser};
+use crate::{application::templates::partials::{alert::AlertTemplate, navbar::NavbarTemplate}, domain::{crud::model::asset_types::AssetType, identityaccess::model::users::SessionUser}};
 
 
 #[derive(Template)]
@@ -9,12 +9,13 @@ use crate::{application::templates::partials::{alert::AlertTemplate, navbar::Nav
 pub struct AssetTypesTemplate {
     navbar: NavbarTemplate,
     alert: Option<AlertTemplate>,
+    asset_types: Vec<AssetType>,
 }
 
 impl AssetTypesTemplate {
-    pub fn new(session_user: SessionUser, message: Option<Message>) -> Self {
+    pub fn new(session_user: SessionUser, message: Option<Message>, asset_types: Vec<AssetType>) -> Self {
         let navbar = NavbarTemplate::new(session_user.user.picture.to_string());
         let alert = message.map(|m| AlertTemplate::new("global_alert_message", m));
-        Self {navbar, alert}
+        Self {navbar, alert, asset_types}
     }
 }
