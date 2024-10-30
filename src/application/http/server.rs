@@ -1,16 +1,16 @@
 use anyhow::{Context, Result};
-use axum::{extract::State, http::StatusCode, middleware, response::IntoResponse, routing::{get, post}, Json};
+use axum::{http::StatusCode, response::IntoResponse, routing::get, Json};
 use axum_extra::extract::cookie::SameSite;
-use axum_login::{tower_sessions::{Expiry, MemoryStore, SessionManagerLayer}, AuthManagerLayerBuilder};
+use axum_login::{tower_sessions::{Expiry, SessionManagerLayer}, AuthManagerLayerBuilder};
 use tower_sessions::cookie::Key;
 use time::Duration;
 use tokio::net::TcpListener;
-use tower_http::services::ServeDir;
+use tower_http::{compression::{predicate::{NotForContentType, SizeAbove}, Predicate}, services::ServeDir};
 use tracing::instrument;
-use axum_messages::{Messages, MessagesManagerLayer};
+use axum_messages::MessagesManagerLayer;
 
-use crate::{application::{identityaccess::identity_application_service::IdentityApplicationService, state::AppState}, domain::identityaccess::model::user_repository::UserRepository, infastructure::services::postgres_user_repository::PostgresUserRepository, settings::ApplicationConfig};
-use super::{handlers::{account, asset_types, auth, content, oauth}, utils};
+use crate::{application::state::AppState, settings::ApplicationConfig};
+use super::handlers::{account, asset_types, auth, oauth};
 
 
 #[instrument]
@@ -28,7 +28,16 @@ pub struct AppHttpServer {
 impl AppHttpServer {
     pub async fn new(config: &ApplicationConfig, app_state: AppState) -> Result<Self> {
         let trace_layer = tower_http::trace::TraceLayer::new_for_http();
-        let compression_layer = tower_http::compression::CompressionLayer::new().br(true);
+
+        let compression_predicate = SizeAbove::new(256)
+            .and(NotForContentType::GRPC)
+            .and(NotForContentType::SSE)
+            .and(NotForContentType::IMAGES)
+            .and(NotForContentType::const_new("text/csv"))
+            .and(NotForContentType::const_new("application/pdf"));
+        let compression_layer = tower_http::compression::CompressionLayer::new()
+            .br(true)
+            .compress_when(compression_predicate);
 
         let address = config.get_address();
         let listener = TcpListener::bind(address).await?;
@@ -47,9 +56,9 @@ impl AppHttpServer {
             .merge(account::router())
             .merge(oauth::router())
             .merge(auth::router())
-            .merge(content::router())
             .merge(asset_types::router())
             .nest_service("/static", ServeDir::new("static").precompressed_gzip())
+            .nest_service("/content", ServeDir::new("content"))
             .layer(compression_layer)
             .layer(trace_layer)
             .layer(MessagesManagerLayer)

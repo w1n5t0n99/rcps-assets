@@ -41,8 +41,8 @@ pub struct GoogleConfig {
 #[derive(Debug, Deserialize)]
 #[allow(unused)]
 pub struct LocalStorageConfig {
-    pub local_directory_path: String,
-    pub public_url: String,
+    pub serve_path: String,
+    pub route_path: String,
 }
 
 #[derive(Debug, Deserialize)]

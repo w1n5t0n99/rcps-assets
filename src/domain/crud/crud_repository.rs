@@ -41,6 +41,12 @@ pub trait CrudRepository: Send + Sync + Clone + 'static {
         update_asset_type: UpdateAssetType,
     ) -> impl Future<Output = Result<Option<AssetType>, CrudRepositoryError>> + Send;
 
+    fn update_asset_type_picture(
+        &self,
+        id: i32,
+        picture: String,
+    ) -> impl Future<Output = Result<Option<AssetType>, CrudRepositoryError>> + Send;
+
     fn delete_asset_type(
         &self,
         id: i32,

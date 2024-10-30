@@ -67,6 +67,7 @@ impl CrudApplicationService {
    } 
 
    pub async fn update_asset_type(&self, id: i32, schema: UpdateAssetTypeSchema) -> Result<Option<AssetType>, CrudError> {
+
         let update_asset_type = UpdateAssetType {
             brand: schema.brand,
             model: schema.model,
@@ -86,5 +87,12 @@ impl CrudApplicationService {
 
         Ok(asset_type)
     }  
+
+    pub async fn update_asset_type_picture(&self, id: i32, picture_url: String) -> Result<Option<AssetType>, CrudError> {
+        let asset_type = self.crud_repo.update_asset_type_picture(id, picture_url)
+            .await?;
+
+        Ok(asset_type)
+    }
 }
 

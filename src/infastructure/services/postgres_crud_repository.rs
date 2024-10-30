@@ -174,4 +174,27 @@ impl CrudRepository for PostgresCrudRepository {
 
         Ok(asset_type)
     }
+
+    async fn update_asset_type_picture(&self, id: i32, picture: String) -> Result<Option<AssetType>, CrudRepositoryError> {
+        let asset_type = sqlx::query_as!(
+            AssetType,
+            r#"
+            UPDATE asset_types
+                SET picture = $1
+                WHERE id = $2
+                RETURNING id, brand, model, description, cost, picture, created_at
+            "#,
+            picture,
+            id,
+        )
+        .fetch_optional(&self.pool)
+        .await
+        .map_err(|e| {
+            if is_unique_constraint_violation(&e) == true { CrudRepositoryError::Duplicate }
+            else { CrudRepositoryError::Unknown(e.into()) }
+        })?;
+
+        Ok(asset_type)
+    }
+
 }

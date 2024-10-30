@@ -3,7 +3,7 @@ use tempfile::NamedTempFile;
 
 
 #[derive(TryFromMultipart)]
-pub struct ProfileImageSchema {
+pub struct ImageSchema {
     #[form_data(limit = "5MiB")]
     pub image: FieldData<NamedTempFile>,
 }

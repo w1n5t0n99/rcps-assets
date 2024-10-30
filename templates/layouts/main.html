@@ -8,6 +8,57 @@
     <script src="/static/response-targets.js"></script>
     <link rel="stylesheet" href="/static/styles/output.css" />
     {% include "partials/favicon.html" %}
+    <script>
+        function calculate_resolution(original_width, original_height, preferred_width, preferred_height) {
+            if (original_width <= preferred_width || original_height <= preferred_height) {
+                return [original_width, original_height]
+            }
+
+            let target_area = preferred_width * preferred_height;
+            let new_width = Math.sqrt((original_width / original_height) * target_area)
+            let new_height = target_area / new_width
+
+            let w = Math.round(new_width) // round to the nearest integer
+            let h = Math.round(new_height - (w - new_width)) // adjust the rounded width with height    
+
+            return [w, h]
+        }
+
+        function changeFileExtension(filename, newExtension) {
+            const lastDotIndex = filename.lastIndexOf('.');
+            if (lastDotIndex === -1) {
+                // No extension found, just append the new one
+                return filename + '.' + newExtension;
+            } else {
+                // Replace existing extension
+                return filename.slice(0, lastDotIndex) + '.' + newExtension;
+            }
+        }
+
+        function dataURItoBlob(dataURI) {
+            // convert base64 to raw binary data held in a string
+            // doesn't handle URLEncoded DataURIs - see SO answer #6850276 for code that does this
+            var byteString = atob(dataURI.split(',')[1]);
+
+            // separate out the mime component
+            var mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0]
+
+            // write the bytes of the string to an ArrayBuffer
+            var ab = new ArrayBuffer(byteString.length);
+
+            // create a view into the buffer
+            var ia = new Uint8Array(ab);
+
+            // set the bytes of the buffer to the correct values
+            for (var i = 0; i < byteString.length; i++) {
+                ia[i] = byteString.charCodeAt(i);
+            }
+
+            // write the ArrayBuffer to a blob, and you're done
+            var blob = new Blob([ab], {type: mimeString});
+            return blob;
+        }
+    </script>
 </head>
 
 <body hx-ext="response-targets">

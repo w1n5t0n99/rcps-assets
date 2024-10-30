@@ -1,80 +1,98 @@
 {% extends "layouts/main.html" %}
 
 {% block content %}
-<script>
-    htmx.on('#form', 'htmx:xhr:progress', function(evt) {
-        htmx.find('#progress').setAttribute('value', evt.detail.loaded/evt.detail.total * 100)
-    });
-
-    /**
-     * Convert between any image formats the browser supports
-     * @param {Blob} source A Blob (or File) containing the image to convert
-     * @param {string} type The MIME type of the target format
-     * @returns {Promise<Blob>} The converted image
-     */
-    async function convert(source, type) {
-        let image = await createImageBitmap(source);
-
-        let canvas = new OffscreenCanvas(image.width, image.height);
-        let context = canvas.getContext("2d");
-        context.drawImage(image, 0, 0);
-
-        let result = await canvas.convertToBlob({ type });
-
-        image.close();
-        return result;
-    }
-</script>
 <div id="content-header" class="my-4 mx-4 flex justify-between">
     <h1 class="text-2xl">Asset Type Edit</h1>
     <div class="space-x-2">
         <a class="btn btn-sm" href="javascript:history.back()">Back</a>
-        <button class="btn btn-sm btn-primary" type="submit" form="edit-form">Save</button>
+        <button class="btn btn-sm btn-primary" type="submit" form="crud_form">Save</button>
     </div>
 </div>
-<div id="content-profile" class="mx-4">
-    <div>
-        <div class="avatar">
-            <div class="w-24 rounded">
-                <img 
-                id="content-picture"
-                alt="profile image"
-                src='{{asset_type.picture.as_deref().unwrap_or("")}}'
-                referrerpolicy="no-referrer" />
-            </div>
-        </div>
-        <div class="flex gap-1 mt-2 mb-4">
-            <input name="image" type="file" hx-encoding="multipart/form-data" hx-post="/asset_types/{{asset_type.id}}/change_picture" hx-trigger="change" hx-indicator="#spinner" class="file-input file-input-sm file-input-bordered w-full max-w-xs" />
-            <progress id='progress' value='0' max='100'></progress>
-        </div>
+<div class="mx-4 mb-4">
+    <div class="w-16 rounded-full mb-1">
+        <img 
+          id="content_picture"
+          alt="content image"
+          src='{{asset_type.picture.as_deref().unwrap_or("")}}'
+          referrerpolicy="no-referrer" />
     </div>
-    <form id="edit-form" hx-boost="true" action="/asset_types/{{asset_type.id}}/edit" method="post" class="form-control w-full" hx-swap="outerHTML" hx-target-400="#global_alert_message">
+    <label class="form-control w-full max-w-xs">
+        <div class="label">
+          <span class="label-text">*Example image of asset type</span>
+        </div>
+        <form id="content_picture_form" hx-encoding="multipart/form-data"> <!--hack because htmx.ajax() wont grab the encoding from input type-->
+            <input id="content_picture_input" name="content_picture_input" type="file" accept="image/*" hx-encoding="multipart/form-data" hx-on:change="convertImageAndUpload(event)" class="file-input file-input-sm file-input-bordered w-full max-w-xs" />
+        </form>
+    </label>
+</div>
+<div id="content-profile" class="mx-4">
+    <form id="crud_form" hx-boost="true" action="/asset_types/{{asset_type.id}}/edit" method="post" class="form-control w-full" hx-swap="outerHTML" hx-target-400="#global_alert_message">
         <div class=" mx-4 md:grid grid-cols-12 gap-3 divide-y">
             <div class="label col-span-6">
                 <div class="flex gap-12 flex-grow">
                     <span class="text-lg label-text font-light">Brand</span>
-                    <input name="brand" type="text" value="{{ asset_type.brand }}" class="input input-bordered w-full" required/>
+                    <input id="brand" name="brand" type="text" value="{{ asset_type.brand }}" class="input input-bordered w-full" required/>
                 </div>
             </div>
             <div class="label col-span-6">
                 <div class="flex gap-12 flex-grow">
                     <span class="text-lg label-text font-light">Model</span>
-                    <input name="model" type="text" value="{{ asset_type.model }}" class="input input-bordered w-full" required/>
+                    <input id="model" name="model" type="text" value="{{ asset_type.model }}" class="input input-bordered w-full" required/>
                 </div>
             </div>
             <div class="label col-span-6">
                 <div class="flex gap-12 flex-grow">
                     <span class="text-lg label-text font-light">Description</span>
-                    <input name="description" type="text" value='{{ asset_type.description.as_deref().unwrap_or("") }}' class="input input-bordered w-full" required/>
+                    <input id="description" name="description" type="text" value='{{ asset_type.description.as_deref().unwrap_or("") }}' class="input input-bordered w-full" required/>
                 </div>
             </div>
             <div class="label col-span-6">
                 <div class="flex gap-12 flex-grow">
                     <span class="text-lg label-text font-light">Cost</span>
-                    <input name="cost" type="text" value='{{ asset_type.cost.as_deref().unwrap_or("") }}' class="input input-bordered w-full" required/>
+                    <input id="cost" name="cost" type="text" value='{{ asset_type.cost.as_deref().unwrap_or("") }}' class="input input-bordered w-full" required/>
                 </div>
             </div>
         </div>
-    </div>
     </form>
+</div>
+<script>
+    function convertImageAndUpload(event) {
+        if (event.target.files.length > 0) {
+            let src = URL.createObjectURL(event.target.files[0]);
+            let filename = event.target.files[0].name;
+            
+            // convert  image to canvas
+            let canvas = document.createElement("canvas");
+            let ctx = canvas.getContext("2d");
+
+            let userImage = new Image();
+            userImage.src = src;
+
+            userImage.onload = function() {
+                // resize image
+                let [w, h] = calculate_resolution(userImage.width, userImage.height, 1920, 1080);
+
+                canvas.width = w;
+                canvas.height = h;
+                ctx.drawImage(userImage, 0, 0, userImage.width, userImage.height, 0, 0, canvas.width, canvas.height);
+
+                // convert to webp
+                let webpImage = canvas.toDataURL("image/webp", 0.5);
+
+                let nfilename = changeFileExtension(filename, "webp");
+                let blob = dataURItoBlob(webpImage);
+                image_file = new File([blob], nfilename, { type: "image/webp", });
+
+                htmx.ajax("POST", "/asset_types/{{asset_type.id}}/change_picture", { 
+                target: "#content_picture",
+                swap:'outerHTML',
+                source: "#content_picture_form",
+                values: {
+                    image: image_file,
+                }
+            })
+            }
+        }
+    }
+</script>
 {% endblock %}

@@ -1,9 +1,6 @@
 use chrono::{DateTime, Utc};
 use serde::{Deserialize, Serialize};
 
-use compact_str::CompactString;
-use derive_more::derive::{Display, AsRef};
-
 
 #[derive(Clone, Debug, Serialize, Deserialize, sqlx::FromRow, sqlx::Type)]
 pub struct AssetType {

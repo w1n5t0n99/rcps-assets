@@ -8,7 +8,7 @@ use garde::{Report, Validate};
 use tracing::instrument;
 use uuid::Uuid;
 
-use crate::{application::{content::schema::ProfileImageSchema, errors::ApplicationError, identityaccess::{identity_application_service::{IdentityApplicationService, IdentityError}, schema::UpdateUserSchema}, state::AppState, templates::{pages::user_edit::UserEditTemplate, partials::form_alert::FormAlertTemplate}}, domain::identityaccess::model::{user_repository::{UserRepository, UserRepositoryError}, users::SessionUser}};
+use crate::{application::{content::schema::ImageSchema, errors::ApplicationError, identityaccess::{identity_application_service::{IdentityApplicationService, IdentityError}, schema::UpdateUserSchema}, state::AppState, templates::{pages::user_edit::UserEditTemplate, partials::form_alert::FormAlertTemplate}}, domain::identityaccess::model::{user_repository::{UserRepository, UserRepositoryError}, users::SessionUser}};
 
 
 #[instrument(skip_all)]
@@ -76,7 +76,7 @@ pub async fn post_user_edit(
 pub async fn post_change_user_picture(
     Path(user_id): Path<Uuid>,
     State(state): State<AppState>,
-    TypedMultipart(ProfileImageSchema{image} ): TypedMultipart<ProfileImageSchema>,
+    TypedMultipart(ImageSchema{image} ): TypedMultipart<ImageSchema>,
 ) -> Result<impl IntoResponse, ApplicationError> {
     let attachment = state.content_service.upload_image_file_as_attachment(image)
         .await

@@ -40,9 +40,8 @@ pub async fn get_content(
         }
     };
 
-    // convert the `AsyncRead` into a `Stream`
+    // convert the `AsyncRead` into a `Stream` e.g tokio::file
     let stream = ReaderStream::new(file);    
-
     let content_disposition = format!("inline;filename={}", filename);
 
      Ok((

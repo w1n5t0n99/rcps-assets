@@ -78,7 +78,7 @@ impl ContentApplicationService {
         Ok(attachment)
     }
 
-    pub async fn upload_document_file_as_attachment(&self, uploaded_file: FieldData<NamedTempFile>, description: String) -> Result<DocumentAttachment, ContentError> {
+    pub async fn upload_document_file_as_attachment(&self, uploaded_file: FieldData<NamedTempFile>) -> Result<DocumentAttachment, ContentError> {
         let payload = self.create_file_payload(uploaded_file).await?;
 
         let attachment = self.attachment_repo.get_document_attachent_from_hash(payload.hash.clone())
@@ -94,7 +94,7 @@ impl ContentApplicationService {
             .await
             .context("error persisting file")?;
 
-        let attachment = self.attachment_repo.add_document_attachent(new_attachment, description)
+        let attachment = self.attachment_repo.add_document_attachent(new_attachment)
             .await
             .context("could not add new attachment to database")?;
 

@@ -141,7 +141,6 @@ pub struct NewImageAttachment {
     pub hash: String,
     pub content_type: ContentType,
     pub url: String,
-    pub url_thumb: String,
 }
 
 #[derive(Clone, Debug, Serialize)]
@@ -159,7 +158,6 @@ pub struct ImageAttachment {
     pub hash: String,
     pub content_type: ContentType,
     pub url: String,
-    pub url_thumb: String,
     pub created_at: DateTime<Utc>,
 }
 
@@ -170,6 +168,5 @@ pub struct DocumentAttachment {
     pub hash: String,
     pub content_type: ContentType,
     pub url: String,
-    pub description: String,
     pub created_at: DateTime<Utc>,
 }

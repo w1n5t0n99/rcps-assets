@@ -27,7 +27,7 @@ async fn main() -> anyhow::Result<()> {
     let user_repo = PostgresUserRepository::new(&config.database).context("failed to init user repository")?;
     let attachment_repo = PostgresAttachmentRepository::new(&config.database).context("failed to init attachment repository")?;
     let crud_repo = PostgresCrudRepository::new(&config.database).context("failed to init attachment repository")?;
-    let persistence = LocalPersistenceService::new(&config.local_storage).context("failed to init persistence repository")?;
+    let persistence = LocalPersistenceService::new(&config.local_storage.route_path, &config.local_storage.serve_path).context("failed to init persistence repository")?;
 
     let content_service = ContentApplicationService::new(attachment_repo, persistence);
     let identity_serivce = IdentityApplicationService::new(user_repo, google_oauth);

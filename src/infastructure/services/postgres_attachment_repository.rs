@@ -49,7 +49,7 @@ impl AttachmentRepository for PostgresAttachmentRepository {
         let attachment = sqlx::query_as!(
             ImageAttachment,
             r#"
-            SELECT id, filename as "filename: Filename", hash, content_type as "content_type: ContentType", url, url_thumb, created_at
+            SELECT id, filename as "filename: Filename", hash, content_type as "content_type: ContentType", url, created_at
             FROM image_attachments
             WHERE $1 = hash
             "#,
@@ -66,7 +66,7 @@ impl AttachmentRepository for PostgresAttachmentRepository {
         let attachment = sqlx::query_as!(
             DocumentAttachment,
             r#"
-            SELECT id, filename as "filename: Filename", hash, content_type as "content_type: ContentType", url, description, created_at
+            SELECT id, filename as "filename: Filename", hash, content_type as "content_type: ContentType", url, created_at
             FROM document_attachments
             WHERE $1 = hash
             "#,
@@ -83,15 +83,14 @@ impl AttachmentRepository for PostgresAttachmentRepository {
         let attachment = sqlx::query_as!(
             ImageAttachment,
             r#"
-            INSERT INTO image_attachments (hash, filename, content_type, url ,url_thumb)
-            VALUES ($1, $2, $3, $4, $5)
-            RETURNING id, filename as "filename: Filename", hash, content_type as "content_type: ContentType", url, url_thumb, created_at
+            INSERT INTO image_attachments (hash, filename, content_type, url)
+            VALUES ($1, $2, $3, $4)
+            RETURNING id, filename as "filename: Filename", hash, content_type as "content_type: ContentType", url, created_at
             "#,
             new_attachment.hash,
             new_attachment.filename.to_string(),
             new_attachment.content_type.to_string(),
             new_attachment.url,
-            new_attachment.url_thumb,
         )
         .fetch_one(&self.pool)
         .await
@@ -103,19 +102,18 @@ impl AttachmentRepository for PostgresAttachmentRepository {
         Ok(attachment)
     }
 
-    async fn add_document_attachent(&self, new_attachment: NewDocumentAttachment, description: String)-> Result<DocumentAttachment, AttachmentRepositoryError> {
+    async fn add_document_attachent(&self, new_attachment: NewDocumentAttachment)-> Result<DocumentAttachment, AttachmentRepositoryError> {
         let attachment = sqlx::query_as!(
             DocumentAttachment,
             r#"
-            INSERT INTO document_attachments (hash, filename, content_type, url ,description)
-            VALUES ($1, $2, $3, $4, $5)
-            RETURNING id, filename as "filename: Filename", hash, content_type as "content_type: ContentType", url, description, created_at
+            INSERT INTO document_attachments (hash, filename, content_type, url)
+            VALUES ($1, $2, $3, $4)
+            RETURNING id, filename as "filename: Filename", hash, content_type as "content_type: ContentType", url, created_at
             "#,
             new_attachment.hash,
             new_attachment.filename.to_string(),
             new_attachment.content_type.to_string(),
             new_attachment.url,
-            description,
         )
         .fetch_one(&self.pool)
         .await

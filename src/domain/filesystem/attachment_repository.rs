@@ -19,5 +19,5 @@ pub trait AttachmentRepository {
     fn get_image_attachent_from_hash(&self, hash: String)-> impl Future<Output = Result<Option<ImageAttachment>, AttachmentRepositoryError>> + Send;
     fn get_document_attachent_from_hash(&self, hash: String)-> impl Future<Output = Result<Option<DocumentAttachment>, AttachmentRepositoryError>> + Send;
     fn add_image_attachent(&self, new_attachment: NewImageAttachment)-> impl Future<Output = Result<ImageAttachment, AttachmentRepositoryError>> + Send;
-    fn add_document_attachent(&self, new_attachment: NewDocumentAttachment, description: String)-> impl Future<Output = Result<DocumentAttachment, AttachmentRepositoryError>> + Send;
+    fn add_document_attachent(&self, new_attachment: NewDocumentAttachment)-> impl Future<Output = Result<DocumentAttachment, AttachmentRepositoryError>> + Send;
 }

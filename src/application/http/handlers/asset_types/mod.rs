@@ -14,6 +14,7 @@ pub fn router() -> Router<AppState>
         .route("/asset_types/:id", delete(self::asset_type_edit::delete_asset_type))
         .route("/asset_types/:id/edit", get(self::asset_type_edit::get_asset_type_edit))
         .route("/asset_types/:id/edit", post(self::asset_type_edit::post_asset_type_edit))
+        .route("/asset_types/:id/change_picture", post(self::asset_type_edit::post_change_asset_type_picture).layer(DefaultBodyLimit::max(5242880)))
         .route("/asset_types/new", get(self::asset_type_create::get_asset_type_create))
         .route("/asset_types/new", post(self::asset_type_create::post_asset_type_create).layer(DefaultBodyLimit::max(5242880)))
         .route("/asset_types", get(self::asset_types::get_asset_types))

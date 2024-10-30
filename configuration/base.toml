@@ -19,5 +19,5 @@ auth_url = "https://accounts.google.com/o/oauth2/v2/auth"
 token_url = "https://www.googleapis.com/oauth2/v3/token"
 
 [local_storage]
-local_directory_path = "./content"
-public_url = "/content"
+serve_path = "content"
+route_path = "/content"

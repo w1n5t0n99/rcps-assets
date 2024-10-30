@@ -4,7 +4,6 @@ CREATE TABLE
         hash TEXT NOT NULL UNIQUE,
         filename TEXT NOT NULL,
         url TEXT NOT NULL,
-        url_thumb TEXT NOT NULL,
         content_type TEXT NOT NULL,
         created_at TIMESTAMP
             WITH TIME ZONE NOT NULL DEFAULT NOW()
@@ -16,7 +15,6 @@ CREATE TABLE
         hash TEXT NOT NULL UNIQUE,
         filename TEXT NOT NULL,
         url TEXT NOT NULL,
-        description TEXT NOT NULL,
         content_type TEXT NOT NULL,
         created_at TIMESTAMP
             WITH TIME ZONE NOT NULL DEFAULT NOW()

@@ -10,9 +10,9 @@ pub struct NewAssetTypeSchema {
     pub brand: String,
     #[garde(length(min=1))]
     pub model: String,
-    #[garde(length(min=1))]
+    #[garde(skip)]	
     pub description: Option<String>,
-    #[garde(length(min=1))]
+    #[garde(skip)]	
     pub cost: Option<String>,
     #[garde(skip)]	
     #[form_data(limit = "5MiB")]
@@ -23,11 +23,11 @@ pub struct NewAssetTypeSchema {
 pub struct UpdateAssetTypeSchema {
     #[garde(length(min=1))]
     pub brand: String,
-    #[garde(length(min=1))]
+    #[garde(skip)]	
     pub model: String,
-    #[garde(length(min=1))]
+    #[garde(skip)]
     pub description: Option<String>,
-    #[garde(length(min=1))]
+    #[garde(skip)]
     pub cost: Option<String>,
 }
 
