@@ -155,14 +155,15 @@ impl CrudRepository for PostgresCrudRepository {
             AssetType,
             r#"
             UPDATE asset_types
-                SET brand = $1, model = $2, description = $3, cost = $4
-                WHERE id = $5
+                SET brand = $1, model = $2, description = $3, cost = $4, picture = $5
+                WHERE id = $6
                 RETURNING id, brand, model, description, cost, picture, created_at
             "#,
             update_asset_type.brand.clone(),
             update_asset_type.model.clone(),
             update_asset_type.description.clone(),
             update_asset_type.cost.clone(),
+            update_asset_type.picture.clone(),
             id,
         )
         .fetch_optional(&self.pool)

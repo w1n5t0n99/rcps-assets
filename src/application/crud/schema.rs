@@ -19,15 +19,18 @@ pub struct NewAssetTypeSchema {
     pub picture: Option<FieldData<NamedTempFile>>,
 }
 
-#[derive(Debug, Validate, Deserialize)]
+#[derive(Debug, Validate, TryFromMultipart)]
 pub struct UpdateAssetTypeSchema {
     #[garde(length(min=1))]
     pub brand: String,
-    #[garde(skip)]	
+    #[garde(length(min=1))]
     pub model: String,
-    #[garde(skip)]
+    #[garde(skip)]	
     pub description: Option<String>,
-    #[garde(skip)]
+    #[garde(skip)]	
     pub cost: Option<String>,
+    #[garde(skip)]	
+    #[form_data(limit = "5MiB")]
+    pub picture: Option<FieldData<NamedTempFile>>,
 }
 

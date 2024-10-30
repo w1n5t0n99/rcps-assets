@@ -5,28 +5,28 @@
     <h1 class="text-2xl">Asset Type Edit</h1>
     <div class="space-x-2">
         <a class="btn btn-sm" href="javascript:history.back()">Back</a>
-        <button class="btn btn-sm btn-primary" type="submit" form="crud_form">Save</button>
+        <button class="btn btn-sm btn-primary" hx-on:click="uploadForm()">Save</button>
     </div>
-</div>
-<div class="mx-4 mb-4">
-    <div class="w-16 rounded-full mb-1">
-        <img 
-          id="content_picture"
-          alt="content image"
-          src='{{asset_type.picture.as_deref().unwrap_or("")}}'
-          referrerpolicy="no-referrer" />
-    </div>
-    <label class="form-control w-full max-w-xs">
-        <div class="label">
-          <span class="label-text">*Example image of asset type</span>
-        </div>
-        <form id="content_picture_form" hx-encoding="multipart/form-data"> <!--hack because htmx.ajax() wont grab the encoding from input type-->
-            <input id="content_picture_input" name="content_picture_input" type="file" accept="image/*" hx-encoding="multipart/form-data" hx-on:change="convertImageAndUpload(event)" class="file-input file-input-sm file-input-bordered w-full max-w-xs" />
-        </form>
-    </label>
 </div>
 <div id="content-profile" class="mx-4">
-    <form id="crud_form" hx-boost="true" action="/asset_types/{{asset_type.id}}/edit" method="post" class="form-control w-full" hx-swap="outerHTML" hx-target-400="#global_alert_message">
+    <form id="crud_form" action="/asset_types/{{asset_type.id}}/edit" method="post" class="form-control w-full" hx-encoding="multipart/form-data"  hx-boost="true" hx-swap="outerHTML" hx-target-400="#global_alert_message">
+        <div class="mx-4 mb-4">
+            <div class="avatar mb-4">
+                <div class="w-28 rounded">
+                    <img 
+                      id="content_picture"
+                      alt="content image"
+                      src='{{asset_type.picture.as_deref().unwrap_or("")}}'
+                      referrerpolicy="no-referrer" />
+                </div>
+            </div>
+            <label class="form-control w-full max-w-xs">
+                <div class="label">
+                    <span class="label-text">*Change example image</span>
+                </div>
+                <input id="picture" name="picture" type="file" accept="image/*" hx-trigger="none" hx-on:change="convertImage(event)" class="file-input file-input-sm file-input-bordered w-full max-w-xs" />
+            </label>
+        </div>
         <div class=" mx-4 md:grid grid-cols-12 gap-3 divide-y">
             <div class="label col-span-6">
                 <div class="flex gap-12 flex-grow">
@@ -56,7 +56,15 @@
     </form>
 </div>
 <script>
-    function convertImageAndUpload(event) {
+    const uform = document.querySelector("#crud_form");
+    const uimage = document.querySelector("#content_picture");
+    const ubrand = document.querySelector("#brand");
+    const umodel = document.querySelector("#model");
+    const udescrip = document.querySelector("#description");
+    const ucost = document.querySelector("#cost");
+    var image_file;
+
+    function convertImage(event) {
         if (event.target.files.length > 0) {
             let src = URL.createObjectURL(event.target.files[0]);
             let filename = event.target.files[0].name;
@@ -78,20 +86,45 @@
 
                 // convert to webp
                 let webpImage = canvas.toDataURL("image/webp", 0.5);
+                uimage.src = webpImage;
 
                 let nfilename = changeFileExtension(filename, "webp");
                 let blob = dataURItoBlob(webpImage);
                 image_file = new File([blob], nfilename, { type: "image/webp", });
+            }
+        }
+    }
 
-                htmx.ajax("POST", "/asset_types/{{asset_type.id}}/change_picture", { 
-                target: "#content_picture",
+    function uploadForm() {
+        if (uform.reportValidity() === false) {
+            return;
+        }
+
+        if (image_file == null) {
+            htmx.ajax("POST", uform.action, { 
+                //target: "#crud_form",
                 swap:'outerHTML',
-                source: "#content_picture_form",
+                source: "#crud_form",
                 values: {
-                    image: image_file,
+                    brand: ubrand.value,
+                    model: umodel.value,
+                    description: udescrip.value,
+                    cost: ucost.value,
                 }
             })
-            }
+        } else {
+            htmx.ajax("POST", uform.action, { 
+                //target: "#crud_form",
+                swap:'outerHTML',
+                source: "#crud_form",
+                values: {
+                    picture: image_file,
+                    brand: ubrand.value,
+                    model: umodel.value,
+                    description: udescrip.value,
+                    cost: ucost.value,
+                }
+            })
         }
     }
 </script>

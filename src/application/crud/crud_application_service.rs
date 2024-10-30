@@ -66,13 +66,26 @@ impl CrudApplicationService {
         Ok(asset_type)
    } 
 
-   pub async fn update_asset_type(&self, id: i32, schema: UpdateAssetTypeSchema) -> Result<Option<AssetType>, CrudError> {
+   pub async fn update_asset_type(&self, id: i32, schema: UpdateAssetTypeSchema, content: &ContentApplicationService) -> Result<Option<AssetType>, CrudError> {
+        
+        let attachment_url = match schema.picture {
+            Some(temp_file) => {
+                let attachment = content.upload_image_file_as_attachment(temp_file)
+                    .await?;
+
+                attachment.url
+            },
+            None => {
+                "/static/images/empty-image.svg".to_string()
+            },
+        };
 
         let update_asset_type = UpdateAssetType {
             brand: schema.brand,
             model: schema.model,
             description: schema.description,
             cost: schema.cost,
+            picture: Some(attachment_url),
         };
 
         let asset_type = self.crud_repo.update_asset_type(id, update_asset_type)

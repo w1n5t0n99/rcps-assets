@@ -36,18 +36,23 @@ pub async fn post_asset_type_edit(
     messages: Messages,
     State(state): State<AppState>,
     Path(id): Path<i32>,
-    Form(update_asset_type): Form<UpdateAssetTypeSchema>,
+    TypedMultipart(update_asset_type ): TypedMultipart<UpdateAssetTypeSchema>,
 ) -> Result<impl IntoResponse, ApplicationError> {
 
     if let Err(report) = update_asset_type.validate() {
         return Err(ApplicationError::bad_request(anyhow!("invalid form"), FormAlertTemplate::global_new(report).to_string()));
     }
 
-    if let Err(e) = state.crud_service.update_asset_type(id, update_asset_type).await {
+    let mut report = Report::new();
+    if let Err(e) = state.crud_service.update_asset_type(id, update_asset_type, &state.content_service).await {
         match e {
+            crate::application::crud::crud_application_service::CrudError::Content(_content_error) => {
+                report.append(garde::Path::new("image"), garde::Error::new("image could not be uploaded"));
+                return Err(ApplicationError::bad_request(anyhow!("invalid form"), FormAlertTemplate::global_new(report).to_string()));
+            },
             crate::application::crud::crud_application_service::CrudError::Repo(CrudRepositoryError::Duplicate) => {
-                messages.error("brand/model is not unique");
-                return Ok(([("HX-Redirect", format!("/asset_types/{}", id))], "success"));
+                report.append(garde::Path::new("brand/model"), garde::Error::new("duplicate asset type"));
+                return Err(ApplicationError::bad_request(anyhow!("invalid form"), FormAlertTemplate::global_new(report).to_string()));
             },
             _ => {
                 return Err(ApplicationError::internal_server_error(anyhow!(e)));

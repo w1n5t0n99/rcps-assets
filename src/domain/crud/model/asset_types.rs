@@ -28,4 +28,5 @@ pub struct UpdateAssetType {
     pub model: String,
     pub description: Option<String>,
     pub cost: Option<String>,
+    pub picture: Option<String>,
 }
