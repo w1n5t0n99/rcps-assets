@@ -113,11 +113,16 @@ impl CrudApplicationService {
 
         for record in rdr.deserialize() {
             // TODO: skip but log error
-            let new_asset_type: NewAssetType = record.map_err(|e| CrudError::Unknown(e.into()))?;
+            let mut new_asset_type: NewAssetType = record.map_err(|e| CrudError::Unknown(e.into()))?;
+            new_asset_type.picture = Some("/static/images/empty-image.svg".to_string());
+
             rows.push(new_asset_type);
         }
 
-        Ok(format!("len: {} - example: {:?}", rows.len(), rows.first()))
+        let rows_count = self.crud_repo.bulk_add_asset_type(&rows)
+            .await?;
+
+        Ok(format!("len: {} - exarowsmple: {:?}", rows.len(), rows_count))
     }
 }
 

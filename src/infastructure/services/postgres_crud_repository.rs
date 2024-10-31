@@ -225,7 +225,7 @@ impl CrudRepository for PostgresCrudRepository {
         Ok(asset_type)
     }
 
-    async fn bulk_add_asset_type(&self, add_asset_types: &[NewAssetType]) -> Result<Option<usize>, CrudRepositoryError> {
+    async fn bulk_add_asset_type(&self, add_asset_types: &[NewAssetType]) -> Result<usize, CrudRepositoryError> {
         let brands: Vec<String> = add_asset_types.iter().map(|a| a.brand.clone()).collect();
         let models: Vec<String> = add_asset_types.iter().map(|a| a.model.clone()).collect();
         let descriptions: Vec<Option<String>> = add_asset_types.iter().map(|a| a.description.as_ref().map(|d| d.clone())).collect();
@@ -236,13 +236,21 @@ impl CrudRepository for PostgresCrudRepository {
             AssetType,
             r#"
             INSERT INTO asset_types (brand, model, description, cost, picture)
-            SELECT * FROM UNNEST (
+            SELECT DISTINCT * FROM(
+                SELECT DISTINCT * FROM UNNEST (
                 $1::TEXT[],
                 $2::TEXT[],
                 $3::TEXT[],
                 $4::TEXT[],
                 $5::TEXT[]
-            )
+            ) AS t(brand, model, description, cost, picture)
+            WHERE t.brand IS NOT NULL AND t.model IS NOT NULL
+            ) AS bulk_query
+            ON CONFLICT ON CONSTRAINT asset_types_brand_model_key DO
+            UPDATE SET 
+                description = excluded.description,
+                cost = excluded.cost,
+                picture = excluded.picture
             RETURNING id, brand, model, description, cost, picture, created_at
             "#,
             &brands,
@@ -252,8 +260,12 @@ impl CrudRepository for PostgresCrudRepository {
             &pictures as _,
         )
         .fetch_all(&self.pool)
-        .await;
+        .await
+        .map_err(|e| {
+            tracing::error!("{}", e);
+            CrudRepositoryError::Unknown(e.into())
+        })?;
 
-        todo!()
+        Ok(rows.len())
     }
 }
