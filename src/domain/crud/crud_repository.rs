@@ -51,4 +51,10 @@ pub trait CrudRepository: Send + Sync + Clone + 'static {
         &self,
         id: i32,
     ) -> impl Future<Output = Result<Option<i32>, CrudRepositoryError>> + Send;
+
+    fn bulk_add_asset_type(
+        &self,
+        new_asset_types: &[NewAssetType],
+    ) -> impl Future<Output = Result<Option<usize>, CrudRepositoryError>> + Send;
 }
+

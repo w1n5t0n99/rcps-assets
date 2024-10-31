@@ -15,14 +15,15 @@ use crate::{application::{crud::schema::NewAssetTypeSchema, errors::ApplicationE
 pub async fn get_asset_type_create(
     messages: Messages,
     Extension(session_user): Extension<SessionUser>,
-) -> Result<AssetTypeCreateTemplate, ApplicationError> {
+) -> Result<impl IntoResponse, ApplicationError> {
     let message = messages
         .into_iter()
         .collect::<Vec<_>>()
         .first()
         .map(|m| m.to_owned());
 
-    Ok(AssetTypeCreateTemplate::new(session_user, message))
+    Ok(([("Cache-Control", "no-store")], AssetTypeCreateTemplate::new(session_user, message)))
+
 }
 
 #[instrument(skip_all)]

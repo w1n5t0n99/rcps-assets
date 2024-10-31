@@ -1,7 +1,7 @@
 use anyhow::anyhow;
 
 use askama_axum::IntoResponse;
-use axum::{debug_handler, extract::{Path, State}, Extension, Form};
+use axum::{debug_handler, extract::{Path, State}, Extension};
 use axum_messages::Messages;
 use axum_typed_multipart::TypedMultipart;
 use garde::{Report, Validate};
@@ -46,11 +46,11 @@ pub async fn post_asset_type_edit(
     let mut report = Report::new();
     if let Err(e) = state.crud_service.update_asset_type(id, update_asset_type, &state.content_service).await {
         match e {
-            crate::application::crud::crud_application_service::CrudError::Content(_content_error) => {
+            CrudError::Content(_content_error) => {
                 report.append(garde::Path::new("image"), garde::Error::new("image could not be uploaded"));
                 return Err(ApplicationError::bad_request(anyhow!("invalid form"), FormAlertTemplate::global_new(report).to_string()));
             },
-            crate::application::crud::crud_application_service::CrudError::Repo(CrudRepositoryError::Duplicate) => {
+            CrudError::Repo(CrudRepositoryError::Duplicate) => {
                 report.append(garde::Path::new("brand/model"), garde::Error::new("duplicate asset type"));
                 return Err(ApplicationError::bad_request(anyhow!("invalid form"), FormAlertTemplate::global_new(report).to_string()));
             },
@@ -132,6 +132,8 @@ pub async fn delete_asset_type(
 /*
     // convert the `AsyncRead` into a `Stream` e.g tokio::file
     let stream = ReaderStream::new(file);    
+
+    //Content-Disposition: attachment; filename=fname.ext // will force download
     let content_disposition = format!("inline;filename={}", filename);
     // return streaming file or bytes as response
      Ok((

@@ -2,6 +2,7 @@ pub mod asset_types;
 pub mod asset_type_create;
 pub mod asset_types_view;
 pub mod asset_type_edit;
+pub mod asset_type_imports;
 
 use axum::{extract::DefaultBodyLimit, middleware, routing::{delete, get, post}, Router};
 
@@ -18,5 +19,7 @@ pub fn router() -> Router<AppState>
         .route("/asset_types/new", get(self::asset_type_create::get_asset_type_create))
         .route("/asset_types/new", post(self::asset_type_create::post_asset_type_create).layer(DefaultBodyLimit::max(5242880)))
         .route("/asset_types", get(self::asset_types::get_asset_types))
+        .route("/asset_types/imports/new", get(self::asset_type_imports::get_asset_type_imports_new))
+        .route("/asset_types/imports/new", post(self::asset_type_imports::post_asset_type_imports_new))
         .route_layer(middleware::from_fn(utils::login_required))
 }

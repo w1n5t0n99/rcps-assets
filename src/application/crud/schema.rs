@@ -34,3 +34,10 @@ pub struct UpdateAssetTypeSchema {
     pub picture: Option<FieldData<NamedTempFile>>,
 }
 
+#[derive(Debug, TryFromMultipart)]
+pub struct UploadAsetTypesSchema {
+    #[form_data(limit = "5MiB")]
+    pub upload: FieldData<NamedTempFile>,
+}
+
+

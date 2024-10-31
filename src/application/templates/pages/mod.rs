@@ -7,3 +7,4 @@ pub mod asset_types;
 pub mod asset_type_create;
 pub mod asset_type_view;
 pub mod asset_type_edit;
+pub mod asset_types_imports_new;

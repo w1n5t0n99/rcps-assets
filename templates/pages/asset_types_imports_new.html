@@ -1,0 +1,26 @@
+{% extends "layouts/main.html" %}
+
+{% block content %}
+<div id="content_header" class="my-4 mx-4 flex justify-between">
+    <h1 class="text-2xl">Upload Asset Types</h1>
+    <div class="space-x-2">
+        <a class="btn btn-sm" href="javascript:history.back()">Back</a>
+        <button class="btn btn-sm btn-primary" type="submit" form="crud_form">
+            Import 
+            <img id="spinner" class="htmx-indicator" src="/static/images/bars.svg"/>
+        </button>
+    </div>
+</div>
+<div id="content_view" class="mx-4">
+    <div class="mx-4">
+        <label class="form-control w-full max-w-xs">
+            <div class="label">
+                <span class="label-text">*Upload CSV file</span>
+            </div>
+            <form id="crud_form" method="post" class="form-control w-full" hx-encoding="multipart/form-data" hx-indicator="#spinner" hx-post="/asset_types/imports/new" hx-boost="true" hx-sync="this" hx-push-url="false" hx-target-400="#global_alert_message">
+                <input name="upload" type="file" accept="text/csv" class="file-input file-input-sm file-input-bordered w-full max-w-xs" />
+            </form>
+        </label>
+    </div>
+</div>
+{% endblock %}

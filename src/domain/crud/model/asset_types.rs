@@ -15,10 +15,15 @@ pub struct AssetType {
 
 #[derive(Clone, Debug, Serialize, Deserialize)]
 pub struct NewAssetType {
+    #[serde(alias="brand", alias="Brand")]
     pub brand: String, 
+    #[serde(alias="model", alias="Model")]
     pub model: String,
+    #[serde(alias="description", alias="Description")]
     pub description: Option<String>,
+    #[serde(alias="cost", alias="Cost")]
     pub cost: Option<String>,
+    #[serde(alias="picture", alias="Picture")]
     pub picture: Option<String>,
 }
 

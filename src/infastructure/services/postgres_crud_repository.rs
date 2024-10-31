@@ -1,4 +1,5 @@
 use anyhow::Context;
+use compact_str::{CompactString, ToCompactString};
 use futures::TryFutureExt;
 use sqlx::{postgres::{PgConnectOptions, PgPoolOptions, PgSslMode}, PgPool};
 use uuid::Uuid;
@@ -224,4 +225,35 @@ impl CrudRepository for PostgresCrudRepository {
         Ok(asset_type)
     }
 
+    async fn bulk_add_asset_type(&self, add_asset_types: &[NewAssetType]) -> Result<Option<usize>, CrudRepositoryError> {
+        let brands: Vec<String> = add_asset_types.iter().map(|a| a.brand.clone()).collect();
+        let models: Vec<String> = add_asset_types.iter().map(|a| a.model.clone()).collect();
+        let descriptions: Vec<Option<String>> = add_asset_types.iter().map(|a| a.description.as_ref().map(|d| d.clone())).collect();
+        let costs: Vec<Option<String>> = add_asset_types.iter().map(|a| a.cost.as_ref().map(|c| c.clone())).collect();
+        let pictures: Vec<Option<String>> = add_asset_types.iter().map(|a| a.picture.as_ref().map(|p| p.clone())).collect();
+
+        let rows = sqlx::query_as!(
+            AssetType,
+            r#"
+            INSERT INTO asset_types (brand, model, description, cost, picture)
+            SELECT * FROM UNNEST (
+                $1::TEXT[],
+                $2::TEXT[],
+                $3::TEXT[],
+                $4::TEXT[],
+                $5::TEXT[]
+            )
+            RETURNING id, brand, model, description, cost, picture, created_at
+            "#,
+            &brands,
+            &models,
+            &descriptions as _,
+            &costs as _,
+            &pictures as _,
+        )
+        .fetch_all(&self.pool)
+        .await;
+
+        todo!()
+    }
 }

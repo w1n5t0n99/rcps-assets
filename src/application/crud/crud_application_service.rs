@@ -2,7 +2,7 @@ use axum::http::uri::Scheme;
 
 use crate::{application::content::content_application_service::{ContentApplicationService, ContentError}, domain::crud::{crud_repository::{CrudRepository, CrudRepositoryError}, model::asset_types::{AssetType, NewAssetType, UpdateAssetType}}, infastructure::services::postgres_crud_repository::PostgresCrudRepository};
 
-use super::schema::{NewAssetTypeSchema, UpdateAssetTypeSchema};
+use super::schema::{NewAssetTypeSchema, UpdateAssetTypeSchema, UploadAsetTypesSchema};
 
 
 
@@ -105,5 +105,22 @@ impl CrudApplicationService {
 
         Ok(asset_type)
     }
+
+    pub async fn upload_asset_types(&self, mut schema: UploadAsetTypesSchema) -> Result<String, CrudError> {
+        let mut rdr = csv::Reader::from_reader(schema.upload.contents.as_file_mut());
+
+        let mut rows = Vec::new();
+
+        for record in rdr.deserialize() {
+            // TODO: skip but log error
+            let new_asset_type: NewAssetType = record.map_err(|e| CrudError::Unknown(e.into()))?;
+            rows.push(new_asset_type);
+        }
+
+        Ok(format!("len: {} - example: {:?}", rows.len(), rows.first()))
+    }
 }
+
+
+
 

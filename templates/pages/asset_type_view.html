@@ -35,25 +35,25 @@
         </div>
     </div>
     <div class=" mx-4 md:grid grid-cols-12 gap-3 ">
-        <div class="label col-span-6">
+        <div class="label col-span-6 border-b-2">
             <div class="flex gap-12">
                 <span class="text-lg label-text font-light">Brand</span>
                 <span class="text-lg label-text select-all">{{asset_type.brand}}</span>
             </div>
         </div>
-        <div class="label col-span-6">
+        <div class="label col-span-6 border-b-2">
             <div class="flex gap-12">
                 <span class="text-lg label-text font-light">Model</span>
                 <span class="text-lg label-text select-all">{{asset_type.model}}</span>
             </div>
         </div>
-        <div class="label col-span-6">
+        <div class="label col-span-6 border-b-2">
             <div class="flex gap-12">
                 <span class="text-lg label-text font-light">Description</span>
                 <span class="text-lg label-text select-all">{{asset_type.description.as_deref().unwrap_or("")}}</span>
             </div>
         </div>
-        <div class="label col-span-6">
+        <div class="label col-span-6 border-b-2">
             <div class="flex gap-12">
                 <span class="text-lg label-text font-light">Cost</span>
                 <span class="text-lg label-text select-all">{{asset_type.cost.as_deref().unwrap_or("")}}</span>
