@@ -151,27 +151,53 @@ impl CrudRepository for PostgresCrudRepository {
     }
 
     async fn update_asset_type(&self, id: i32, update_asset_type: UpdateAssetType) -> Result<Option<AssetType>, CrudRepositoryError> {
-        let asset_type = sqlx::query_as!(
-            AssetType,
-            r#"
-            UPDATE asset_types
-                SET brand = $1, model = $2, description = $3, cost = $4, picture = $5
-                WHERE id = $6
-                RETURNING id, brand, model, description, cost, picture, created_at
-            "#,
-            update_asset_type.brand.clone(),
-            update_asset_type.model.clone(),
-            update_asset_type.description.clone(),
-            update_asset_type.cost.clone(),
-            update_asset_type.picture.clone(),
-            id,
-        )
-        .fetch_optional(&self.pool)
-        .await
-        .map_err(|e| {
-            if is_unique_constraint_violation(&e) == true { CrudRepositoryError::Duplicate }
-            else { CrudRepositoryError::Unknown(e.into()) }
-        })?;
+        let asset_type = match update_asset_type.picture {
+            Some(picture) => {
+                sqlx::query_as!(
+                    AssetType,
+                    r#"
+                    UPDATE asset_types
+                        SET brand = $1, model = $2, description = $3, cost = $4, picture = $5
+                        WHERE id = $6
+                        RETURNING id, brand, model, description, cost, picture, created_at
+                    "#,
+                    update_asset_type.brand.clone(),
+                    update_asset_type.model.clone(),
+                    update_asset_type.description.clone(),
+                    update_asset_type.cost.clone(),
+                    picture.clone(),
+                    id,
+                )
+                .fetch_optional(&self.pool)
+                .await
+                .map_err(|e| {
+                    if is_unique_constraint_violation(&e) == true { CrudRepositoryError::Duplicate }
+                    else { CrudRepositoryError::Unknown(e.into()) }
+                })?
+            },
+            None => {
+                sqlx::query_as!(
+                    AssetType,
+                    r#"
+                    UPDATE asset_types
+                        SET brand = $1, model = $2, description = $3, cost = $4
+                        WHERE id = $5
+                        RETURNING id, brand, model, description, cost, picture, created_at
+                    "#,
+                    update_asset_type.brand.clone(),
+                    update_asset_type.model.clone(),
+                    update_asset_type.description.clone(),
+                    update_asset_type.cost.clone(),
+                    id,
+                )
+                .fetch_optional(&self.pool)
+                .await
+                .map_err(|e| {
+                    if is_unique_constraint_violation(&e) == true { CrudRepositoryError::Duplicate }
+                    else { CrudRepositoryError::Unknown(e.into()) }
+                })?
+            },
+        };
 
         Ok(asset_type)
     }

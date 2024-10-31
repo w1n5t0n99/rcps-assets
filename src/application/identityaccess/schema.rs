@@ -1,9 +1,11 @@
+use axum_typed_multipart::{FieldData, TryFromMultipart};
 use oauth2::CsrfToken;
 use serde::{Deserialize};
 use garde::Validate;
+use tempfile::NamedTempFile;
 
 
-#[derive(Clone, Debug, Deserialize)]
+#[derive(Debug, TryFromMultipart)]
 #[derive(Validate)]
 pub struct NewUserSchema {
     #[garde(email)]
@@ -19,15 +21,11 @@ pub struct NewUserSchema {
     #[garde(skip)]	
     pub role_id: i32,
     #[garde(skip)]	
-    #[serde(default = "default_picture")]
-    pub picture: String,
+    #[form_data(limit = "5MiB")]
+    pub picture: Option<FieldData<NamedTempFile>>,
 }
 
-fn default_picture() -> String {
-    "/static/images/User.svg".to_string()
-}
-
-#[derive(Clone, Debug, Deserialize)]
+#[derive(Debug, TryFromMultipart)]
 #[derive(Validate)]
 pub struct UpdateUserSchema {
     #[garde(length(min=1))]
@@ -36,6 +34,9 @@ pub struct UpdateUserSchema {
     pub family_name: String,
     #[garde(skip)]	
     pub role_id: i32,
+    #[garde(skip)]	
+    #[form_data(limit = "5MiB")]
+    pub picture: Option<FieldData<NamedTempFile>>,
 }
 
 #[derive(Debug, Clone, Deserialize)]

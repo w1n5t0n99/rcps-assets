@@ -37,15 +37,16 @@ pub async fn post_user_edit(
     auth_session: AuthSession<IdentityApplicationService>,
     messages: Messages,
     Extension(session_user): Extension<SessionUser>,
+    State(state): State<AppState>,
     Path(user_id): Path<Uuid>,
-    Form(update_user): Form<UpdateUserSchema>,
+    TypedMultipart(update_user): TypedMultipart<UpdateUserSchema>,
 ) -> Result<impl IntoResponse, ApplicationError> {
 
     if let Err(report) = update_user.validate() {
         return Err(ApplicationError::bad_request(anyhow!("invalid form"), FormAlertTemplate::global_new(report).to_string()));
     }
 
-    match auth_session.backend.update_user(session_user, user_id, update_user).await {
+    match auth_session.backend.update_user(session_user, user_id, update_user, &state.content_service).await {
         Ok(Some(_)) => { },
         Ok(None) => {
             let mut report = Report::new();

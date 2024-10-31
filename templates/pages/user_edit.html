@@ -1,7 +1,7 @@
 {% extends "layouts/main.html" %}
 
 {% block content %}
-<div id="content-header" class="my-4 mx-4 flex justify-between">
+<div id="content_header" class="my-4 mx-4 flex justify-between">
     <h1 class="text-2xl">User Configuration</h1>
     <div class="space-x-2">
         <a class="btn btn-sm" href="javascript:history.back()">Back</a>
@@ -21,56 +21,55 @@
                 </div>
               </dialog>
         {% endif %}
-        <button class="btn btn-sm btn-primary" type="submit" form="profile">Save</button>
+        <button class="btn btn-sm btn-primary" hx-on:click="uploadForm()">Save</button>
         <a class="btn btn-sm btn-primary btn-disabled" href="#">Reset Password</a>
     </div>
 </div>
-<div class="mx-4">
-    <div class="avatar">
-        <div class="w-16 rounded-full">
-            <img 
-              id="content-profile-image"
-              alt="profile image"
-              src="{{user.picture}}"
-              referrerpolicy="no-referrer" />
+<div id="content_view" class="mx-4 flex">
+    <form id="crud_form" hx-boost="true" action="/settings/users/{{user.id}}/edit" method="post" class="form-control w-full" hx-encoding="multipart/form-data" hx-swap="outerHTML" hx-target-400="#global_alert_message">
+        <div class="mx-4 mb-4">
+            <div class="avatar mb-4">
+                <div class="w-28 rounded">
+                    <img 
+                      id="preview_picture"
+                      alt="content image"
+                      src="{{user.picture}}"
+                      referrerpolicy="no-referrer" />
+                </div>
+            </div>
+            <label class="form-control w-full max-w-xs">
+                <input id="picture" name="picture" type="file" accept="image/*" hx-trigger="none" hx-on:change="convertImage(event)" class="file-input file-input-sm file-input-bordered w-full max-w-xs" />
+            </label>
         </div>
-    </div>
-    <div class="flex gap-1  mt-2 mb-4">
-        <input name="image" type="file" hx-encoding="multipart/form-data" hx-post="/settings/users/{{user.id}}/change_picture" hx-trigger="change" hx-indicator="#spinner" class="file-input file-input-sm file-input-bordered w-full max-w-xs" />
-        <img  id="spinner" class="htmx-indicator" src="/static/images/bars.svg"/>
-    </div>
-</div>
-<div id="content-profile" class="mx-4 flex">
-    <form id="profile" hx-boost="true" action="/settings/users/{{user.id}}/edit" method="post" class="form-control w-full" hx-swap="outerHTML" hx-target-400="#global_alert_message">
-        <div class="md:grid grid-cols-12 gap-3">
+        <div class="mx-4 md:grid grid-cols-12 gap-3">
             <div class="label col-span-5">
                 <span class="label-text">Email</span>
             </div>
             <div class="col-span-7">
-                <input name="email" type="email" value="{{ user.email }}" class="input input-bordered input-sm w-full" disabled />
+                <input id="email" name="email" type="email" value="{{ user.email }}" class="input input-bordered input-sm w-full" disabled />
             </div>
             <div class="label col-span-5">
                 <span class="label-text">First Name</span>
             </div>
             <div class="col-span-7">
-                <input name="given_name" type="text" value="{{ user.given_name }}" class="input input-bordered input-sm w-full" required/>
+                <input id="given_name" name="given_name" type="text" value="{{ user.given_name }}" class="input input-bordered input-sm w-full" required/>
             </div>
             <div class="label col-span-5">
                 <span class="label-text">Last Name</span>
             </div>
             <div class="col-span-7">
-                <input name="family_name" type="text" value="{{ user.family_name }}" class="input input-bordered input-sm w-full" required/>
+                <input id="family_name" name="family_name" type="text" value="{{ user.family_name }}" class="input input-bordered input-sm w-full" required/>
             </div>
             <div class="label col-span-5">
                 <span class="label-text">Role</span>
             </div>
             <div class="col-span-7">
                 {% if session_user.user.id == user.id  %}
-                    <select name="role_id" class="select select-sm select-bordered select-disabled w-full" hx-trigger="load"
+                    <select id="role_id" name="role_id" class="select select-sm select-bordered select-disabled w-full" hx-trigger="load"
                         hx-get="/settings/roles?selected={{user.role}}" hx-swap="innerHTML" required>
                     </select>
                 {% else %}
-                    <select name="role_id" class="select select-sm select-bordered w-full" hx-trigger="load"
+                    <select id="role_id" name="role_id" class="select select-sm select-bordered w-full" hx-trigger="load"
                         hx-get="/settings/roles?selected={{user.role}}" hx-swap="innerHTML" required>
                     </select>
                 {% endif %}
@@ -78,4 +77,73 @@
         </div>
     </form>
 </div>
+<script>
+    const uform = document.querySelector("#crud_form");
+    const upreview = document.querySelector("#preview_picture");
+    const uemail = document.querySelector("#email");
+    const ugiven_name = document.querySelector("#given_name");
+    const ufamily_name = document.querySelector("#family_name");
+    const urole_id = document.querySelector("#role_id");
+    var image_file;
+
+    function convertImage(event) {
+        if (event.target.files.length > 0) {
+            let src = URL.createObjectURL(event.target.files[0]);
+            let filename = event.target.files[0].name;
+            
+            // convert  image to canvas
+            let canvas = document.createElement("canvas");
+            let ctx = canvas.getContext("2d");
+
+            let userImage = new Image();
+            userImage.src = src;
+
+            userImage.onload = function() {
+                // resize image
+                let [w, h] = calculate_resolution(userImage.width, userImage.height, 1920, 1080);
+
+                canvas.width = w;
+                canvas.height = h;
+                ctx.drawImage(userImage, 0, 0, userImage.width, userImage.height, 0, 0, canvas.width, canvas.height);
+
+                // convert to webp
+                let webpImage = canvas.toDataURL("image/webp", 0.5);
+                upreview.src = webpImage;
+
+                let nfilename = changeFileExtension(filename, "webp");
+                let blob = dataURItoBlob(webpImage);
+                image_file = new File([blob], nfilename, { type: "image/webp", });
+            }
+        }
+    }
+
+    function uploadForm() {
+        if (uform.reportValidity() === false) {
+            return;
+        }
+
+        if (image_file == null) {
+            htmx.ajax("POST", uform.action, { 
+                source: "#crud_form",
+                values: {
+                    email: uemail.value,
+                    given_name: ugiven_name.value,
+                    family_name: ufamily_name.value,
+                    role_id: urole_id.value,
+                }
+            })
+        } else {
+            htmx.ajax("POST", uform.action, { 
+                source: "#crud_form",
+                values: {
+                    picture: image_file,
+                    email: uemail.value,
+                    given_name: ugiven_name.value,
+                    family_name: ufamily_name.value,
+                    role_id: urole_id.value,
+                }
+            })
+        }
+    }
+</script>
 {% endblock %}

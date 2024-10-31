@@ -1,20 +1,20 @@
 {% extends "layouts/main.html" %}
 
 {% block content %}
-<div id="content-header" class="my-4 mx-4 flex justify-between">
+<div id="content_header" class="my-4 mx-4 flex justify-between">
     <h1 class="text-2xl">Asset Type Edit</h1>
     <div class="space-x-2">
         <a class="btn btn-sm" href="javascript:history.back()">Back</a>
         <button class="btn btn-sm btn-primary" hx-on:click="uploadForm()">Save</button>
     </div>
 </div>
-<div id="content-profile" class="mx-4">
+<div id="content_view" class="mx-4">
     <form id="crud_form" action="/asset_types/{{asset_type.id}}/edit" method="post" class="form-control w-full" hx-encoding="multipart/form-data"  hx-boost="true" hx-swap="outerHTML" hx-target-400="#global_alert_message">
         <div class="mx-4 mb-4">
             <div class="avatar mb-4">
                 <div class="w-28 rounded">
                     <img 
-                      id="content_picture"
+                      id="preview_picture"
                       alt="content image"
                       src='{{asset_type.picture.as_deref().unwrap_or("")}}'
                       referrerpolicy="no-referrer" />
@@ -57,7 +57,7 @@
 </div>
 <script>
     const uform = document.querySelector("#crud_form");
-    const uimage = document.querySelector("#content_picture");
+    const upreview = document.querySelector("#preview_picture");
     const ubrand = document.querySelector("#brand");
     const umodel = document.querySelector("#model");
     const udescrip = document.querySelector("#description");
@@ -86,7 +86,7 @@
 
                 // convert to webp
                 let webpImage = canvas.toDataURL("image/webp", 0.5);
-                uimage.src = webpImage;
+                upreview.src = webpImage;
 
                 let nfilename = changeFileExtension(filename, "webp");
                 let blob = dataURItoBlob(webpImage);
@@ -102,8 +102,6 @@
 
         if (image_file == null) {
             htmx.ajax("POST", uform.action, { 
-                //target: "#crud_form",
-                swap:'outerHTML',
                 source: "#crud_form",
                 values: {
                     brand: ubrand.value,
@@ -114,8 +112,6 @@
             })
         } else {
             htmx.ajax("POST", uform.action, { 
-                //target: "#crud_form",
-                swap:'outerHTML',
                 source: "#crud_form",
                 values: {
                     picture: image_file,

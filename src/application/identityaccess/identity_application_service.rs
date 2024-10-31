@@ -5,7 +5,7 @@ use oauth2::{url::Url, CsrfToken};
 use thiserror::Error;
 use uuid::Uuid;
 
-use crate::{application::content::content_application_service::ContentApplicationService, domain::identityaccess::model::{credentials::Credentials, oauth_service::{OAuthError, OAuthService}, password_service::{PasswordError, PasswordService}, roles::Role, user_repository::{UserRepository, UserRepositoryError}, users::{EmailAddress, NewUser, PasswordHash, Picture, SessionUser, UpdateUser, UserDescriptor}}, infastructure::services::{google_oauth_service::GoogleOauthService, postgres_user_repository::PostgresUserRepository}};
+use crate::{application::content::content_application_service::{ContentApplicationService, ContentError}, domain::identityaccess::model::{credentials::Credentials, oauth_service::{OAuthError, OAuthService}, password_service::{PasswordError, PasswordService}, roles::Role, user_repository::{UserRepository, UserRepositoryError}, users::{EmailAddress, NewUser, PasswordHash, Picture, SessionUser, UpdateUser, UserDescriptor}}, infastructure::services::{google_oauth_service::GoogleOauthService, postgres_user_repository::PostgresUserRepository}};
 
 use super::schema::{NewUserSchema, UpdateUserSchema};
 
@@ -18,6 +18,8 @@ pub enum IdentityError {
     User(#[from] UserRepositoryError),
     #[error(transparent)]
     Password(#[from] PasswordError),
+    #[error("transparent")]
+    Content(#[from] ContentError),
     #[error(transparent)]
     OAuth(#[from] OAuthError),
     #[error(transparent)]
@@ -56,19 +58,30 @@ impl IdentityApplicationService
         Ok(roles)
     }
 
-    pub async fn add_user(&self, user: NewUserSchema) -> Result<UserDescriptor, IdentityError> {
-        // should be validated in handler
-        let password_hash = self.password.generate_password(user.password)
+    pub async fn add_user(&self, schema: NewUserSchema, content: &ContentApplicationService) -> Result<UserDescriptor, IdentityError> {
+        let attachment_url = match schema.picture {
+            Some(temp_file) => {
+                let attachment = content.upload_image_file_as_attachment(temp_file)
+                    .await?;
+
+                attachment.url
+            },
+            None => {
+                "/static/images/empty-image.svg".to_string()
+            },
+        };
+
+        let password_hash = self.password.generate_password(schema.password)
             .await?;
 
         let new_user = NewUser {
             password_hash: PasswordHash::new(password_hash),
-            email: EmailAddress::new(user.email),
+            email: EmailAddress::new(schema.email),
             email_verified: true,
-            given_name: user.given_name,
-            family_name: user.family_name,
-            role_id: user.role_id,
-            picture: Picture::new(user.picture),
+            given_name: schema.given_name,
+            family_name: schema.family_name,
+            role_id: schema.role_id,
+            picture: Picture::new(attachment_url),
         };
 
         let user_desc = self.user_repo.add_user(new_user)
@@ -87,11 +100,23 @@ impl IdentityApplicationService
             .map_err(|e| e.into())
     }
 
-    pub async fn update_user(&self, session_user: SessionUser, user_id: Uuid, user: UpdateUserSchema) -> Result<Option<UserDescriptor>, IdentityError> {
+    pub async fn update_user(&self, session_user: SessionUser, user_id: Uuid, schema: UpdateUserSchema, content: &ContentApplicationService) -> Result<Option<UserDescriptor>, IdentityError> {
+
+        let attachment_url = match schema.picture {
+            Some(temp_file) => {
+                let attachment = content.upload_image_file_as_attachment(temp_file)
+                    .await?;
+
+                Some(Picture::new(attachment.url))
+            },
+            None => { None },
+        };
+
         let update_user = UpdateUser {
-            given_name: user.given_name,
-            family_name: user.family_name,
-            role_id: user.role_id,
+            given_name: schema.given_name,
+            family_name: schema.family_name,
+            role_id: schema.role_id,
+            picture: attachment_url,
         };
 
         if session_user.user.id == user_id {

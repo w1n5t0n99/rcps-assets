@@ -1,21 +1,38 @@
 {% extends "layouts/main.html" %}
 
 {% block content %}
-<div id="content-header" class="my-4 mx-4 flex justify-between">
+<div id="content_header" class="my-4 mx-4 flex justify-between">
     <h1 class="text-2xl">New User</h1>
     <div class="space-x-2">
-        <button class="btn btn-sm btn-primary" type="submit" form="profile">Save</button>
+        <button class="btn btn-sm btn-primary" hx-on:click="uploadForm()">Save</button>
         <button class="btn btn-sm btn-disabled">Update Password</button>
     </div>
 </div>
-<div id="content-profile" class="mx-4 flex">
-    <form id="profile" hx-boost="true" action="/settings/users/new" class="form-control w-full" method="post" hx-swap="outerHTML" hx-target-400="#global_alert_message">
-        <div class="md:grid grid-cols-12 gap-3">
+<div id="content_view" class="mx-4 flex">
+    <form id="crud_form" hx-boost="true" action="/settings/users/new" class="form-control w-full" method="post" hx-encoding="multipart/form-data" hx-swap="outerHTML" hx-target-400="#global_alert_message">
+        <div class="mx-4 mb-4">
+            <div class="avatar mb-4">
+                <div class="w-28 rounded">
+                    <img 
+                      id="preview_picture"
+                      alt="content image"
+                      src="/static/images/User.svg"
+                      referrerpolicy="no-referrer" />
+                </div>
+            </div>
+            <label class="form-control w-full max-w-xs">
+                <div class="label">
+                  <span class="label-text">*user profile image</span>
+                </div>
+                <input id="picture" name="picture" type="file" accept="image/*" hx-trigger="none" hx-on:change="convertImage(event)" class="file-input file-input-sm file-input-bordered w-full max-w-xs" />
+            </label>
+        </div>
+        <div class="mx-4 md:grid grid-cols-12 gap-3">
             <div class="label col-span-5">
                 <span class="label-text">Email</span>
             </div>
             <div class="col-span-7">
-                <input name="email" type="email" placeholder="" class="input input-bordered input-sm w-full peer/email" required/>
+                <input id="email" name="email" type="email" placeholder="" class="input input-bordered input-sm w-full peer/email" required/>
                 <div class="label hidden peer-[&:not(:placeholder-shown):not(:focus):invalid]/email:block">
                     <span class="label-text-alt text-red-600">Invalid email address</span>
                 </div>
@@ -24,35 +41,110 @@
                 <span class="label-text">Password</span>
             </div>
             <div class="col-span-7">
-                <input name="password" type="text" class="input input-bordered input-sm w-full" required/>
+                <input id="password" name="password" type="text" class="input input-bordered input-sm w-full" required/>
             </div>
             <div class="label col-span-5">
                 <span class="label-text">Confirm Password</span>
             </div>
             <div class="col-span-7">
-                <input name="confirm_password" type="text" class="input input-bordered input-sm w-full" required/>
+                <input id="confirm_password" name="confirm_password" type="text" class="input input-bordered input-sm w-full" required/>
             </div>
             <div class="label col-span-5">
                 <span class="label-text">First Name</span>
             </div>
             <div class="col-span-7">
-                <input name="given_name" type="text" class="input input-bordered input-sm w-full" required/>
+                <input id="given_name" name="given_name" type="text" class="input input-bordered input-sm w-full" required/>
             </div>
             <div class="label col-span-5">
                 <span class="label-text">Last Name</span>
             </div>
             <div class="col-span-7">
-                <input name="family_name" type="text" class="input input-bordered input-sm w-full" required/>
+                <input id="family_name" name="family_name" type="text" class="input input-bordered input-sm w-full" required/>
             </div>
             <div class="label col-span-5">
                 <span class="label-text">Role</span>
             </div>
             <div class="col-span-7">
-                <select name="role_id" class="select select-sm select-bordered w-full" hx-trigger="load"
+                <select id="role_id" name="role_id" class="select select-sm select-bordered w-full" hx-trigger="load"
                     hx-get="/settings/roles" hx-swap="innerHTML" required>
                 </select>
             </div>
         </div>
     </form>
 </div>
+<script>
+    const uform = document.querySelector("#crud_form");
+    const upreview = document.querySelector("#preview_picture");
+    const uemail = document.querySelector("#email");
+    const upassword = document.querySelector("#password");
+    const uconfirm_password = document.querySelector("#confirm_password");
+    const ugiven_name = document.querySelector("#given_name");
+    const ufamily_name = document.querySelector("#family_name");
+    const urole_id = document.querySelector("#role_id");
+    var image_file;
+
+    function convertImage(event) {
+        if (event.target.files.length > 0) {
+            let src = URL.createObjectURL(event.target.files[0]);
+            let filename = event.target.files[0].name;
+            
+            // convert  image to canvas
+            let canvas = document.createElement("canvas");
+            let ctx = canvas.getContext("2d");
+
+            let userImage = new Image();
+            userImage.src = src;
+
+            userImage.onload = function() {
+                // resize image
+                let [w, h] = calculate_resolution(userImage.width, userImage.height, 1920, 1080);
+
+                canvas.width = w;
+                canvas.height = h;
+                ctx.drawImage(userImage, 0, 0, userImage.width, userImage.height, 0, 0, canvas.width, canvas.height);
+
+                // convert to webp
+                let webpImage = canvas.toDataURL("image/webp", 0.5);
+                upreview.src = webpImage;
+
+                let nfilename = changeFileExtension(filename, "webp");
+                let blob = dataURItoBlob(webpImage);
+                image_file = new File([blob], nfilename, { type: "image/webp", });
+            }
+        }
+    }
+
+    function uploadForm() {
+        if (uform.reportValidity() === false) {
+            return;
+        }
+
+        if (image_file == null) {
+            htmx.ajax("POST", uform.action, { 
+                source: "#crud_form",
+                values: {
+                    email: uemail.value,
+                    password: upassword.value,
+                    confirm_password: uconfirm_password.value,
+                    given_name: ugiven_name.value,
+                    family_name: ufamily_name.value,
+                    role_id: urole_id.value,
+                }
+            })
+        } else {
+            htmx.ajax("POST", uform.action, { 
+                source: "#crud_form",
+                values: {
+                    picture: image_file,
+                    email: uemail.value,
+                    password: upassword.value,
+                    confirm_password: uconfirm_password.value,
+                    given_name: ugiven_name.value,
+                    family_name: ufamily_name.value,
+                    role_id: urole_id.value,
+                }
+            })
+        }
+    }
+</script>
 {% endblock %}

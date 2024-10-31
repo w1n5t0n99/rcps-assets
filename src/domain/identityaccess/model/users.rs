@@ -66,6 +66,7 @@ pub struct UpdateUser {
     pub given_name: String,
     pub family_name: String,
     pub role_id: i32,
+    pub picture: Option<Picture>,
 }
 
 #[derive(Clone, Debug, Serialize, Deserialize, sqlx::FromRow, sqlx::Type)]

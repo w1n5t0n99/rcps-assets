@@ -73,11 +73,9 @@ impl CrudApplicationService {
                 let attachment = content.upload_image_file_as_attachment(temp_file)
                     .await?;
 
-                attachment.url
+                Some(attachment.url)
             },
-            None => {
-                "/static/images/empty-image.svg".to_string()
-            },
+            None => { None },
         };
 
         let update_asset_type = UpdateAssetType {
@@ -85,7 +83,7 @@ impl CrudApplicationService {
             model: schema.model,
             description: schema.description,
             cost: schema.cost,
-            picture: Some(attachment_url),
+            picture: attachment_url,
         };
 
         let asset_type = self.crud_repo.update_asset_type(id, update_asset_type)

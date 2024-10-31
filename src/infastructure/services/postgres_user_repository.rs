@@ -90,54 +90,110 @@ impl UserRepository for PostgresUserRepository {
     }
 
     async fn update_session_user(&self, user_id: Uuid, user: UpdateUser) -> Result<Option<UserDescriptor>, UserRepositoryError> {
-        let user_descriptor = sqlx::query_as!(
-            UserDescriptor,
-            r#"
-            WITH updated AS (
-                UPDATE users
-                SET given_name = $1, family_name = $2
-                WHERE id = $3
-                RETURNING id, email, given_name, family_name, role_id, picture
-            )
-            SELECT updated.id, updated.email as "email: EmailAddress", updated.given_name, updated.family_name, updated.picture as "picture: Picture", roles.name as role
-            FROM updated INNER JOIN roles ON updated.role_id = roles.id
-            "#,
-            user.given_name.clone(),
-            user.family_name.clone(),
-            user_id,
-        )
-        .fetch_optional(&self.pool)
-        .await
-        .context("could not retrieve user from database")?;
+        let user_descriptor = match user.picture {
+            Some(picture) => {
+                sqlx::query_as!(
+                    UserDescriptor,
+                    r#"
+                    WITH updated AS (
+                        UPDATE users
+                        SET given_name = $1, family_name = $2, picture = $3
+                        WHERE id = $4
+                        RETURNING id, email, given_name, family_name, role_id, picture
+                    )
+                    SELECT updated.id, updated.email as "email: EmailAddress", updated.given_name, updated.family_name, updated.picture as "picture: Picture", roles.name as role
+                    FROM updated INNER JOIN roles ON updated.role_id = roles.id
+                    "#,
+                    user.given_name.clone(),
+                    user.family_name.clone(),
+                    picture.to_string(),
+                    user_id,
+                )
+                .fetch_optional(&self.pool)
+                .await
+                .context("could not retrieve user from database")?
+            },
+            None => {
+                sqlx::query_as!(
+                    UserDescriptor,
+                    r#"
+                    WITH updated AS (
+                        UPDATE users
+                        SET given_name = $1, family_name = $2
+                        WHERE id = $3
+                        RETURNING id, email, given_name, family_name, role_id, picture
+                    )
+                    SELECT updated.id, updated.email as "email: EmailAddress", updated.given_name, updated.family_name, updated.picture as "picture: Picture", roles.name as role
+                    FROM updated INNER JOIN roles ON updated.role_id = roles.id
+                    "#,
+                    user.given_name.clone(),
+                    user.family_name.clone(),
+                    user_id,
+                )
+                .fetch_optional(&self.pool)
+                .await
+                .context("could not retrieve user from database")?
+            },
+        };
 
         Ok(user_descriptor)
     }
 
     async fn update_user(&self, user_id: Uuid, user: UpdateUser) -> Result<Option<UserDescriptor>, UserRepositoryError> {
-        let user_descriptor = sqlx::query_as!(
-            UserDescriptor,
-            r#"
-            WITH updated AS (
-                UPDATE users
-                SET given_name = $1, family_name = $2, role_id = $3
-                WHERE id = $4
-                RETURNING id, email, given_name, family_name, role_id, picture
-            )
-            SELECT updated.id, updated.email as "email: EmailAddress", updated.given_name, updated.family_name, updated.picture as "picture: Picture", roles.name as role
-            FROM updated INNER JOIN roles ON updated.role_id = roles.id
-            "#,
-            user.given_name.clone(),
-            user.family_name.clone(),
-            user.role_id,
-            user_id,
-        )
-        .fetch_optional(&self.pool)
-        .await
-        .map_err(|e| {
-            if is_unique_constraint_violation(&e) == true { UserRepositoryError::Duplicate }
-            else { UserRepositoryError::Unknown(e.into()) }
-        })?;
-
+        let user_descriptor = match user.picture {
+            Some(picture) => {
+                sqlx::query_as!(
+                    UserDescriptor,
+                    r#"
+                    WITH updated AS (
+                        UPDATE users
+                        SET given_name = $1, family_name = $2, role_id = $3, picture = $4
+                        WHERE id = $5
+                        RETURNING id, email, given_name, family_name, role_id, picture
+                    )
+                    SELECT updated.id, updated.email as "email: EmailAddress", updated.given_name, updated.family_name, updated.picture as "picture: Picture", roles.name as role
+                    FROM updated INNER JOIN roles ON updated.role_id = roles.id
+                    "#,
+                    user.given_name.clone(),
+                    user.family_name.clone(),
+                    user.role_id,
+                    picture.to_string(),
+                    user_id,
+                )
+                .fetch_optional(&self.pool)
+                .await
+                .map_err(|e| {
+                    if is_unique_constraint_violation(&e) == true { UserRepositoryError::Duplicate }
+                    else { UserRepositoryError::Unknown(e.into()) }
+                })?
+            },
+            None => {
+                sqlx::query_as!(
+                    UserDescriptor,
+                    r#"
+                    WITH updated AS (
+                        UPDATE users
+                        SET given_name = $1, family_name = $2, role_id = $3
+                        WHERE id = $4
+                        RETURNING id, email, given_name, family_name, role_id, picture
+                    )
+                    SELECT updated.id, updated.email as "email: EmailAddress", updated.given_name, updated.family_name, updated.picture as "picture: Picture", roles.name as role
+                    FROM updated INNER JOIN roles ON updated.role_id = roles.id
+                    "#,
+                    user.given_name.clone(),
+                    user.family_name.clone(),
+                    user.role_id,
+                    user_id,
+                )
+                .fetch_optional(&self.pool)
+                .await
+                .map_err(|e| {
+                    if is_unique_constraint_violation(&e) == true { UserRepositoryError::Duplicate }
+                    else { UserRepositoryError::Unknown(e.into()) }
+                })?
+            },
+        };
+        
         Ok(user_descriptor)
     }
 
