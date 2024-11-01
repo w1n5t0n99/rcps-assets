@@ -4,7 +4,7 @@ use futures::TryFutureExt;
 use sqlx::{postgres::{PgConnectOptions, PgPoolOptions, PgSslMode}, PgPool};
 use uuid::Uuid;
 
-use crate::{domain::crud::{crud_repository::{CrudRepository, CrudRepositoryError}, model::asset_types::{AssetType, NewAssetType, UpdateAssetType}}, settings::DatabaseConfig};
+use crate::{domain::crud::{crud_repository::{CrudRepository, CrudRepositoryError}, model::asset_types::{AssetType, NewAssetType, UpdateAssetType, UploadResult}}, settings::DatabaseConfig};
 
 
 #[derive(Debug, Clone)]
@@ -225,7 +225,7 @@ impl CrudRepository for PostgresCrudRepository {
         Ok(asset_type)
     }
 
-    async fn bulk_add_asset_type(&self, add_asset_types: &[NewAssetType]) -> Result<usize, CrudRepositoryError> {
+    async fn bulk_add_or_update_asset_type(&self, add_asset_types: &[NewAssetType]) -> Result<UploadResult, CrudRepositoryError> {
         let brands: Vec<String> = add_asset_types.iter().map(|a| a.brand.clone()).collect();
         let models: Vec<String> = add_asset_types.iter().map(|a| a.model.clone()).collect();
         let descriptions: Vec<Option<String>> = add_asset_types.iter().map(|a| a.description.as_ref().map(|d| d.clone())).collect();
@@ -236,8 +236,8 @@ impl CrudRepository for PostgresCrudRepository {
             AssetType,
             r#"
             INSERT INTO asset_types (brand, model, description, cost, picture)
-            SELECT DISTINCT * FROM(
-                SELECT DISTINCT * FROM UNNEST (
+            SELECT DISTINCT ON(brand, model) brand, model, description, cost, picture FROM(
+                SELECT * FROM UNNEST (
                 $1::TEXT[],
                 $2::TEXT[],
                 $3::TEXT[],
@@ -266,6 +266,48 @@ impl CrudRepository for PostgresCrudRepository {
             CrudRepositoryError::Unknown(e.into())
         })?;
 
-        Ok(rows.len())
+        Ok(UploadResult { total: brands.len(), processed: rows.len() })
+    }
+
+    async fn bulk_add_asset_type(&self, add_asset_types: &[NewAssetType]) -> Result<UploadResult, CrudRepositoryError> {
+        let brands: Vec<String> = add_asset_types.iter().map(|a| a.brand.clone()).collect();
+        let models: Vec<String> = add_asset_types.iter().map(|a| a.model.clone()).collect();
+        let descriptions: Vec<Option<String>> = add_asset_types.iter().map(|a| a.description.as_ref().map(|d| d.clone())).collect();
+        let costs: Vec<Option<String>> = add_asset_types.iter().map(|a| a.cost.as_ref().map(|c| c.clone())).collect();
+        let pictures: Vec<Option<String>> = add_asset_types.iter().map(|a| a.picture.as_ref().map(|p| p.clone())).collect();
+
+        let rows = sqlx::query_as!(
+            AssetType,
+            r#"
+            INSERT INTO asset_types (brand, model, description, cost, picture)
+            SELECT DISTINCT ON(brand, model) brand, model, description, cost, picture FROM(
+                SELECT * FROM UNNEST (
+                $1::TEXT[],
+                $2::TEXT[],
+                $3::TEXT[],
+                $4::TEXT[],
+                $5::TEXT[]
+            ) AS t(brand, model, description, cost, picture)
+            WHERE t.brand IS NOT NULL AND t.model IS NOT NULL
+            ) AS bulk_query
+            ON CONFLICT ON CONSTRAINT asset_types_brand_model_key DO NOTHING
+            RETURNING id, brand, model, description, cost, picture, created_at
+            "#,
+            &brands,
+            &models,
+            &descriptions as _,
+            &costs as _,
+            &pictures as _,
+        )
+        .fetch_all(&self.pool)
+        .await
+        .map_err(|e| {
+            tracing::error!("{}", e);
+            CrudRepositoryError::Unknown(e.into())
+        })?;
+
+        Ok(UploadResult { total: brands.len(), processed: rows.len() })
     }
 }
+
+

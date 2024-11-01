@@ -1,6 +1,6 @@
 use axum::http::uri::Scheme;
 
-use crate::{application::content::content_application_service::{ContentApplicationService, ContentError}, domain::crud::{crud_repository::{CrudRepository, CrudRepositoryError}, model::asset_types::{AssetType, NewAssetType, UpdateAssetType}}, infastructure::services::postgres_crud_repository::PostgresCrudRepository};
+use crate::{application::content::content_application_service::{ContentApplicationService, ContentError}, domain::crud::{crud_repository::{CrudRepository, CrudRepositoryError}, model::asset_types::{AssetType, NewAssetType, UpdateAssetType, UploadResult}}, infastructure::services::postgres_crud_repository::PostgresCrudRepository};
 
 use super::schema::{NewAssetTypeSchema, UpdateAssetTypeSchema, UploadAsetTypesSchema};
 
@@ -106,7 +106,7 @@ impl CrudApplicationService {
         Ok(asset_type)
     }
 
-    pub async fn upload_asset_types(&self, mut schema: UploadAsetTypesSchema) -> Result<String, CrudError> {
+    pub async fn upload_asset_types(&self, mut schema: UploadAsetTypesSchema) -> Result<UploadResult, CrudError> {
         let mut rdr = csv::Reader::from_reader(schema.upload.contents.as_file_mut());
 
         let mut rows = Vec::new();
@@ -115,14 +115,16 @@ impl CrudApplicationService {
             // TODO: skip but log error
             let mut new_asset_type: NewAssetType = record.map_err(|e| CrudError::Unknown(e.into()))?;
             new_asset_type.picture = Some("/static/images/empty-image.svg".to_string());
-
             rows.push(new_asset_type);
         }
 
-        let rows_count = self.crud_repo.bulk_add_asset_type(&rows)
-            .await?;
+        let upload_result = match schema.method.as_str() {
+            "add" => {  self.crud_repo.bulk_add_asset_type(&rows).await? },
+            "add_or_update" => {  self.crud_repo.bulk_add_or_update_asset_type(&rows).await? },
+            _ => { UploadResult {total: rows.len(), processed: 0, }},
+        };
 
-        Ok(format!("len: {} - exarowsmple: {:?}", rows.len(), rows_count))
+        Ok(upload_result)
     }
 }
 

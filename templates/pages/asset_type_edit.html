@@ -43,13 +43,13 @@
             <div class="label col-span-6">
                 <div class="flex gap-12 flex-grow">
                     <span class="text-lg label-text font-light">Description</span>
-                    <input id="description" name="description" type="text" value='{{ asset_type.description.as_deref().unwrap_or("") }}' class="input input-bordered w-full" required/>
+                    <input id="description" name="description" type="text" value='{{ asset_type.description.as_deref().unwrap_or("") }}' class="input input-bordered w-full"/>
                 </div>
             </div>
             <div class="label col-span-6">
                 <div class="flex gap-12 flex-grow">
                     <span class="text-lg label-text font-light">Cost</span>
-                    <input id="cost" name="cost" type="text" value='{{ asset_type.cost.as_deref().unwrap_or("") }}' class="input input-bordered w-full" required/>
+                    <input id="cost" name="cost" type="text" value='{{ asset_type.cost.as_deref().unwrap_or("") }}' class="input input-bordered w-full"/>
                 </div>
             </div>
         </div>

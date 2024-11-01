@@ -14,11 +14,23 @@
 <div id="content_view" class="mx-4">
     <div class="mx-4">
         <label class="form-control w-full max-w-xs">
-            <div class="label">
-                <span class="label-text">*Upload CSV file</span>
-            </div>
             <form id="crud_form" method="post" class="form-control w-full" hx-encoding="multipart/form-data" hx-indicator="#spinner" hx-post="/asset_types/imports/new" hx-boost="true" hx-sync="this" hx-push-url="false" hx-target-400="#global_alert_message">
-                <input name="upload" type="file" accept="text/csv" class="file-input file-input-sm file-input-bordered w-full max-w-xs" />
+                <label class="form-control w-full max-w-xs">
+                    <div class="label">
+                        <span class="label-text">*Upload CSV file</span>
+                    </div>
+                    <input name="upload" type="file" accept="text/csv" class="file-input file-input-sm file-input-bordered w-full max-w-xs" />
+                </label>
+                <label class="form-control w-full max-w-xs">
+                    <div class="label">
+                      <span class="label-text">Choose action to perform on upload</span>
+                    </div>
+                    <select name="method" class="select select-bordered select-sm" required>
+                      <option disabled selected>Choose</option>
+                      <option value="add">Add new items</option>
+                      <option value="add_or_update">Add or update items</option>
+                    </select>
+                  </label>
             </form>
         </label>
     </div>

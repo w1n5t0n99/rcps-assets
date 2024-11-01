@@ -2,7 +2,7 @@ use std::future::Future;
 
 use thiserror::Error;
 
-use super::model::asset_types::{AssetType, NewAssetType, UpdateAssetType};
+use super::model::asset_types::{AssetType, NewAssetType, UpdateAssetType, UploadResult};
 
 
 #[derive(Error, Debug)]
@@ -55,6 +55,11 @@ pub trait CrudRepository: Send + Sync + Clone + 'static {
     fn bulk_add_asset_type(
         &self,
         new_asset_types: &[NewAssetType],
-    ) -> impl Future<Output = Result<usize, CrudRepositoryError>> + Send;
+    ) -> impl Future<Output = Result<UploadResult, CrudRepositoryError>> + Send;
+
+    fn bulk_add_or_update_asset_type(
+        &self,
+        new_asset_types: &[NewAssetType],
+    ) -> impl Future<Output = Result<UploadResult, CrudRepositoryError>> + Send;
 }
 

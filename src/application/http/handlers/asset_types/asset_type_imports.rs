@@ -1,14 +1,13 @@
 use anyhow::anyhow;
 
 use askama_axum::IntoResponse;
-use axum::{debug_handler, extract::{Path, State}, Extension};
+use axum::{debug_handler, extract::State, Extension};
 use axum_messages::Messages;
 use axum_typed_multipart::TypedMultipart;
-use futures::TryFutureExt;
-use garde::{Report, Validate};
+use garde::Validate;
 use tracing::instrument;
 
-use crate::{application::{content::schema::ImageSchema, crud::{crud_application_service::CrudError, schema::{UpdateAssetTypeSchema, UploadAsetTypesSchema}}, errors::ApplicationError, state::AppState, templates::{pages::{asset_type_edit::AssetTypeEditTemplate, asset_types_imports_new::AssetTypesImportsNew}, partials::form_alert::FormAlertTemplate}}, domain::{crud::crud_repository::CrudRepositoryError, identityaccess::model::users::SessionUser}};
+use crate::{application::{crud::schema::UploadAsetTypesSchema, errors::ApplicationError, state::AppState, templates::{pages::asset_types_imports_new::AssetTypesImportsNew, partials::form_alert::FormAlertTemplate}}, domain::identityaccess::model::users::SessionUser};
 
 
 #[instrument(skip_all)]
@@ -32,11 +31,15 @@ pub async fn post_asset_type_imports_new(
     TypedMultipart(upload_asset_type ): TypedMultipart<UploadAsetTypesSchema>,
 ) -> Result<impl IntoResponse, ApplicationError> {
 
+    if let Err(report) = upload_asset_type.validate() {
+        return Err(ApplicationError::bad_request(anyhow!("invalid form"), FormAlertTemplate::global_new(report).to_string()));
+    }
+
     let res = state.crud_service.upload_asset_types(upload_asset_type)
         .await
         .map_err(|e| ApplicationError::internal_server_error(e.into()))?;
 
-    messages.info("file uploaded");
-    Ok(res)
+    messages.success(format!("upload completed - total: {} processed: {}", res.total, res.processed));
+    Ok(([("HX-Redirect", "/asset_types")], "success"))
 }
 

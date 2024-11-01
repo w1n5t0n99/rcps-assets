@@ -16,6 +16,7 @@ pub struct AssetType {
 #[derive(Clone, Debug, Serialize, Deserialize)]
 pub struct NewAssetType {
     #[serde(alias="brand", alias="Brand")]
+    //TODO: use #[serde(rename_all = "...")]
     pub brand: String, 
     #[serde(alias="model", alias="Model")]
     pub model: String,
@@ -34,4 +35,10 @@ pub struct UpdateAssetType {
     pub description: Option<String>,
     pub cost: Option<String>,
     pub picture: Option<String>,
+}
+
+#[derive(Clone, Debug, Serialize, Deserialize)]
+pub struct UploadResult {
+    pub total: usize,
+    pub processed: usize,
 }
