@@ -133,7 +133,23 @@ impl CrudRepository for PostgresCrudRepository {
         .context("could not retrieve asset types from database")?;
 
         Ok(asset_types)
-        
+    }
+
+    async fn get_asset_types_search(&self, search_text: &str) -> Result<Vec<AssetType>, CrudRepositoryError> {
+        let asset_types = sqlx::query_as!(
+            AssetType,
+            r#"
+            SELECT id, brand, model, description, cost, picture, created_at
+            FROM asset_types
+            WHERE full_search @@ websearch_to_tsquery($1)
+            "#,
+            search_text,
+        )
+        .fetch_all(&self.pool)
+        .await
+        .context("could not retrieve asset types from database")?;
+
+        Ok(asset_types)
     }
 
     async fn delete_asset_type(&self, id: i32) -> Result<Option<i32>, CrudRepositoryError> {

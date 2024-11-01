@@ -19,14 +19,14 @@
                     <div class="label">
                         <span class="label-text">*Upload CSV file</span>
                     </div>
-                    <input name="upload" type="file" accept="text/csv" class="file-input file-input-sm file-input-bordered w-full max-w-xs" />
+                    <input name="upload" type="file" accept="text/csv" class="file-input file-input-sm file-input-bordered w-full max-w-xs" required />
                 </label>
                 <label class="form-control w-full max-w-xs">
                     <div class="label">
                       <span class="label-text">Choose action to perform on upload</span>
                     </div>
                     <select name="method" class="select select-bordered select-sm" required>
-                      <option disabled selected>Choose</option>
+                      <option value="" disabled selected>Choose</option>
                       <option value="add">Add new items</option>
                       <option value="add_or_update">Add or update items</option>
                     </select>

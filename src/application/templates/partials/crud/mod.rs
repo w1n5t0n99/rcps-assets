@@ -1,0 +1,1 @@
+pub mod asset_types_search_results;

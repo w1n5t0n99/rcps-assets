@@ -35,6 +35,11 @@ pub trait CrudRepository: Send + Sync + Clone + 'static {
         &self,
     ) -> impl Future<Output = Result<Vec<AssetType>, CrudRepositoryError>> + Send;
 
+    fn get_asset_types_search(
+        &self,
+        search_text: &str,
+    ) -> impl Future<Output = Result<Vec<AssetType>, CrudRepositoryError>> + Send;
+
     fn update_asset_type(
         &self,
         id: i32,

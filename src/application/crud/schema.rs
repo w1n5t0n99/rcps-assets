@@ -51,4 +51,12 @@ fn is_valid_method(value: &str, _: &()) -> garde::Result {
     }
 }
 
+#[derive(Debug, Validate, Deserialize, Serialize)]
+pub struct AssetTypeSearchSchema {
+    #[garde(length(min=1))]
+    pub search: String,
+   // #[garde(length(min=1))]
+   // pub sort: String,
+}
+
 

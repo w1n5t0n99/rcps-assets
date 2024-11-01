@@ -26,5 +26,5 @@ pub async fn get_asset_type_view(
         .map_err(|e| ApplicationError::internal_server_error(anyhow!(e)))?
         .ok_or(ApplicationError::internal_server_error(anyhow!("asset type not found")))?;
 
-    Ok(([("Cache-Control", "no-store")], AssetTypeViewTemplate::new(session_user, message, asset_type)))
+    Ok(([("Cache-Control", "no-store") ], AssetTypeViewTemplate::new(session_user, message, asset_type)))
 }

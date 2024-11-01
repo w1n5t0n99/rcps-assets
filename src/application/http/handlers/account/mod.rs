@@ -4,13 +4,14 @@ mod users;
 mod user_create;
 mod user_edit;
 
-use axum::{extract::DefaultBodyLimit, middleware, routing::{delete, get, post}, Router};
+use axum::{extract::DefaultBodyLimit, middleware, response::Redirect, routing::{delete, get, post}, Router};
 
-use crate::{application::{http::utils, state::AppState}, domain::identityaccess::model::user_repository::UserRepository};
+use crate::application::{http::utils, state::AppState};
 
 pub fn router() -> Router<AppState>
 {
     Router::new()
+        .route("/", get(|| async { Redirect::permanent("/settings") }))
         .route("/settings", get(self::settings::get_settings))
         .route("/settings/roles", get(self::roles::get_roles))
         .route("/settings/users", get(self::users::get_users))

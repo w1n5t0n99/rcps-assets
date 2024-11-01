@@ -26,11 +26,13 @@
     <div class="mx-4 mb-4">
         <div class="avatar mb-4">
             <div class="w-28 rounded">
-                <img 
-                  id="preview_picturee"
-                  alt="profile image"
-                  src='{{asset_type.picture.as_deref().unwrap_or("")}}'
-                  referrerpolicy="no-referrer" />
+                <a target="_blank" href='{{asset_type.picture.as_deref().unwrap_or("")}}'>
+                    <img 
+                    id="preview_picturee"
+                    alt="profile image"
+                    src='{{asset_type.picture.as_deref().unwrap_or("")}}'
+                    referrerpolicy="no-referrer" />
+                </a>
             </div>
         </div>
     </div>

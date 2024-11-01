@@ -4,7 +4,20 @@
     <div id="content-header" class="mt-4 mx-4 flex justify-between">
         <div class="space-x-2">
           <h1 class="text-2xl inline-block">Asset Types</h1>
-          <input class="input input-bordered input-sm inline-block" type="text" class="grow" placeholder="Search" />
+          <input class="input input-bordered input-sm inline-block"
+            id="search"
+            name="search"
+            type="search"
+            class="grow"
+            autocomplete="off"
+            placeholder="Search"
+            hx-boost="true"
+            hx-get="/asset_types/search"
+            hx-trigger="input changed delay:500ms, search" 
+            hx-swap="outerHTML"
+            hx-target="#search_results"
+            hx-on:load=""
+          />
         </div>
         <div class="space-x-2">
             <a href="/asset_types/new" class="btn btn-sm">Add New</a>
@@ -22,7 +35,7 @@
                 <th>Cost</th>
               </tr>
             </thead>
-            <tbody>
+            <tbody id="search_results">
               {% for asset_type in asset_types %}
               <tr class="hover cursor-pointer" hx-on:click="window.location.href = '/asset_types/{{asset_type.id}}'">
                   <td>{{asset_type.brand}}</td>
@@ -30,8 +43,15 @@
                   <td>{{asset_type.description.as_deref().unwrap_or("")}}</td>
                   <td>{{asset_type.cost.as_deref().unwrap_or("")}}</td>
               </tr>
-          {% endfor %}
+              {% endfor %}
             </tbody>
           </table>
     </div>
+    <script>
+      function init() {
+          // Clear forms here
+          document.getElementById("search").value = "";
+      }
+      window.onload = init;
+    </script>
 {% endblock %}

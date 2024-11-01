@@ -2,7 +2,7 @@ use axum::http::uri::Scheme;
 
 use crate::{application::content::content_application_service::{ContentApplicationService, ContentError}, domain::crud::{crud_repository::{CrudRepository, CrudRepositoryError}, model::asset_types::{AssetType, NewAssetType, UpdateAssetType, UploadResult}}, infastructure::services::postgres_crud_repository::PostgresCrudRepository};
 
-use super::schema::{NewAssetTypeSchema, UpdateAssetTypeSchema, UploadAsetTypesSchema};
+use super::schema::{AssetTypeSearchSchema, NewAssetTypeSchema, UpdateAssetTypeSchema, UploadAsetTypesSchema};
 
 
 
@@ -33,10 +33,24 @@ impl CrudApplicationService {
    }
 
    pub async fn  get_asset_type(&self, id: i32) -> Result<Option<AssetType>, CrudError> {
-    let asset_types = self.crud_repo.get_asset_type_by_id(id).await?;
+        let asset_types = self.crud_repo.get_asset_type_by_id(id).await?;
 
-    Ok(asset_types)
-}
+        Ok(asset_types)
+    }
+
+    pub async fn  get_asset_types_search(&self, schema: AssetTypeSearchSchema) -> Result<Vec<AssetType>, CrudError> {
+        let asset_types = match schema.search.is_empty() {
+            false => {
+                self.crud_repo.get_asset_types_search(&schema.search).await?
+            }
+            true => {
+                // fallback
+                self.crud_repo.get_asset_types().await?
+            }
+        };
+
+        Ok(asset_types)
+    }
 
    pub async fn add_asset_type(&self, schema: NewAssetTypeSchema, content: &ContentApplicationService) -> Result<AssetType, CrudError> {
         // should be validated in handler 
@@ -115,6 +129,9 @@ impl CrudApplicationService {
             // TODO: skip but log error
             let mut new_asset_type: NewAssetType = record.map_err(|e| CrudError::Unknown(e.into()))?;
             new_asset_type.picture = Some("/static/images/empty-image.svg".to_string());
+            if new_asset_type.brand.trim().is_empty() || new_asset_type.model.trim().is_empty() {
+                continue;
+            }
             rows.push(new_asset_type);
         }
 
