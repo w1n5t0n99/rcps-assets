@@ -9,14 +9,16 @@
             name="search"
             type="search"
             class="grow"
+            value="{{filter.search}}"
             autocomplete="off"
             placeholder="Search"
             hx-boost="true"
-            hx-get="/asset_types/search"
+            hx-get="/asset_types"
             hx-trigger="input changed delay:500ms, search" 
             hx-swap="outerHTML"
-            hx-target="#search_results"
-            hx-on:load=""
+            hx-select="#search"
+            hx-select-oob="#search_results"
+            hx-replace-url="true"
           />
         </div>
         <div class="space-x-2">
@@ -47,11 +49,4 @@
             </tbody>
           </table>
     </div>
-    <script>
-      function init() {
-          // Clear forms here
-          document.getElementById("search").value = "";
-      }
-      window.onload = init;
-    </script>
 {% endblock %}

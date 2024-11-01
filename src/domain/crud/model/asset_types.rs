@@ -42,3 +42,16 @@ pub struct UploadResult {
     pub total: usize,
     pub processed: usize,
 }
+
+#[derive(Clone, Debug, Serialize, Deserialize)]
+pub struct AssetTypeSearch {
+    pub search: String,
+}
+
+impl AssetTypeSearch {
+    pub fn new(search: impl Into<String>) -> Self {
+        Self {
+            search: search.into(),
+        }
+    }
+}
