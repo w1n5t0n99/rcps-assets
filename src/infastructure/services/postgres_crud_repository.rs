@@ -4,7 +4,7 @@ use futures::TryFutureExt;
 use sqlx::{postgres::{PgConnectOptions, PgPoolOptions, PgSslMode}, PgPool};
 use uuid::Uuid;
 
-use crate::{domain::crud::{crud_repository::{CrudRepository, CrudRepositoryError}, model::asset_types::{AssetType, NewAssetType, UpdateAssetType, UploadResult}}, settings::DatabaseConfig};
+use crate::{domain::crud::{crud_repository::{CrudRepository, CrudRepositoryError}, model::asset_types::{AssetType, AssetTypeFilter, NewAssetType, UpdateAssetType, UploadResult}}, settings::DatabaseConfig};
 
 
 #[derive(Debug, Clone)]
@@ -135,19 +135,110 @@ impl CrudRepository for PostgresCrudRepository {
         Ok(asset_types)
     }
 
-    async fn get_asset_types_search(&self, search_text: &str) -> Result<Vec<AssetType>, CrudRepositoryError> {
-        let asset_types = sqlx::query_as!(
-            AssetType,
-            r#"
-            SELECT id, brand, model, description, cost, picture, created_at
-            FROM asset_types
-            WHERE full_search @@ websearch_to_tsquery($1)
-            "#,
-            search_text,
-        )
-        .fetch_all(&self.pool)
-        .await
-        .context("could not retrieve asset types from database")?;
+    async fn get_asset_types_search(&self, filter: AssetTypeFilter) -> Result<Vec<AssetType>, CrudRepositoryError> {
+
+        tracing::info!("{:?}", filter);
+        let asset_types = match (filter.search.as_deref(), filter.sort.as_deref(), filter.order.as_deref()) {
+            (Some(search), Some(sort), Some("ASC")) => {
+                sqlx::query_as!(
+                    AssetType,
+                    r#"
+                    SELECT id, brand, model, description, cost, picture, created_at
+                    FROM asset_types
+                    WHERE full_search @@ websearch_to_tsquery($1)
+                    ORDER BY
+                    CASE 
+                        WHEN $2 = 'brand' THEN brand
+                        WHEN $2 = 'model' THEN model
+                    END ASC
+                    "#,
+                    search,
+                    sort,
+                )
+                .fetch_all(&self.pool)
+                .await
+            },
+            (Some(search), Some(sort), Some("DESC")) => {
+                tracing::info!("{:?}", sort);
+
+                sqlx::query_as!(
+                    AssetType,
+                    r#"
+                    SELECT id, brand, model, description, cost, picture, created_at
+                    FROM asset_types
+                    WHERE full_search @@ websearch_to_tsquery($1)
+                    ORDER BY
+                    CASE 
+                        WHEN $2 = 'brand' THEN brand
+                        WHEN $2 = 'model' THEN model
+                    END DESC
+                    "#,
+                    search,
+                    sort,
+                )
+                .fetch_all(&self.pool)
+                .await
+            },
+            (Some(search), None, None) => {
+                sqlx::query_as!(
+                    AssetType,
+                    r#"
+                    SELECT id, brand, model, description, cost, picture, created_at
+                    FROM asset_types
+                    WHERE full_search @@ websearch_to_tsquery($1)
+                    "#,
+                    search,
+                )
+                .fetch_all(&self.pool)
+                .await
+            },
+            (None, Some(sort), Some("ASC")) => {
+                sqlx::query_as!(
+                    AssetType,
+                    r#"
+                    SELECT id, brand, model, description, cost, picture, created_at
+                    FROM asset_types
+                    ORDER BY
+                    CASE 
+                        WHEN $1 = 'brand' THEN brand
+                        WHEN $1 = 'model' THEN model
+                    END ASC
+                    "#,
+                    sort,
+                )
+                .fetch_all(&self.pool)
+                .await
+            },
+            (None, Some(sort), Some("DESC")) => {
+                sqlx::query_as!(
+                    AssetType,
+                    r#"
+                    SELECT id, brand, model, description, cost, picture, created_at
+                    FROM asset_types
+                    ORDER BY
+                    CASE 
+                        WHEN $1 = 'brand' THEN brand
+                        WHEN $1 = 'model' THEN model
+                    END DESC
+                    "#,
+                    sort,
+                )
+                .fetch_all(&self.pool)
+                .await
+            },          
+            _ => {
+                sqlx::query_as!(
+                    AssetType,
+                    r#"
+                    SELECT id, brand, model, description, cost, picture, created_at
+                    FROM asset_types
+                    "#,
+                )
+                .fetch_all(&self.pool)
+                .await
+            },
+        }.context("could not retrieve asset types from database")?;
+        
 
         Ok(asset_types)
     }

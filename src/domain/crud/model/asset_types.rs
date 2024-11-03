@@ -44,14 +44,8 @@ pub struct UploadResult {
 }
 
 #[derive(Clone, Debug, Serialize, Deserialize)]
-pub struct AssetTypeSearch {
-    pub search: String,
-}
-
-impl AssetTypeSearch {
-    pub fn new(search: impl Into<String>) -> Self {
-        Self {
-            search: search.into(),
-        }
-    }
+pub struct AssetTypeFilter {
+    pub search: Option<String>,
+    pub sort: Option<String>,
+    pub order: Option<String>,
 }

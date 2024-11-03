@@ -52,11 +52,39 @@ fn is_valid_method(value: &str, _: &()) -> garde::Result {
 }
 
 #[derive(Debug, Validate, Deserialize, Serialize)]
-pub struct AssetTypeSearchSchema {
-    #[garde(length(min=1))]
-    pub search: String,
-   // #[garde(length(min=1))]
-   // pub sort: String,
+pub struct AssetTypeFilterSchema {
+    #[garde(skip)]	
+    pub search: Option<String>,
+    #[garde(custom(validate_sort))]
+    pub sort: Option<String>,
+    #[garde(custom(validate_order))]
+    pub order: Option<String>,
+}
+
+fn validate_order(value: &Option<String>, _: &()) -> garde::Result {
+    if let Some(order) = value {
+        match order.to_uppercase().as_str() {
+            "ASC" => garde::Result::Ok(()),
+            "DESC" => garde::Result::Ok(()),
+            "" => garde::Result::Ok(()),
+            _ => garde::Result::Err(garde::Error::new("invalid order type")),
+        }
+    } else {
+        garde::Result::Ok(())
+    }
+}
+
+fn validate_sort(value: &Option<String>, _: &()) -> garde::Result {
+    if let Some(order) = value {
+        match order.as_str() {
+            "brand" => garde::Result::Ok(()),
+            "model" => garde::Result::Ok(()),
+            "" => garde::Result::Ok(()),
+            _ => garde::Result::Err(garde::Error::new("invalid sort type")),
+        }
+    } else {
+        garde::Result::Ok(())
+    }
 }
 
 

@@ -3,9 +3,10 @@ use anyhow::anyhow;
 use askama_axum::IntoResponse;
 use axum::{extract::State, Extension, Form};
 use axum_messages::Messages;
+use garde::Validate;
 use tracing::instrument;
 
-use crate::{application::{crud::schema::AssetTypeSearchSchema, errors::ApplicationError, state::AppState, templates::pages::asset_types::AssetTypesTemplate}, domain::{crud::model::asset_types::AssetTypeSearch, identityaccess::model::users::SessionUser}};
+use crate::{application::{crud::schema::AssetTypeFilterSchema, errors::ApplicationError, state::AppState, templates::{pages::asset_types::AssetTypesTemplate, partials::form_alert::FormAlertTemplate}}, domain::{crud::model::asset_types::AssetTypeFilter, identityaccess::model::users::SessionUser}};
 
 
 #[instrument(skip_all)]
@@ -13,30 +14,21 @@ pub async fn get_asset_types(
     messages: Messages,
     State(state): State<AppState>,
     Extension(session_user): Extension<SessionUser>,
-    search: Option<Form<AssetTypeSearchSchema>>,
+     Form(asset_type_filter_schema): Form<AssetTypeFilterSchema>,
 ) -> Result<impl IntoResponse, ApplicationError> {
     let message = messages
         .into_iter()
         .collect::<Vec<_>>()
         .first()
         .map(|m| m.to_owned());
+    
+    if let Err(report) = asset_type_filter_schema.validate() {
+        return Err(ApplicationError::bad_request(anyhow!("invalid"), FormAlertTemplate::global_new(report).to_string()));
+    }
 
-    let search = search.map(|s| s.0);
-    let mut search_fields = AssetTypeSearch::new("");
+    let (asset_types, asset_type_filter) = state.crud_service.get_asset_types_search(asset_type_filter_schema)
+        .await
+        .map_err(|e| ApplicationError::InternalServerError(anyhow!(e)))?;
 
-    let asset_types = match search {
-        Some(search) => {
-            search_fields.search = search.search.clone();
-            state.crud_service.get_asset_types_search(search)
-                .await
-                .map_err(|e| ApplicationError::InternalServerError(anyhow!(e)))?
-        }
-        None => {
-            state.crud_service.get_asset_types()
-                .await
-                .map_err(|e| ApplicationError::InternalServerError(anyhow!(e)))?  
-        }
-    };
-
-    Ok(([("Cache-Control", "no-store")], AssetTypesTemplate::new(session_user, message, asset_types, search_fields)))
+    Ok(([("Cache-Control", "no-store")], AssetTypesTemplate::new(session_user, message, asset_types, asset_type_filter)))
 }

@@ -1,8 +1,8 @@
 use axum::http::uri::Scheme;
 
-use crate::{application::content::content_application_service::{ContentApplicationService, ContentError}, domain::crud::{crud_repository::{CrudRepository, CrudRepositoryError}, model::asset_types::{AssetType, NewAssetType, UpdateAssetType, UploadResult}}, infastructure::services::postgres_crud_repository::PostgresCrudRepository};
+use crate::{application::content::content_application_service::{ContentApplicationService, ContentError}, domain::crud::{crud_repository::{CrudRepository, CrudRepositoryError}, model::asset_types::{AssetType, AssetTypeFilter, NewAssetType, UpdateAssetType, UploadResult}}, infastructure::services::postgres_crud_repository::PostgresCrudRepository};
 
-use super::schema::{AssetTypeSearchSchema, NewAssetTypeSchema, UpdateAssetTypeSchema, UploadAsetTypesSchema};
+use super::schema::{AssetTypeFilterSchema, NewAssetTypeSchema, UpdateAssetTypeSchema, UploadAsetTypesSchema};
 
 
 
@@ -38,18 +38,19 @@ impl CrudApplicationService {
         Ok(asset_types)
     }
 
-    pub async fn  get_asset_types_search(&self, schema: AssetTypeSearchSchema) -> Result<Vec<AssetType>, CrudError> {
-        let asset_types = match schema.search.is_empty() {
-            false => {
-                self.crud_repo.get_asset_types_search(&schema.search).await?
-            }
-            true => {
-                // fallback
-                self.crud_repo.get_asset_types().await?
-            }
+    pub async fn  get_asset_types_search(&self, schema: AssetTypeFilterSchema) -> Result<(Vec<AssetType>, AssetTypeFilter), CrudError> {
+        
+         // the html input may return Some("") when empty
+        let asset_type_filter = AssetTypeFilter {
+            search: schema.search.and_then(|s| if s.is_empty() {None} else {Some(s)}),
+            sort: schema.sort.and_then(|s| if s.is_empty() {None} else {Some(s)}),
+            order: schema.order.and_then(|s| if s.is_empty() {None} else {Some(s.to_uppercase())}),
         };
 
-        Ok(asset_types)
+
+        let asset_types = self.crud_repo.get_asset_types_search(asset_type_filter.clone()).await?;
+
+        Ok((asset_types, asset_type_filter))
     }
 
    pub async fn add_asset_type(&self, schema: NewAssetTypeSchema, content: &ContentApplicationService) -> Result<AssetType, CrudError> {

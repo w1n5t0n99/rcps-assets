@@ -3,41 +3,49 @@
 {% block content %}
     <div id="content-header" class="mt-4 mx-4 flex justify-between">
         <div class="space-x-2">
-          <h1 class="text-2xl inline-block">Asset Types</h1>
-          <input class="input input-bordered input-sm inline-block"
-            id="search"
-            name="search"
-            type="search"
-            class="grow"
-            value="{{filter.search}}"
-            autocomplete="off"
-            placeholder="Search"
+          <h1 class="text-2xl inline-block mb-2">Asset Types</h1>
+          <form id="table_filter"
             hx-boost="true"
+            action="/table"
+            method="get"
             hx-get="/asset_types"
-            hx-trigger="input changed delay:500ms, search" 
+            hx-trigger="input changed delay:500ms from:#table_search, startProcessing"
             hx-swap="outerHTML"
-            hx-select="#search"
-            hx-select-oob="#search_results"
+            hx-select="#table_filter"
+            hx-select-oob="#table"
             hx-replace-url="true"
-          />
+            hx-target-400="#global_alert_message"
+          >
+            <input class="input input-bordered input-sm inline-block"
+              id="table_search"
+              name="search"
+              type="search"
+              class="grow"
+              autocomplete="off"
+              placeholder="Search"
+              value='{{ filter.search.as_deref().unwrap_or("") }}'
+            />
+            <input id="table_sort" name="sort" type="hidden" value='{{ filter.sort.as_deref().unwrap_or("") }}'/>
+            <input id="table_order" name="order" type="hidden" value='{{ filter.order.as_deref().unwrap_or("") }}'/>
+          </form>
         </div>
         <div class="space-x-2">
             <a href="/asset_types/new" class="btn btn-sm">Add New</a>
             <a href="/asset_types/imports/new" class="btn btn-sm">Import</a>
         </div>
     </div>
-    <div id="content-list" class="overflow-x-auto">
-        <table class="table">
+    <div id="content-body" class="overflow-x-auto">
+        <table id="table" class="table">
             <!-- head -->
             <thead>
-              <tr>
-                <th>Brand</th>
-                <th>Model</th>
-                <th>Description</th>
-                <th>Cost</th>
+              <tr id="table_header_row">
+                <th hx-on:click="sort(this)" class="hover:border-b-2 cursor-pointer"  data-name="brand">Brand <span name="header_sort" class="px-2">{{Self::sort_icon(self, "brand")}}</span></th>
+                <th hx-on:click="sort(this)" class="hover:border-b-2 cursor-pointer"  data-name="model">Model <span name="header_sort" class="px-2">{{Self::sort_icon(self, "model")}}</span></th>
+                <th>Description <span name="header_sort"></span></th>
+                <th>Cost <span name="header_sort"></span></th>
               </tr>
             </thead>
-            <tbody id="search_results">
+            <tbody id="table_body">
               {% for asset_type in asset_types %}
               <tr class="hover cursor-pointer" hx-on:click="window.location.href = '/asset_types/{{asset_type.id}}'">
                   <td>{{asset_type.brand}}</td>
@@ -49,4 +57,35 @@
             </tbody>
           </table>
     </div>
+    <script>
+      function sort(event) {
+          let selected_sort_icon = htmx.findAll(event, "span")[0];
+          let selected_sort_icon_value = selected_sort_icon.innerHTML;
+          let selected_row_name = event.dataset.name;
+      
+          let header_rows = htmx.findAll(htmx.find('#table_header_row'), "th")
+          for(let i = 0; i < header_rows.length; i++) {
+              if (selected_row_name === header_rows[i].dataset.name) {
+                  if (selected_sort_icon_value === '↑') {
+                      header_rows[i].getElementsByTagName('span')[0].innerHTML = '';
+                      htmx.find('#table_sort').value = '';
+                      htmx.find('#table_order').value = '';
+
+                  } else if (selected_sort_icon_value === '↓') {
+                      header_rows[i].getElementsByTagName('span')[0].innerHTML = '↑';
+                      htmx.find('#table_sort').value = selected_row_name;
+                      htmx.find('#table_order').value = 'ASC';
+                  } else {
+                      header_rows[i].getElementsByTagName('span')[0].innerHTML = '↓';
+                      htmx.find('#table_sort').value = selected_row_name;
+                      htmx.find('#table_order').value = 'DESC';
+                  }
+              } else {
+                  header_rows[i].getElementsByTagName('span')[0].innerHTML = '';
+              }
+          }
+
+          htmx.trigger('#table_filter', 'startProcessing');
+      }
+  </script>
 {% endblock %}

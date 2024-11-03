@@ -2,7 +2,7 @@ use std::future::Future;
 
 use thiserror::Error;
 
-use super::model::asset_types::{AssetType, NewAssetType, UpdateAssetType, UploadResult};
+use super::model::asset_types::{AssetType, AssetTypeFilter, NewAssetType, UpdateAssetType, UploadResult};
 
 
 #[derive(Error, Debug)]
@@ -37,7 +37,7 @@ pub trait CrudRepository: Send + Sync + Clone + 'static {
 
     fn get_asset_types_search(
         &self,
-        search_text: &str,
+        filter: AssetTypeFilter,
     ) -> impl Future<Output = Result<Vec<AssetType>, CrudRepositoryError>> + Send;
 
     fn update_asset_type(
