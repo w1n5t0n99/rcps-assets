@@ -169,6 +169,12 @@ impl CrudApplicationService {
 
         Ok(asset_item_id)
     } 
+
+    pub async fn  get_asset_item(&self, id: i32) -> Result<Option<AssetItem>, CrudError> {
+        let asset_item = self.crud_repo.get_asset_item_by_id(id).await?;
+
+        Ok(asset_item)
+    }
 }
 
 
