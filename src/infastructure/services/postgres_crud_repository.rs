@@ -4,7 +4,7 @@ use futures::TryFutureExt;
 use sqlx::{postgres::{PgConnectOptions, PgPoolOptions, PgSslMode}, PgPool};
 use uuid::Uuid;
 
-use crate::{domain::crud::{crud_repository::{CrudRepository, CrudRepositoryError}, model::asset_types::{AssetType, AssetTypeFilter, NewAssetType, UpdateAssetType, UploadResult}}, settings::DatabaseConfig};
+use crate::{domain::crud::{crud_repository::{CrudRepository, CrudRepositoryError}, model::{asset_items::{AssetItem, AssetItemID, NewAssetItem}, asset_types::{AssetType, AssetTypeFilter, NewAssetType, UpdateAssetType, UploadResult}}}, settings::DatabaseConfig};
 
 
 #[derive(Debug, Clone)]
@@ -414,6 +414,70 @@ impl CrudRepository for PostgresCrudRepository {
         })?;
 
         Ok(UploadResult { total: brands.len(), processed: rows.len() })
+    }
+
+    async fn add_asset_item(&self, new_asset_item: NewAssetItem) -> Result<AssetItemID, CrudRepositoryError> {
+        let asset_item = sqlx::query_as!(
+            AssetItemID,
+            r#"
+            INSERT INTO asset_items (asset_id, name, serial_number, brand, model, school, room, funding_source)
+            VALUES($1, $2, $3, $4, $5, $6, $7, $8)
+            RETURNING id
+            "#,
+            new_asset_item.asset_id,
+            new_asset_item.name,
+            new_asset_item.serial_number,
+            new_asset_item.brand,
+            new_asset_item.model,
+            new_asset_item.school,
+            new_asset_item.room,
+            new_asset_item.funding_source
+        )
+        .fetch_one(&self.pool)
+        .await
+        .map_err(|e| {
+            if is_unique_constraint_violation(&e) == true { CrudRepositoryError::Duplicate }
+            else if is_foreign_key_violation(&e) == true { CrudRepositoryError::Reference }
+            else { CrudRepositoryError::Unknown(e.into()) }
+        })?;
+
+        Ok(asset_item)
+    }
+
+    async fn get_asset_items(&self) -> Result<Vec<AssetItem>, CrudRepositoryError> {
+        let asset_items = sqlx::query_as!(
+            AssetItem,
+            r#"
+            SELECT ai.id, ai.asset_id, ai.name, ai.serial_number, ai.brand, ai.model, at.description, at.cost, ai.school, ai.room, ai.funding_source, ai.created_at
+            FROM asset_items AS ai
+            LEFT JOIN asset_types AS at
+                ON ai.brand = at.brand AND ai.model = at.model
+            "#,
+        )
+        .fetch_all(&self.pool)
+        .await
+        .context("could not retrieve asset types from database")?;
+
+        Ok(asset_items)
+    }
+
+    async fn get_asset_item_by_id(&self, id: i32) -> Result<Option<AssetItem>, CrudRepositoryError> {
+        let asset_item = sqlx::query_as!(
+            AssetItem,
+            r#"
+            SELECT ai.id, ai.asset_id, ai.name, ai.serial_number, ai.brand, ai.model, at.description, at.cost, ai.school, ai.room, ai.funding_source, ai.created_at
+            FROM asset_items AS ai
+            LEFT JOIN asset_types AS at
+                ON ai.brand = at.brand AND ai.model = at.model
+            WHERE ai.id = $1
+            "#,
+            id
+        )
+        .fetch_optional(&self.pool)
+        .await
+        .context("could not retrieve asset type from database")?;
+
+        Ok(asset_item)
     }
 }
 

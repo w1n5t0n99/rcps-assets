@@ -1,0 +1,65 @@
+{% extends "layouts/main.html" %}
+
+{% block content %}
+<div id="content_header" class="my-4 mx-4 flex justify-between">
+    <h1 class="text-2xl">New Asset-Item</h1>
+    <div class="space-x-2">
+        <a class="btn btn-sm" href="javascript:history.back()">Back</a>
+        <button class="btn btn-sm btn-primary" type="submit" form="crud_form">Save</button>
+    </div>
+</div>
+<div id="content_view" class="mx-4 flex">
+    <form id="crud_form" hx-boost="true" action="/asset_items/new" class="form-control w-full" method="post" hx-swap="outerHTML" hx-target-400="#global_alert_message">
+        <div class=" mx-4 md:grid grid-cols-12 gap-3">
+            <div class="label col-span-5">
+                <span class="label-text">Asset ID</span>
+            </div>
+            <div class="col-span-7">
+                <input id="asset_id" name="asset_id" type="text" class="input input-bordered input-sm w-full"/>
+            </div>
+            <div class="label col-span-5">
+                <span class="label-text">Name</span>
+            </div>
+            <div class="col-span-7">
+                <input id="name" name="name" type="text" class="input input-bordered input-sm w-full"/>
+            </div>
+            <div class="label col-span-5">
+                <span class="label-text">Serial Number</span>
+            </div>
+            <div class="col-span-7">
+                <input id="serial_number" name="serial_number" type="text" class="input input-bordered input-sm w-full"/>
+            </div>
+            <div class="label col-span-5">
+                <span class="label-text">Brand</span>
+            </div>
+            <div class="col-span-7">
+                <input id="brand" name="brand" type="text" class="input input-bordered input-sm w-full"/>
+            </div>
+            <div class="label col-span-5">
+                <span class="label-text">Model</span>
+            </div>
+            <div class="col-span-7">
+                <input id="model" name="model" type="text" class="input input-bordered input-sm w-full"/>
+            </div>
+            <div class="label col-span-5">
+                <span class="label-text">School</span>
+            </div>
+            <div class="col-span-7">
+                <input id="school" name="school" type="text" class="input input-bordered input-sm w-full"/>
+            </div>
+            <div class="label col-span-5">
+                <span class="label-text">Room</span>
+            </div>
+            <div class="col-span-7">
+                <input id="room" name="room" type="text" class="input input-bordered input-sm w-full"/>
+            </div>
+            <div class="label col-span-5">
+                <span class="label-text">Funding Source</span>
+            </div>
+            <div class="col-span-7">
+                <input id="funding_source" name="funding_source" type="text" class="input input-bordered input-sm w-full"/>
+            </div>
+        </div>
+    </form>
+</div>
+{% endblock %}

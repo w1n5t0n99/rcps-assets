@@ -10,7 +10,7 @@ use tracing::instrument;
 use axum_messages::MessagesManagerLayer;
 
 use crate::{application::state::AppState, settings::ApplicationConfig};
-use super::handlers::{account, asset_types, auth, oauth};
+use super::handlers::{account, asset_items, asset_types, auth, oauth};
 
 
 #[instrument]
@@ -57,6 +57,7 @@ impl AppHttpServer {
             .merge(oauth::router())
             .merge(auth::router())
             .merge(asset_types::router())
+            .merge(asset_items::router())
             .nest_service("/static", ServeDir::new("static").precompressed_gzip())
             .nest_service("/content", ServeDir::new("content"))
             .layer(compression_layer)

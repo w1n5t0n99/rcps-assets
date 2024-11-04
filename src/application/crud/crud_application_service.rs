@@ -1,8 +1,8 @@
 use axum::http::uri::Scheme;
 
-use crate::{application::content::content_application_service::{ContentApplicationService, ContentError}, domain::crud::{crud_repository::{CrudRepository, CrudRepositoryError}, model::asset_types::{AssetType, AssetTypeFilter, NewAssetType, UpdateAssetType, UploadResult}}, infastructure::services::postgres_crud_repository::PostgresCrudRepository};
+use crate::{application::content::content_application_service::{ContentApplicationService, ContentError}, domain::crud::{crud_repository::{CrudRepository, CrudRepositoryError}, model::{asset_items::{AssetItem, AssetItemID, NewAssetItem}, asset_types::{AssetType, AssetTypeFilter, NewAssetType, UpdateAssetType, UploadResult}}}, infastructure::services::postgres_crud_repository::PostgresCrudRepository};
 
-use super::schema::{AssetTypeFilterSchema, NewAssetTypeSchema, UpdateAssetTypeSchema, UploadAsetTypesSchema};
+use super::schema::{AssetTypeFilterSchema, NewAssetItemSchema, NewAssetTypeSchema, UpdateAssetTypeSchema, UploadAsetTypesSchema};
 
 
 
@@ -144,6 +144,31 @@ impl CrudApplicationService {
 
         Ok(upload_result)
     }
+
+    pub async fn  get_asset_items(&self) -> Result<Vec<AssetItem>, CrudError> {
+        let asset_items = self.crud_repo.get_asset_items().await?;
+
+        Ok(asset_items)
+   }
+
+   pub async fn add_asset_item(&self, schema: NewAssetItemSchema) -> Result<AssetItemID, CrudError> {
+
+        let new_asset_item = NewAssetItem {
+            asset_id: schema.asset_id.and_then(|s| if s.is_empty() { None } else { Some(s) }),
+            name: schema.name.and_then(|s| if s.is_empty() { None } else { Some(s) }),
+            serial_number: schema.serial_number.and_then(|s| if s.is_empty() { None } else { Some(s) }),
+            brand: schema.brand.and_then(|s| if s.is_empty() { None } else { Some(s) }),
+            model: schema.model.and_then(|s| if s.is_empty() { None } else { Some(s) }),
+            school: schema.school.and_then(|s| if s.is_empty() { None } else { Some(s) }),
+            room: schema.room.and_then(|s| if s.is_empty() { None } else { Some(s) }),
+            funding_source: schema.funding_source.and_then(|s| if s.is_empty() { None } else { Some(s) }),
+        };
+
+        let asset_item_id = self.crud_repo.add_asset_item(new_asset_item)
+            .await?;
+
+        Ok(asset_item_id)
+    } 
 }
 
 

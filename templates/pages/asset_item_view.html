@@ -1,0 +1,89 @@
+{% extends "layouts/main.html" %}
+
+{% block content %}
+<div id="content_header" class="my-4 mx-4 flex justify-between">
+    <h1 class="text-2xl">Asset Item</h1>
+    <div class="space-x-2">
+        <a class="btn btn-sm" href="javascript:history.back()">Back</a>
+        <button class="btn btn-sm" onclick="delete_modal.showModal()">Delete</button>
+        <dialog id="delete_modal" class="modal">
+            <div class="modal-box">
+                <h3 class="text-lg font-bold">Permanently Delete Asset Item</h3>
+                <p class="py-4">Are you sure?</p>
+                <div class="modal-action justify-between px-1">
+                    <button class="btn btn-sm btn-error" hx-delete="/asset_items/{{asset_item.id}}">Delete</button>
+                    <form method="dialog">
+                        <!-- if there is a button in form, it will close the modal -->
+                        <button class="btn btn-sm">Close</button>
+                    </form>
+                </div>
+            </div>
+          </dialog>
+        <a class="btn btn-sm btn-info" href="/asset_items/{{asset_item.id}}/edit">Edit</a>
+    </div>
+</div>
+<div id="content_view" class="mx-4">
+    <div class=" mx-4 md:grid grid-cols-12 gap-3 ">
+        <div class="label col-span-6 border-b-2">
+            <div class="flex gap-12">
+                <span class="text-lg label-text font-light">Asset ID</span>
+                <span class="text-lg label-text select-all">{{asset_item.asset_id.as_deref().unwrap_or("")}}</span>
+            </div>
+        </div>
+        <div class="label col-span-6 border-b-2">
+            <div class="flex gap-12">
+                <span class="text-lg label-text font-light">Name</span>
+                <span class="text-lg label-text select-all">{{asset_item.name.as_deref().unwrap_or("")}}</span>
+            </div>
+        </div>
+        <div class="label col-span-6 border-b-2">
+            <div class="flex gap-12">
+                <span class="text-lg label-text font-light">Serial Number</span>
+                <span class="text-lg label-text select-all">{{asset_item.serial_number.as_deref().unwrap_or("")}}</span>
+            </div>
+        </div>
+        <div class="label col-span-6 border-b-2">
+            <div class="flex gap-12">
+                <span class="text-lg label-text font-light">Brand</span>
+                <span class="text-lg label-text select-all">{{asset_item.brand.as_deref().unwrap_or("")}}</span>
+            </div>
+        </div>
+        <div class="label col-span-6 border-b-2">
+            <div class="flex gap-12">
+                <span class="text-lg label-text font-light">Model</span>
+                <span class="text-lg label-text select-all">{{asset_item.model.as_deref().unwrap_or("")}}</span>
+            </div>
+        </div>
+        <div class="label col-span-6 border-b-2">
+            <div class="flex gap-12">
+                <span class="text-lg label-text font-light">Description</span>
+                <span class="text-lg label-text select-all">{{asset_item.description.as_deref().unwrap_or("")}}</span>
+            </div>
+        </div>
+        <div class="label col-span-6 border-b-2">
+            <div class="flex gap-12">
+                <span class="text-lg label-text font-light">Cost</span>
+                <span class="text-lg label-text select-all">{{asset_item.cost.as_deref().unwrap_or("")}}</span>
+            </div>
+        </div>
+        <div class="label col-span-6 border-b-2">
+            <div class="flex gap-12">
+                <span class="text-lg label-text font-light">School</span>
+                <span class="text-lg label-text select-all">{{asset_item.school.as_deref().unwrap_or("")}}</span>
+            </div>
+        </div>
+        <div class="label col-span-6 border-b-2">
+            <div class="flex gap-12">
+                <span class="text-lg label-text font-light">Room</span>
+                <span class="text-lg label-text select-all">{{asset_item.room.as_deref().unwrap_or("")}}</span>
+            </div>
+        </div>
+        <div class="label col-span-6 border-b-2">
+            <div class="flex gap-12">
+                <span class="text-lg label-text font-light">Funding Source</span>
+                <span class="text-lg label-text select-all">{{asset_item.funding_source.as_deref().unwrap_or("")}}</span>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

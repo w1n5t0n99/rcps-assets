@@ -3,11 +3,11 @@
 {% block content %}
     <div id="content-header" class="mt-4 mx-4 flex justify-between">
         <div class="space-x-2">
-          <h1 class="text-2xl inline-block mb-2">Asset Types</h1>
+          <h1 class="text-2xl inline-block mb-2">Asset Items</h1>
           <form id="table_filter"
             hx-boost="true"
             method="get"
-            hx-get="/asset_types"
+            hx-get="/asset_items"
             hx-trigger="input changed delay:500ms from:#table_search, startProcessing"
             hx-swap="outerHTML"
             hx-select="#table_filter"
@@ -20,17 +20,17 @@
               name="search"
               type="search"
               class="grow"
+              data-value=""
               autocomplete="off"
               placeholder="Search"
-              value='{{ filter.search.as_deref().unwrap_or("") }}'
             />
-            <input id="table_sort" name="sort" type="hidden" value='{{ filter.sort.as_deref().unwrap_or("") }}'/>
-            <input id="table_order" name="order" type="hidden" value='{{ filter.order.as_deref().unwrap_or("") }}'/>
+            <input id="table_sort" name="sort" type="hidden" data-value=""/>
+            <input id="table_order" name="order" type="hidden" data-value=""/>
           </form>
         </div>
         <div class="space-x-2">
-            <a href="/asset_types/new" class="btn btn-sm">Add New</a>
-            <a href="/asset_types/imports/new" class="btn btn-sm">Import</a>
+            <a href="/asset_items/new" class="btn btn-sm">Add New</a>
+            <a href="/asset_items/imports/new" class="btn btn-sm">Import</a>
         </div>
     </div>
     <div id="content-body" class="overflow-x-auto">
@@ -38,19 +38,23 @@
             <!-- head -->
             <thead>
               <tr id="table_header_row">
-                <th hx-on:click="sort(this)" class="hover:border-b-2 cursor-pointer"  data-name="brand">Brand <span name="header_sort" class="px-2">{{Self::sort_icon(self, "brand")}}</span></th>
-                <th hx-on:click="sort(this)" class="hover:border-b-2 cursor-pointer"  data-name="model">Model <span name="header_sort" class="px-2">{{Self::sort_icon(self, "model")}}</span></th>
+                <th hx-on:click="sort(this)" class="hover:border-b-2 cursor-pointer"  data-name="asset_id">Asset ID <span name="header_sort" class="px-2"></span></th>
+                <th hx-on:click="sort(this)" class="hover:border-b-2 cursor-pointer"  data-name="name">Name <span name="header_sort" class="px-2"></span></th>
                 <th>Description <span name="header_sort"></span></th>
-                <th>Cost <span name="header_sort"></span></th>
+                <th hx-on:click="sort(this)" class="hover:border-b-2 cursor-pointer"  data-name="brand">Brand <span name="header_sort" class="px-2"></span></th>
+                <th hx-on:click="sort(this)" class="hover:border-b-2 cursor-pointer"  data-name="model">Model <span name="header_sort" class="px-2"></span></th>
+                <th hx-on:click="sort(this)" class="hover:border-b-2 cursor-pointer"  data-name="serial_number">Serial # <span name="header_sort" class="px-2"></span></th>
               </tr>
             </thead>
             <tbody id="table_body">
-              {% for asset_type in asset_types %}
-              <tr class="hover cursor-pointer" hx-on:click="window.location.href = '/asset_types/{{asset_type.id}}'">
-                  <td>{{asset_type.brand}}</td>
-                  <td>{{asset_type.model}}</td>
-                  <td>{{asset_type.description.as_deref().unwrap_or("")}}</td>
-                  <td>{{asset_type.cost.as_deref().unwrap_or("")}}</td>
+              {% for asset_item in asset_items %}
+              <tr class="hover cursor-pointer" hx-on:click="">
+                <td>{{asset_item.asset_id.as_deref().unwrap_or("")}}</td> 
+                <td>{{asset_item.name.as_deref().unwrap_or("")}}</td>                
+                <td>{{asset_item.description.as_deref().unwrap_or("")}}</td>
+                <td>{{asset_item.brand.as_deref().unwrap_or("")}}</td> 
+                <td>{{asset_item.model.as_deref().unwrap_or("")}}</td> 
+                <td>{{asset_item.serial_number.as_deref().unwrap_or("")}}</td> 
               </tr>
               {% endfor %}
             </tbody>
@@ -84,7 +88,7 @@
               }
           }
 
-          htmx.trigger('#table_filter', 'startProcessing');
+          //htmx.trigger('#table_filter', 'startProcessing');
       }
   </script>
 {% endblock %}
