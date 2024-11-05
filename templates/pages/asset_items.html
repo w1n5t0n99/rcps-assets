@@ -5,14 +5,12 @@
         <div class="space-x-2">
           <h1 class="text-2xl inline-block mb-2">Asset Items</h1>
           <form id="table_filter"
-            hx-boost="true"
-            method="get"
             hx-get="/asset_items"
-           
+            hx-trigger="input changed delay:500ms from:#table_search, startProcessing"
+            hx-on:htmx:before-request=""
             hx-swap="outerHTML"
             hx-select="#table_filter"
-            hx-select-oob="#table"
-            hx-replace-url="true"
+            hx-select-oob="#table_body"
             hx-target-400="#global_alert_message"
           >
             <input class="input input-bordered input-sm inline-block"
@@ -48,7 +46,7 @@
             </thead>
             <tbody id="table_body">
               {% for asset_item in asset_items %}
-              <tr class="hover cursor-pointer" hx-get="/asset_items/{{asset_item.id}}" hx-target="#content" hx-swap="outerHTML" hx-push-url="true">
+              <tr class="hover cursor-pointer" hx-get="/asset_items/{{asset_item.id}}" hx-target="#content" hx-swap="outerHTML" hx-push-url="true" hx-select="#content">
                 <td>{{asset_item.asset_id.as_deref().unwrap_or("")}}</a></td> 
                 <td>{{asset_item.name.as_deref().unwrap_or("")}}</td>                
                 <td>{{asset_item.description.as_deref().unwrap_or("")}}</td>
@@ -72,23 +70,38 @@
                   if (selected_sort_icon_value === '↑') {
                       header_rows[i].getElementsByTagName('span')[0].innerHTML = '';
                       htmx.find('#table_sort').value = '';
-                      htmx.find('#table_order').value = '';
+                      htmx.find('#table_sort').dataset.value = '';
 
+                      htmx.find('#table_order').value = '';
+                      htmx.find('#table_order').dataset.value = '';
                   } else if (selected_sort_icon_value === '↓') {
                       header_rows[i].getElementsByTagName('span')[0].innerHTML = '↑';
                       htmx.find('#table_sort').value = selected_row_name;
+                      htmx.find('#table_sort').dataset.value = selected_row_name;
+
                       htmx.find('#table_order').value = 'ASC';
+                      htmx.find('#table_order').dataset.value = 'ASC';
                   } else {
                       header_rows[i].getElementsByTagName('span')[0].innerHTML = '↓';
                       htmx.find('#table_sort').value = selected_row_name;
+                      htmx.find('#table_sort').dataset.value = selected_row_name;
+
                       htmx.find('#table_order').value = 'DESC';
+                      htmx.find('#table_order').dataset.value = 'DESC';
                   }
               } else {
                   header_rows[i].getElementsByTagName('span')[0].innerHTML = '';
               }
           }
 
-          //htmx.trigger('#table_filter', 'startProcessing');
+          htmx.trigger('#table_filter', 'startProcessing');
       }
+
+      htmx.onLoad(function (el) {
+       // console.log(el)
+       // htmx.find('#table_search').value = htmx.find('#table_search').dataset.value;
+       // htmx.find('#table_sort').value = htmx.find('#table_sort').dataset.value;
+       // htmx.find('#table_order').value = htmx.find('#table_order').dataset.value;
+    })
   </script>
 {% endblock %}

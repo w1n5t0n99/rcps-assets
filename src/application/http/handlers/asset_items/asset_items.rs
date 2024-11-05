@@ -6,7 +6,7 @@ use axum_messages::Messages;
 use garde::Validate;
 use tracing::instrument;
 
-use crate::{application::{errors::ApplicationError, state::AppState, templates::pages::asset_items::AssetItemsTemplate}, domain::identityaccess::model::users::SessionUser};
+use crate::{application::{crud::schema::FilterSchema, errors::ApplicationError, state::AppState, templates::pages::asset_items::AssetItemsTemplate}, domain::identityaccess::model::users::SessionUser};
 
 
 #[instrument(skip_all)]
@@ -14,6 +14,7 @@ pub async fn get_asset_items(
     messages: Messages,
     State(state): State<AppState>,
     Extension(session_user): Extension<SessionUser>,
+    Form(asset_items_filter_schema): Form<FilterSchema>,
 ) -> Result<impl IntoResponse, ApplicationError> {
     let message = messages
         .into_iter()

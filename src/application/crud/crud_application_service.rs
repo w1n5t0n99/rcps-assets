@@ -2,7 +2,7 @@ use axum::http::uri::Scheme;
 
 use crate::{application::content::content_application_service::{ContentApplicationService, ContentError}, domain::crud::{crud_repository::{CrudRepository, CrudRepositoryError}, model::{asset_items::{AssetItem, AssetItemID, NewAssetItem}, asset_types::{AssetType, AssetTypeFilter, NewAssetType, UpdateAssetType, UploadResult}}}, infastructure::services::postgres_crud_repository::PostgresCrudRepository};
 
-use super::schema::{AssetTypeFilterSchema, NewAssetItemSchema, NewAssetTypeSchema, UpdateAssetTypeSchema, UploadAsetTypesSchema};
+use super::schema::{FilterSchema, NewAssetItemSchema, NewAssetTypeSchema, UpdateAssetTypeSchema, UploadAsetTypesSchema};
 
 
 
@@ -38,7 +38,7 @@ impl CrudApplicationService {
         Ok(asset_types)
     }
 
-    pub async fn  get_asset_types_search(&self, schema: AssetTypeFilterSchema) -> Result<(Vec<AssetType>, AssetTypeFilter), CrudError> {
+    pub async fn  get_asset_types_search(&self, schema: FilterSchema) -> Result<(Vec<AssetType>, AssetTypeFilter), CrudError> {
         
          // the html input may return Some("") when empty
         let asset_type_filter = AssetTypeFilter {
