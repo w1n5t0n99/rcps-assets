@@ -8,7 +8,7 @@
             hx-boost="true"
             method="get"
             hx-get="/asset_items"
-            hx-trigger="input changed delay:500ms from:#table_search, startProcessing"
+           
             hx-swap="outerHTML"
             hx-select="#table_filter"
             hx-select-oob="#table"
@@ -48,8 +48,8 @@
             </thead>
             <tbody id="table_body">
               {% for asset_item in asset_items %}
-              <tr class="hover cursor-pointer" hx-on:click="triggerAnchor(this)">
-                <td><a href="/asset_items/{{asset_item.id}}" hx-boost="true">{{asset_item.asset_id.as_deref().unwrap_or("")}}</a></td> 
+              <tr class="hover cursor-pointer" hx-get="/asset_items/{{asset_item.id}}" hx-target="#content" hx-swap="outerHTML" hx-push-url="true">
+                <td>{{asset_item.asset_id.as_deref().unwrap_or("")}}</a></td> 
                 <td>{{asset_item.name.as_deref().unwrap_or("")}}</td>                
                 <td>{{asset_item.description.as_deref().unwrap_or("")}}</td>
                 <td>{{asset_item.brand.as_deref().unwrap_or("")}}</td> 
@@ -89,13 +89,6 @@
           }
 
           //htmx.trigger('#table_filter', 'startProcessing');
-      }
-
-      function triggerAnchor(el) {
-        //console.log("click");
-       // let td = htmx.findAll(el, "td")[0];
-       // let a = htmx.findAll(td, "a")[0];
-       // htmx.trigger(a, 'click'); 
       }
   </script>
 {% endblock %}

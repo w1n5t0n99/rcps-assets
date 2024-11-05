@@ -62,7 +62,7 @@
 </head>
 
 <body hx-ext="response-targets">
-    <div id="content">
+    <div>
         {{ navbar }}
         {% if let Some(alert) = alert %}
             {{ alert }}
@@ -70,7 +70,9 @@
             <div id="global_alert_message"></div>
             </div>
         {%- endif %}
-        {% block content %}<p>Placeholder content</p>{% endblock %}
+        <div id="content">
+            {% block content %}<p>Placeholder content</p>{% endblock %}
+        </div>
     </div>
   </body>
 
