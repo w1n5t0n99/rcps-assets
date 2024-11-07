@@ -4,7 +4,7 @@ use futures::TryFutureExt;
 use sqlx::{postgres::{PgConnectOptions, PgPoolOptions, PgSslMode}, PgPool};
 use uuid::Uuid;
 
-use crate::{domain::crud::{crud_repository::{CrudRepository, CrudRepositoryError}, model::{asset_items::{AssetItem, AssetItemID, NewAssetItem}, asset_types::{AssetType, AssetTypeFilter, NewAssetType, UpdateAssetType, UploadResult}}}, settings::DatabaseConfig};
+use crate::{domain::crud::{crud_repository::{CrudRepository, CrudRepositoryError}, model::{asset_items::{AssetItem, AssetItemFilter, AssetItemID, NewAssetItem}, asset_types::{AssetType, AssetTypeFilter, NewAssetType, UpdateAssetType, UploadResult}}}, settings::DatabaseConfig};
 
 
 #[derive(Debug, Clone)]
@@ -137,7 +137,6 @@ impl CrudRepository for PostgresCrudRepository {
 
     async fn get_asset_types_search(&self, filter: AssetTypeFilter) -> Result<Vec<AssetType>, CrudRepositoryError> {
 
-        tracing::info!("{:?}", filter);
         let asset_types = match (filter.search.as_deref(), filter.sort.as_deref(), filter.order.as_deref()) {
             (Some(search), Some(sort), Some("ASC")) => {
                 sqlx::query_as!(
@@ -159,8 +158,6 @@ impl CrudRepository for PostgresCrudRepository {
                 .await
             },
             (Some(search), Some(sort), Some("DESC")) => {
-                tracing::info!("{:?}", sort);
-
                 sqlx::query_as!(
                     AssetType,
                     r#"
@@ -461,6 +458,11 @@ impl CrudRepository for PostgresCrudRepository {
         Ok(asset_items)
     }
 
+    async fn get_asset_items_search(&self, filter: AssetItemFilter) -> Result<Vec<AssetItem>, CrudRepositoryError> {
+        
+        Ok(Vec::new())        
+    }
+
     async fn get_asset_item_by_id(&self, id: i32) -> Result<Option<AssetItem>, CrudRepositoryError> {
         let asset_item = sqlx::query_as!(
             AssetItem,
@@ -479,6 +481,24 @@ impl CrudRepository for PostgresCrudRepository {
 
         Ok(asset_item)
     }
+
+    async fn delete_asset_item(&self, id: i32) -> Result<Option<i32>, CrudRepositoryError> {
+        let returned_id = sqlx::query!(
+            r#"
+            DELETE FROM asset_items WHERE id = $1
+            RETURNING id
+            "#,
+            id,
+        )
+        .fetch_optional(&self.pool)
+        .await
+        .context("could not delete asset from database")?;
+    
+        Ok(returned_id.map(|r| r.id))
+    }
+
+    
 }
+
 
 

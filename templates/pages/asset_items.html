@@ -7,10 +7,10 @@
           <form id="table_filter"
             hx-get="/asset_items"
             hx-trigger="input changed delay:500ms from:#table_search, startProcessing"
-            hx-on:htmx:before-request=""
+            hx-on:htmx:before-request="htmx.find('#table_search').dataset.value = htmx.find('#table_search').value"
             hx-swap="outerHTML"
-            hx-select="#table_filter"
-            hx-select-oob="#table_body"
+            hx-select="#table_body"
+            hx-target="#table_body"
             hx-target-400="#global_alert_message"
           >
             <input class="input input-bordered input-sm inline-block"
@@ -18,9 +18,9 @@
               name="search"
               type="search"
               class="grow"
-              data-value=""
               autocomplete="off"
               placeholder="Search"
+              data-value=""
             />
             <input id="table_sort" name="sort" type="hidden" data-value=""/>
             <input id="table_order" name="order" type="hidden" data-value=""/>
@@ -98,10 +98,22 @@
       }
 
       htmx.onLoad(function (el) {
-       // console.log(el)
-       // htmx.find('#table_search').value = htmx.find('#table_search').dataset.value;
-       // htmx.find('#table_sort').value = htmx.find('#table_sort').dataset.value;
-       // htmx.find('#table_order').value = htmx.find('#table_order').dataset.value;
+       let table_search = htmx.find('#table_search');
+       if (table_search != null) {
+        table_search.value = table_search.dataset.value;
+       }
+
+       let table_sort = htmx.find('#table_sort');
+       if (table_sort != null) {
+        table_sort.value = table_sort.dataset.value;
+       }
+
+       let table_order = htmx.find('#table_order');
+       if (table_order != null) {
+        table_order.value = table_order.dataset.value;
+       }
+
+
     })
   </script>
 {% endblock %}

@@ -54,3 +54,10 @@ pub struct UpdateAssetItem {
     pub room: Option<String>,
     pub funding_source: Option<String>,
 }
+
+#[derive(Clone, Debug, Serialize, Deserialize)]
+pub struct AssetItemFilter {
+    pub search: Option<String>,
+    pub sort: Option<String>,
+    pub order: Option<String>,
+}

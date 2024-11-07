@@ -2,7 +2,7 @@ use std::future::Future;
 
 use thiserror::Error;
 
-use super::model::{asset_items::{AssetItem, AssetItemID, NewAssetItem}, asset_types::{AssetType, AssetTypeFilter, NewAssetType, UpdateAssetType, UploadResult}};
+use super::model::{asset_items::{AssetItem, AssetItemFilter, AssetItemID, NewAssetItem}, asset_types::{AssetType, AssetTypeFilter, NewAssetType, UpdateAssetType, UploadResult}};
 
 
 #[derive(Error, Debug)]
@@ -78,9 +78,19 @@ pub trait CrudRepository: Send + Sync + Clone + 'static {
         &self,
     ) -> impl Future<Output = Result<Vec<AssetItem>, CrudRepositoryError>> + Send;
 
+    fn get_asset_items_search(
+        &self,
+        filter: AssetItemFilter,
+    ) -> impl Future<Output = Result<Vec<AssetItem>, CrudRepositoryError>> + Send;
+
     fn get_asset_item_by_id(
         &self,
         id: i32,
     ) -> impl Future<Output = Result<Option<AssetItem>, CrudRepositoryError>> + Send;
+
+    fn delete_asset_item(
+        &self,
+        id: i32,
+    ) -> impl Future<Output = Result<Option<i32>, CrudRepositoryError>> + Send;
 }
 
