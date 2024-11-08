@@ -19,7 +19,7 @@
                 </div>
             </div>
           </dialog>
-        <a class="btn btn-sm btn-info" href="/asset_items/{{asset_item.id}}/edit">Edit</a>
+        <button class="btn btn-sm btn-info" hx-get="/asset_items/{{asset_item.id}}/edit" hx-select="#main_content" hx-target="#main_content">Edit</button>
     </div>
 </div>
 <div id="content_view" class="mx-4">

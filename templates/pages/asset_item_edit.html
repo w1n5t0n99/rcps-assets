@@ -1,0 +1,77 @@
+{% extends "layouts/main.html" %}
+
+{% block content %}
+<div id="content_header" class="my-4 mx-4 flex justify-between">
+    <h1 class="text-2xl">Asset Item Edit</h1>
+    <div class="space-x-2">
+        <a class="btn btn-sm" href="javascript:history.back()">Back</a>
+        <button type="submit" form="crud_form" class="btn btn-sm btn-primary">Save</button>
+    </div>
+</div>
+<div id="content_view" class="mx-4">
+    <form id="crud_form" hx-post="/asset_items/{{asset_item.id}}/edit" class="form-control w-full"  hx-select="#main_content" hx-select-oob="#alert" hx-target="#main_content" hx-push-url="false" hx-swap="outerHTML" hx-target-400="#global_alert_message">
+        <div class=" mx-4 md:grid grid-cols-12 gap-3 divide-y">
+            <div class="label col-span-6">
+                <div class="flex gap-12 flex-grow">
+                    <span class="text-lg label-text font-light">Asset ID</span>
+                    <input name="asset_id" type="text" value='{{ asset_item.asset_id.as_deref().unwrap_or("") }}' class="input input-bordered w-full" required/>
+                </div>
+            </div>
+            <div class="label col-span-6">
+                <div class="flex gap-12 flex-grow">
+                    <span class="text-lg label-text font-light">Name</span>
+                    <input  name="name" type="text" value='{{ asset_item.name.as_deref().unwrap_or("") }}' class="input input-bordered w-full" required/>
+                </div>
+            </div>
+            <div class="label col-span-6">
+                <div class="flex gap-12 flex-grow">
+                    <span class="text-lg label-text font-light">Serial Number</span>
+                    <input name="serial_number" type="text" value='{{ asset_item.name.as_deref().unwrap_or("") }}' class="input input-bordered w-full" required/>
+                </div>
+            </div>
+            <div class="label col-span-6">
+                <div class="flex gap-12 flex-grow">
+                    <span class="text-lg label-text font-light">Brand</span>
+                    <input name="brand" type="text" value='{{ asset_item.brand.as_deref().unwrap_or("") }}' class="input input-bordered w-full" required/>
+                </div>
+            </div>
+            <div class="label col-span-6">
+                <div class="flex gap-12 flex-grow">
+                    <span class="text-lg label-text font-light">Model</span>
+                    <input name="model" type="text" value='{{ asset_item.model.as_deref().unwrap_or("") }}' class="input input-bordered w-full" required/>
+                </div>
+            </div>
+            <div class="label col-span-6">
+                <div class="flex gap-12 flex-grow">
+                    <span class="text-lg label-text font-light">Description</span>
+                    <input name="description" type="text" value='{{ asset_item.description.as_deref().unwrap_or("") }}' class="input input-bordered w-full"/>
+                </div>
+            </div>
+            <div class="label col-span-6">
+                <div class="flex gap-12 flex-grow">
+                    <span class="text-lg label-text font-light">Cost</span>
+                    <input name="cost" type="text" value='{{ asset_item.cost.as_deref().unwrap_or("") }}' class="input input-bordered w-full"/>
+                </div>
+            </div>
+            <div class="label col-span-6">
+                <div class="flex gap-12 flex-grow">
+                    <span class="text-lg label-text font-light">School</span>
+                    <input name="school" type="text" value='{{ asset_item.school.as_deref().unwrap_or("") }}' class="input input-bordered w-full"/>
+                </div>
+            </div>
+            <div class="label col-span-6">
+                <div class="flex gap-12 flex-grow">
+                    <span class="text-lg label-text font-light">Room</span>
+                    <input name="room" type="text" value='{{ asset_item.room.as_deref().unwrap_or("") }}' class="input input-bordered w-full"/>
+                </div>
+            </div>
+            <div class="label col-span-6">
+                <div class="flex gap-12 flex-grow">
+                    <span class="text-lg label-text font-light">Funding Source</span>
+                    <input name="funding_source" type="text" value='{{ asset_item.funding_source.as_deref().unwrap_or("") }}' class="input input-bordered w-full"/>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+{% endblock %}

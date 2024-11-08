@@ -1,7 +1,7 @@
 {% extends "layouts/main.html" %}
 
 {% block content %}
-    <div id="content-header" class="mt-4 mx-4 flex justify-between">
+    <div id="content_header" class="mt-4 mx-4 flex justify-between">
         <div class="space-x-2">
           <h1 class="text-2xl inline-block mb-2">Asset Items</h1>
           <form id="table_filter"
@@ -27,26 +27,26 @@
           </form>
         </div>
         <div class="space-x-2">
-            <a href="/asset_items/new" class="btn btn-sm">Add New</a>
+            <a hx-boost="true" hx-push-url="true" href="/asset_items/new" class="btn btn-sm">Add New</a>
             <a href="/asset_items/imports/new" class="btn btn-sm">Import</a>
         </div>
     </div>
-    <div id="content-body" class="overflow-x-auto">
+    <div id="content_body" class="overflow-x-auto">
         <table id="table" class="table">
             <!-- head -->
             <thead>
               <tr id="table_header_row">
-                <th hx-on:click="sort(this)" class="hover:border-b-2 cursor-pointer"  data-name="asset_id">Asset ID <span name="header_sort" class="px-2"></span></th>
-                <th hx-on:click="sort(this)" class="hover:border-b-2 cursor-pointer"  data-name="name">Name <span name="header_sort" class="px-2"></span></th>
+                <th id="asset_id_col" hx-on:click="sort(this)" class="hover:border-b-2 cursor-pointer"  data-name="asset_id">Asset ID <span name="header_sort" class="px-2"></span></th>
+                <th id="name_col" hx-on:click="sort(this)" class="hover:border-b-2 cursor-pointer"  data-name="name">Name <span name="header_sort" class="px-2"></span></th>
                 <th>Description <span name="header_sort"></span></th>
-                <th hx-on:click="sort(this)" class="hover:border-b-2 cursor-pointer"  data-name="brand">Brand <span name="header_sort" class="px-2"></span></th>
-                <th hx-on:click="sort(this)" class="hover:border-b-2 cursor-pointer"  data-name="model">Model <span name="header_sort" class="px-2"></span></th>
-                <th hx-on:click="sort(this)" class="hover:border-b-2 cursor-pointer"  data-name="serial_number">Serial # <span name="header_sort" class="px-2"></span></th>
+                <th id="brand_col" hx-on:click="sort(this)" class="hover:border-b-2 cursor-pointer"  data-name="brand">Brand <span name="header_sort" class="px-2"></span></th>
+                <th id="model_col" hx-on:click="sort(this)" class="hover:border-b-2 cursor-pointer"  data-name="model">Model <span name="header_sort" class="px-2"></span></th>
+                <th id="serial_num_col" hx-on:click="sort(this)" class="hover:border-b-2 cursor-pointer"  data-name="serial_number">Serial # <span name="header_sort" class="px-2"></span></th>
               </tr>
             </thead>
             <tbody id="table_body">
               {% for asset_item in asset_items %}
-              <tr class="hover cursor-pointer" hx-get="/asset_items/{{asset_item.id}}" hx-target="#content" hx-swap="outerHTML" hx-push-url="true" hx-select="#content">
+              <tr class="hover cursor-pointer" hx-get="/asset_items/{{asset_item.id}}" hx-target="#main_content" hx-swap="outerHTML" hx-push-url="true" hx-select="#main_content">
                 <td>{{asset_item.asset_id.as_deref().unwrap_or("")}}</a></td> 
                 <td>{{asset_item.name.as_deref().unwrap_or("")}}</td>                
                 <td>{{asset_item.description.as_deref().unwrap_or("")}}</td>
@@ -59,35 +59,26 @@
           </table>
     </div>
     <script>
-      function sort(event) {
-          let selected_sort_icon = htmx.findAll(event, "span")[0];
-          let selected_sort_icon_value = selected_sort_icon.innerHTML;
-          let selected_row_name = event.dataset.name;
+      function sort(el) {
+        let selected_sort_icon = htmx.findAll(el, "span")[0].innerHTML;
+        let selected_row_name = el.dataset.name;
       
-          let header_rows = htmx.findAll(htmx.find('#table_header_row'), "th")
+        let header_rows = htmx.findAll(htmx.find('#table_header_row'), "th")
           for(let i = 0; i < header_rows.length; i++) {
               if (selected_row_name === header_rows[i].dataset.name) {
-                  if (selected_sort_icon_value === '↑') {
+                  if (selected_sort_icon === '↑') {
                       header_rows[i].getElementsByTagName('span')[0].innerHTML = '';
                       htmx.find('#table_sort').value = '';
-                      htmx.find('#table_sort').dataset.value = '';
-
                       htmx.find('#table_order').value = '';
-                      htmx.find('#table_order').dataset.value = '';
-                  } else if (selected_sort_icon_value === '↓') {
+
+                  } else if (selected_sort_icon === '↓') {
                       header_rows[i].getElementsByTagName('span')[0].innerHTML = '↑';
                       htmx.find('#table_sort').value = selected_row_name;
-                      htmx.find('#table_sort').dataset.value = selected_row_name;
-
                       htmx.find('#table_order').value = 'ASC';
-                      htmx.find('#table_order').dataset.value = 'ASC';
                   } else {
                       header_rows[i].getElementsByTagName('span')[0].innerHTML = '↓';
                       htmx.find('#table_sort').value = selected_row_name;
-                      htmx.find('#table_sort').dataset.value = selected_row_name;
-
                       htmx.find('#table_order').value = 'DESC';
-                      htmx.find('#table_order').dataset.value = 'DESC';
                   }
               } else {
                   header_rows[i].getElementsByTagName('span')[0].innerHTML = '';

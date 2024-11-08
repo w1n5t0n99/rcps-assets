@@ -11,3 +11,4 @@ pub mod asset_types_imports_new;
 pub mod asset_items;
 pub mod asset_item_create;
 pub mod asset_item_view;
+pub mod asset_item_edit;

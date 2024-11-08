@@ -94,4 +94,23 @@ pub struct NewAssetItemSchema {
     pub funding_source: Option<String>,
 }
 
+#[derive(Debug, Validate, Deserialize, Serialize)]
+pub struct UpdateAssetItemSchema {
+    #[garde(skip)]	
+    pub asset_id: Option<String>,
+    #[garde(skip)]	
+    pub name: Option<String>,
+    #[garde(skip)]	
+    pub serial_number: Option<String>,
+    #[garde(skip)]	
+    pub brand: Option<String>,
+    #[garde(skip)]	
+    pub model: Option<String>,
+    #[garde(skip)]	
+    pub school: Option<String>,
+    #[garde(skip)]	
+    pub room: Option<String>,
+    #[garde(skip)]	
+    pub funding_source: Option<String>,
+}
 
