@@ -50,15 +50,9 @@ pub async fn post_asset_item_edit(
         .ok_or(ApplicationError::internal_server_error(anyhow!("asset type not found")))?;
 
 
-    let messages = messages.success("asset item saved");
-    let message = messages
-        .into_iter()
-        .collect::<Vec<_>>()
-        .first()
-        .map(|m| m.to_owned());
+    messages.success("asset item saved");
 
-    Ok(AssetItemViewTemplate::new(session_user, message, asset_item))
-}
+    Ok(([("HX-Redirect", format!("/asset_items/{}", id))], "success"))}
 
 #[instrument(skip_all)]
 pub async fn delete_asset_item(
@@ -70,7 +64,7 @@ pub async fn delete_asset_item(
     
 
     messages.success("asset item deleted");
-    Ok(([("HX-Redirect", "/asset_types")], "success"))
+    Ok(([("HX-Redirect", "/asset_items")], "success"))
 }
 
 /*
